@@ -1,0 +1,12 @@
+[PropertyInfo]
+DEBUG,boolean,false,false, , ,false,<default>
+m_constraints,LinkedList,false,false, , ,false,<default>
+m_edges,LinkedList,false,false, , ,false,<default>
+m_nodes,LinkedList,false,false, , ,false,<default>
+m_system,IXSystem,false,false, , ,false,<default>
+m_timeInterval,double,false,false, , ,false,<default>
+[IconNames]
+
+
+
+

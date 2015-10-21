@@ -1,0 +1,5204 @@
+/**  This is the final version of the OPL parser.  */
+
+options {
+    DEBUG_PARSER = false;
+    DEBUG_LOOKAHEAD = false;
+    STATIC = false;
+
+
+}
+
+PARSER_BEGIN(OplParser)
+
+package extensionTools.opltoopd;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.*;
+import java.util.*;
+import java.text.*;
+import java.io.*;
+import java.lang.*;
+import exportedAPI.*;
+import exportedAPI.opcatAPIx.*;
+
+public class OplParser {
+
+    private String oplSentence;
+    private ProcessStruct ps;
+    private ObjectStruct os;
+    private LinkStruct ls;
+    private RelationStruct rs;
+    OPLComboBox oPLComboBox;
+    int excep=0;
+}
+
+PARSER_END(OplParser)
+
+
+
+/* WHITE SPACE */
+
+SKIP :
+{
+
+"\t"
+| "\n"
+| "\r"
+| "\f"
+}
+
+/* Reserved words*/
+
+TOKEN:
+{
+    "and" |
+    "handles" |
+    "requires" |
+    "relates to" |
+    "relates to " |
+    "Many" |
+   // " to "   |
+   // "to"  |
+    "Zero" |
+    "zero" |
+    "many" |
+    "many " |
+    "zero " |
+  //  "to "   |
+    "exhibits" |
+    "exhibits "|
+    "is " |
+    "instance of" |
+    "is an"  |
+    ", which " |
+    " which "  |
+    " is of type " |
+    " handles " |
+    " affects "  |
+    ", handles " |
+    "handles " |
+    "at least one "  |
+    "A  " |
+    "An  " |
+    "consists of" |
+    "are equivalent" |
+    "are instances of" |
+    "is an instance of" |
+    "a" |
+    "an " |
+    " " |
+    "is an " |
+    " yields " |
+    "optional " |
+    "Optional "  |
+    " requires " |
+    " triggers " |
+    " consumes " |
+    " or " |
+    "or" |
+     "or "|
+    "a " |
+    "can " |
+    "is a "
+    
+
+}
+
+
+TOKEN:
+{
+    < INTEGER: (<DIGIT1>)+ > |
+    <#DIGIT1: ["1"-"9"] (["0"-"9"])* | ["0"-"9"] >
+}
+
+
+
+
+
+/* IDENTIFIERS */
+
+/*TOKEN:
+{
+    <VALUE_LIST: (<IDENTIFIER> |
+                   <IDENTIFIER> " and " <IDENTIFIER> |
+                   (<IDENTIFIER> ", ")+ <IDENTIFIER> ", and "
+                    <IDENTIFIER>
+                  ) >
+}
+*/
+TOKEN:
+{
+    <TYPE_DECL: ("Boolean" | "char" | "short" | "integer" |
+                 "unsigned integer" | "long" | "float" |
+                 "double" | "date" | "time" | "string"
+                 ) >
+}
+
+TOKEN:
+{
+    <SCOPE: ("private" | "public" | "protected" )>
+}
+
+
+TOKEN:
+{
+    <STATE: ["a"-"z"](["a"-"z","0"-"9","_"] )*  >
+}
+
+
+/*TOKEN:
+{
+    <BIG_TAG: ( <TAG> (" " <TAG>)*  ) >
+}
+*/
+TOKEN:
+{
+    <TAG: ["a"-"z"] (["a"-"z","A"-"Z","0"-"9","_"])* >
+}
+
+
+
+TOKEN:
+{
+    <BIG_IDENT: ( <IDENTIFIER> |
+        <IDENTIFIER> (" " ["A"-"Z"] (<LETTER>|<DIGIT>)* )+  )
+    >
+}
+
+TOKEN :
+{
+  < IDENTIFIER: ( ["A"-"Z"] (<LETTER>|<DIGIT>)* |
+                "A " ["A"-"Z"] (<LETTER>|<DIGIT>)* |
+                "An " ["A"-"Z"](<LETTER>|<DIGIT>)* )
+    >
+|
+  < #LETTER:  [
+       "\u0024",
+       "\u0041"-"\u005a",
+       "\u005f",
+       "\u0061"-"\u007a",
+       "\u00c0"-"\u00d6",
+       "\u00d8"-"\u00f6",
+       "\u00f8"-"\u00ff",
+       "\u0100"-"\u1fff",
+       "\u3040"-"\u318f",
+       "\u3300"-"\u337f",
+       "\u3400"-"\u3d2d",
+       "\u4e00"-"\u9fff",
+       "\uf900"-"\ufaff"
+      ]
+  >
+|
+  < #DIGIT:
+      [
+       "\u0030"-"\u0039",
+       "\u0660"-"\u0669",
+       "\u06f0"-"\u06f9",
+       "\u0966"-"\u096f",
+       "\u09e6"-"\u09ef",
+       "\u0a66"-"\u0a6f",
+       "\u0ae6"-"\u0aef",
+       "\u0b66"-"\u0b6f",
+       "\u0be7"-"\u0bef",
+       "\u0c66"-"\u0c6f",
+       "\u0ce6"-"\u0cef",
+       "\u0d66"-"\u0d6f",
+       "\u0e50"-"\u0e59",
+       "\u0ed0"-"\u0ed9",
+       "\u1040"-"\u1049"
+      ]
+  >
+}
+
+
+TOKEN:
+{
+    <ENV_PHYS: ("is physical" | "is environmental" |
+                "is environmental and physical" |
+                "is transient" |
+                "is environmental and transient" |
+                "is physical and transient" |
+                "is physical, environmental, and transient" |
+                " is physical" | " is environmental" |
+                " is environmental and physical" |
+                " is transient" |
+                " is environmental and transient" |
+                " is physical and transient" |
+                " is physical, environmental, and transient")>
+}
+
+TOKEN:
+{
+    <OBJ_PROC: (" object" | " process" | " objects" |
+                " processes" ) >
+}
+
+TOKEN:
+{
+    <TIME: ("milli seconds" | "second" | "minutes" |
+            "hours" | "days" | "months" | "years" |
+            "milli second" | "secon" | "minute" |
+            "hour" | "day" | "month" | "year" ) >
+}
+
+
+/*****************************************
+ * The OPL grammar starts here           *
+ ****************************************/
+/**
+*    This is the main function of the parser.
+*    Actually, the OPLgrammar starts here.
+*
+*    @param PS  the pointer to the Process Struct
+*           OS  the pointer to the Object Struct
+*           LS  the pointer to the Link Struct
+*           RS  the pointer to the Relation Struct
+*    @return  the idendification of the sentence type:
+*             1 - Simple object sentence
+*             2 - Simple process sentence
+*             3 - Link sentence
+*             4 - Relation sentence
+*             5 - Exception
+*/
+
+int CompilationUnit(ProcessStruct PS, ObjectStruct OS,
+          LinkStruct LS, RelationStruct RS) throws MyException:
+{
+    this.ps = PS;
+    this.os = OS;
+    this.ls = LS;
+    this.rs = RS;
+    int i=0;
+    
+}
+{
+    LOOKAHEAD(150)
+    i = RelSent()
+    {
+        if(i == 4)
+          return 4;
+        else return 5;
+    }
+    |
+    LOOKAHEAD(150)
+    i = SimleSent()
+    {
+        if(i==1)
+            return 1;
+        else return 2;
+    }
+    |
+    LOOKAHEAD(150)
+    i = LinkSent()
+    {
+        return 3;
+    }
+    |
+     Condition()
+    {
+        return 3;
+    }
+
+}
+
+/********************************************************/
+/*               Simple sentences                       */
+/* This function will return 0 if it is object sentence,*/
+/* and 1 if it is process sentence. The code number of  */
+/* this type of sentences is 1.                         */
+/********************************************************/
+/**
+*   This function handles the simple object or process
+*   sentences. The code number of this type of
+*   sentences is 1.
+*
+*   @return  0 if it is object sentence, and 1 if
+*            it is process sentence.
+*/
+
+int SimleSent() throws MyException:
+{
+    int i;
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    Token t;
+    ErrorStrings err_str = new ErrorStrings();
+    String str = new String();
+}
+{
+    /*
+    i = ObjName(1,1,0,oStruct,pStruct)"."
+    {
+        return i;
+    }
+    */
+    LOOKAHEAD(15)
+    States()
+    {
+        return 0;
+    }
+    |
+    LOOKAHEAD(15)
+    i = ObjName(1,1,0,oStruct,pStruct)
+    t=<ENV_PHYS> "."
+    {
+        env_phys_dec(i,t,os,ps);
+        return i;
+    }
+    | LOOKAHEAD(15)
+    i = ObjName(1,1,0,oStruct,pStruct)
+    " is of type " t = <TYPE_DECL> "."
+    {
+        if(i==1){
+            ps.setProcessName(null);
+            throw new MyException(err_str.excep_str[25]);
+        }
+        str = t.toString();
+        if(str.equals("Boolean"))
+           os.setObjectType("boolean");
+        else if(str.equals("string"))
+           os.setObjectType("char[50]");
+        else os.setObjectType(str);
+        return 0;
+    }
+    |
+    i = ObjName(1,1,0,oStruct,pStruct)
+    " is " t = <SCOPE> "."
+    
+    {
+        str = t.toString();
+        if(i == 0)
+            os.setScope(str);
+        else ps.setScope(str);
+
+        return i;
+    }
+}
+
+
+/*******************************************************/
+/*               State sentence                        */
+/* The code number is 1;                               */
+/*******************************************************/
+/**
+*   This function treats the state sentences, which are
+*   actually the simple sentences. Hence, this function
+*   is called by the SimleSent() function. The code
+*   number of this type is 1.
+*
+*   @see SimleSent()
+*/
+
+void States() throws MyException:
+{
+    Token t;
+    String str = new String();
+    String str_array[];
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    State state = new State();
+    int i,j;
+    ErrorStrings err_str = new ErrorStrings();
+    
+}
+{
+    LOOKAHEAD(25)
+    i = ObjName(1,1,0,oStruct,pStruct)
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,os,pStruct);
+      }
+      ", can be " | " can be ")
+
+    ( LOOKAHEAD(10)
+
+         (LOOKAHEAD(5)t = <STATE> "," " "|
+          LOOKAHEAD(5) t = "a, " |
+          LOOKAHEAD(5) t = <STATE> ", " |
+          t = <STATE>)
+
+      {
+         str = t.toString();
+         if(str.equals("a, ")) {
+            str = str.substring(0,1);
+            str = str.concat(" ");
+         }
+         state.setStateName(str);
+         os.States.add(state);
+      }
+      ( LOOKAHEAD(5)
+        ", which is the default, "
+        {
+            os.setInitialValue(str);
+        }
+        |LOOKAHEAD(5)
+        ", which is initial, "
+        {
+            state.setIsInitial(true);
+        }
+        |
+         LOOKAHEAD(5)
+        "which is the default, "
+        {
+            os.setInitialValue(str);
+        }
+        |
+        "which is initial, "
+        {
+            state.setIsInitial(true);
+        }
+      )?
+      (LOOKAHEAD(5)(LOOKAHEAD(5)t = <STATE>  | t = "a" )
+      {
+         state = new State();
+         str = t.toString();
+         if(str.equals("a"))
+            str = str.concat(" ");
+         state.setStateName(str);
+         os.States.add(state);
+      }
+     // ", "
+      ( LOOKAHEAD(15) ", " |
+        ", which is initial, "
+        {
+            state.setIsInitial(true);
+        }
+      )
+      )+
+
+      ("or " | " or ")
+      (LOOKAHEAD(5)t = <STATE>  | t = "a" )
+      {
+         state = new State();
+         str = t.toString();
+         if(str.equals("a"))
+            str = str.concat(" ");
+         state.setStateName(str);
+         os.States.add(state);
+      }
+      (
+        ", which is initial"
+        {
+            state.setIsInitial(true);
+        }
+      )?
+      
+       | LOOKAHEAD(10)
+       (LOOKAHEAD(5)t = <STATE> | LOOKAHEAD(5)t = "a " |
+        LOOKAHEAD(5)t = "a" | t = "a, " )
+       {
+          state = new State();
+          str = t.toString();
+          if(str.equals("a"))
+            str = str.concat(" ");
+          state.setStateName(str);
+          if(str.equals("a, ")){
+            state.setStateName("a ");
+            str = str.substring(0,1);
+            str = str.concat(" ");
+          }
+          os.States.add(state);
+       }
+      ( LOOKAHEAD(5)
+        ", which is the default, "
+        {
+            os.setInitialValue(str);
+        }
+        |LOOKAHEAD(5)
+        ", which is initial, "
+        {
+            state.setIsInitial(true);
+        }
+        |
+         LOOKAHEAD(5)
+        "which is the default, "
+        {
+            os.setInitialValue(str);
+        }
+        |
+        "which is initial, "
+        {
+            state.setIsInitial(true);
+        }
+      )?
+       ("or " | " or ")
+       (LOOKAHEAD(5)t = <STATE> | t = "a" )
+       {
+          state = new State();
+          str = t.toString();
+          if(str.equals("a"))
+            str = str.concat(" ");
+          state.setStateName(str);
+          os.States.add(state);
+       }
+       (
+        (LOOKAHEAD(5)", which is initial" | "which is initial" )
+        {
+            state.setIsInitial(true);
+        }
+      )?
+       |
+       
+       (LOOKAHEAD(5)t = <STATE>  | LOOKAHEAD(5)t = "a" |
+        t = "a, ")
+
+      {
+         str = t.toString();
+         if(str.equals("a"))
+            str = str.concat(" ");
+         if(str.equals("a, ")){
+            str = str.substring(0,1);
+            str = str.concat(" ");
+         }
+         if(str.indexOf(" or ") == -1){
+            state.setStateName(str);
+            os.States.add(state);
+         }
+         else {
+         //   str_array = str.split(" or ");
+         //   state.setStateName(str_array[0]);
+            os.States.add(state);
+            state = new State();
+         //   state.setStateName(str_array[1]);
+            os.States.add(state);
+         }
+      }
+      ( LOOKAHEAD(5)
+        ", which is the default"
+        {
+            os.setInitialValue(str);
+        }
+        |LOOKAHEAD(5)
+        ", which is initial"
+        {
+            state.setIsInitial(true);
+        }
+        |
+         LOOKAHEAD(5)
+        "which is the default"
+        {
+            os.setInitialValue(str);
+        }
+        |
+        "which is initial"
+        {
+            state.setIsInitial(true);
+        }
+      )?
+        )
+         "."
+      
+      |
+      i = ObjName(1,1,0,oStruct,pStruct)
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,os,pStruct);
+      }
+      ", is " | " is ")
+
+     (LOOKAHEAD(5)t = <STATE> " by default." {i=1;}|
+                  t = "a by default." {i=2;})
+      {
+         if(i==2)
+            str = str.concat("a ");
+         else
+            str = t.toString();
+         state.setStateName(str);
+         os.States.add(state);
+      }
+     // "by default."
+
+}
+
+
+
+/*******************************************************/
+/*               Link sentences                        */
+/* The code number is 3.                               */
+/*******************************************************/
+
+/**
+*   This function treats the Link sentences. The code
+*   number of this type is 3.
+*
+*   @return  allways 3 - the code number
+*/
+
+int LinkSent() throws MyException:
+{
+}
+{
+    LOOKAHEAD(125)
+    ObjInvoke()
+    {
+        return 3;
+    }
+    |
+    LOOKAHEAD(125)
+    ObjInvokeState()
+    {
+        return 3;
+    }
+    |
+
+    LOOKAHEAD(125)
+    Invoke()
+    {
+        return 3;
+    }
+    |
+    LOOKAHEAD(125)
+    Transform()
+    {
+        return 3;
+    }
+    |
+    LOOKAHEAD(125)
+    Enable()
+    {
+        return 3;
+    }
+    |
+    LOOKAHEAD(125)
+    Timeout()
+    {
+        return 3;
+    }
+    |
+    StateTimeout()
+    {
+        return 3;
+    }
+}
+
+
+/*******************************************************/
+/*               Condition link                           */
+/* The code number is 3.
+/*******************************************************/
+/**
+*   This function treats the Condition link sentences,
+*   which are actually the link sentences. Hence,
+*   this function is called by the LinkSent() function.
+*   The code number of this type is 3.
+*
+*   @see LinkSent()
+*/
+
+void Condition()throws MyException:
+{
+    Token t;
+    String str = new String();
+    State  state = new State();
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    int i;
+    ErrorStrings err_str = new ErrorStrings();
+
+}
+{
+    i = ObjName(3,1,0,oStruct,pStruct)
+    {
+        if(i == 0){
+
+           // throw new MyException("Error 2. Consult the help.");
+              throw new MyException(err_str.excep_str[0]);
+        }
+    }
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct);
+      }
+      ", occurs if " | " occurs if ")
+
+    (LOOKAHEAD(20)
+
+        /*  Two objects occur     */
+        {
+            oStruct = new ObjectStruct();
+        }
+        i = ObjName(3,2,0,oStruct,pStruct)
+        {
+          if(i == 1)
+            throw new MyException(err_str.excep_str[1]);
+        }
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        }
+         ", is " | " is ")
+         
+        (LOOKAHEAD(3)t = <STATE> " and " | t = "a " "and " )
+         {
+            state = new State();
+            str = t.toString();
+            state.setStateName(str);
+            oStruct.States.add(state);
+
+         }
+
+        {
+            oStruct = new ObjectStruct();
+        }
+        i = ObjName(3,2,0,oStruct,pStruct)
+        {
+          if(i == 1)
+            throw new MyException(err_str.excep_str[1]);
+        }
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        }
+         ", is " | " is ")
+        (LOOKAHEAD(3)t = <STATE>  | t = "a" )
+         {
+            state = new State();
+            str = t.toString();
+            if(str.equals("a"))
+                str = str.concat(" ");
+            state.setStateName(str);
+            oStruct.States.add(state);
+         }
+         "."
+        {
+            ls.setLinkType("occurs");
+        }
+        |
+        /***********************************/
+        /*  One Process handled        */
+         LOOKAHEAD(10)
+
+         i = ObjName(3,2,0,oStruct,pStruct)
+        {
+          if(i == 1)
+            throw new MyException(err_str.excep_str[1]);
+        }
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        }
+         ", is " | " is ")
+        (LOOKAHEAD(3)t = <STATE>  | t = "a" )
+         {
+            state = new State();
+            str = t.toString();
+            if(str.equals("a"))
+                str = str.concat(" ");
+            state.setStateName(str);
+            oStruct.States.add(state);
+         }
+         "."
+
+        {
+            ls.setLinkType("occurs");
+        }
+
+        |
+        /****************************************/
+        /*  Many processes are handeled      */
+        (LOOKAHEAD(10)
+            {
+                pStruct = new ProcessStruct();
+            }
+            i = ObjName(3,2,0,oStruct,pStruct)
+            {
+            if(i == 1)
+              throw new MyException(err_str.excep_str[1]);
+            }
+            (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+                {
+                    env_phys_dec(i,t,oStruct,pStruct);
+                }
+                ", is " | " is ")
+             (LOOKAHEAD(3)t = <STATE>  | t = "a" )
+             {
+              state = new State();
+              str = t.toString();
+              if(str.equals("a"))
+                str = str.concat(" ");
+             state.setStateName(str);
+             oStruct.States.add(state);
+             }
+             ", "
+             )+
+          {
+            oStruct = new ObjectStruct();
+          }
+          i = ObjName(3,2,0,oStruct,pStruct)
+          {
+            if(i == 1)
+              throw new MyException(err_str.excep_str[1]);
+          }
+          (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+            {
+                env_phys_dec(i,t,oStruct,pStruct);
+            }
+            ", is " | " is ")
+             (LOOKAHEAD(3)t = <STATE> ", and " | t = "a" ", and " )
+             {
+              state = new State();
+              str = t.toString();
+              if(str.equals("a"))
+                str = str.concat(" ");
+             state.setStateName(str);
+             oStruct.States.add(state);
+             }
+           //  " and "
+            {
+             oStruct = new ObjectStruct();
+            }
+             i = ObjName(3,2,0,oStruct,pStruct)
+            {
+              if(i == 1)
+                throw new MyException(err_str.excep_str[1]);
+            }
+             (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+            {
+                env_phys_dec(i,t,oStruct,pStruct);
+            }
+            ", is " | " is ")
+             (LOOKAHEAD(3)t = <STATE>  | t = "a" ) "."
+             {
+              state = new State();
+              str = t.toString();
+              if(str.equals("a"))
+                str = str.concat(" ");
+             state.setStateName(str);
+             oStruct.States.add(state);
+             }
+             {
+              ls.setLinkType("occurs");
+             }
+    )
+}
+
+
+
+
+/*******************************************************/
+/*               Enable link                           */
+/* The code number is 3.
+/*******************************************************/
+/**
+*   This function treats the Enable link sentences,
+*   which are actually the link sentences. Hence,
+*   this function is called by the LinkSent() function.
+*   The code number of this type is 3.
+*
+*   @see LinkSent()
+*/
+void Enable() throws MyException:
+{
+}
+{
+    LOOKAHEAD(5)
+    Agent()
+    |
+    LOOKAHEAD(5)
+    Instrument()
+
+}
+
+/*******************************************************/
+/*               Transform link                        */
+/* The code number is 3.                               */
+/*******************************************************/
+/**
+*   This function treats the Transform link sentences,
+*   which are actually the link sentences. Hence,
+*   this function is called by the LinkSent() function.
+*   The code number of this type is 3.
+*
+*   @see LinkSent()
+*/
+
+void Transform() throws MyException:
+{
+}
+{
+    LOOKAHEAD(5)
+    Change()
+    |
+
+    LOOKAHEAD(5)
+    Consump()
+    |
+    LOOKAHEAD(5)
+    Affect()
+    |
+    Yield()
+
+}
+
+
+/*******************************************************/
+/*               Agent link                            */
+/* The code number is 3.                               */
+/*******************************************************/
+/**
+*   This function treats the Agent link sentences,
+*   which are actually the link sentences. Hence,
+*   this function is called by the Enable() function.
+*   The code number of this type is 3.
+*
+*   @see LinkSent(), Enable()
+*/
+
+void Agent() throws MyException:
+{
+    int i,j;
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    Token t;
+    ErrorStrings err_str = new ErrorStrings();
+}
+{
+    i = ObjName(3,1,0,oStruct,pStruct)
+    {
+        if(i == 1)
+           throw new MyException(err_str.excep_str[2]);
+    }
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct);
+      }
+      ", handles " | " handles ")
+      
+    (LOOKAHEAD(20)
+
+        /*  Two processes are handeled     */
+        {
+            pStruct = new ProcessStruct();
+        }
+        i = ObjName(3,2,0,oStruct,pStruct)
+        {
+          if(i == 0)
+            throw new MyException(err_str.excep_str[3]);
+        }
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        }
+         " and " | " and ")
+        {
+            pStruct = new ProcessStruct();
+        }
+        i = ObjName(3,2,0,oStruct,pStruct)
+        {
+          if(i == 0)
+            throw new MyException(err_str.excep_str[3]);
+        }
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        }
+         "." | ".")
+        
+        {
+            ls.setLinkType("handles");
+        }
+        |
+        /***********************************/
+        /*  One Process handled        */
+         LOOKAHEAD(10)
+         
+         i = ObjName(3,2,0,oStruct,pStruct)
+        {
+          if(i == 0)
+            throw new MyException(err_str.excep_str[3]);
+        }
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        }
+         "." | ".")
+
+        {
+            ls.setLinkType("handles");
+        }
+
+        |
+        /****************************************/
+        /*  Many processes are handeled      */
+        (LOOKAHEAD(10)
+            {
+                pStruct = new ProcessStruct();
+            }
+            i = ObjName(3,2,0,oStruct,pStruct)
+            {
+                if(i == 0)
+                    throw new MyException(err_str.excep_str[3]);
+            }
+            (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+                {
+                    env_phys_dec(i,t,oStruct,pStruct);
+                }
+                ", " | ", ")
+          )+
+          {
+            pStruct = new ProcessStruct();
+          }
+          i = ObjName(3,2,0,oStruct,pStruct)
+          {
+            if(i == 0)
+                throw new MyException(err_str.excep_str[3]);
+          }
+          (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+            {
+                env_phys_dec(i,t,oStruct,pStruct);
+            }
+            ", and " | ", and ")
+          {
+            pStruct = new ProcessStruct();
+          }
+          i = ObjName(3,2,0,oStruct,pStruct)
+          {
+            if(i == 0)
+                throw new MyException(err_str.excep_str[3]);
+          }
+          (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+            {
+                env_phys_dec(i,t,oStruct,pStruct);
+            }
+            "." | ".")
+          {
+            ls.setLinkType("handles");
+          }
+    )
+}
+
+/*******************************************************/
+/*               Instrumental link                     */
+/* The code number is 7.                               */
+/*******************************************************/
+/**
+*   This function treats the Instrumental link sentences,
+*   which are actually the link sentences. Hence,
+*   this function is called by the Enable() function.
+*   The code number of this type is 7.
+*
+*   @see LinkSent(), Enable()
+*/
+
+void Instrument() throws MyException:
+{
+    int i, state_flag=0;
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    Token t;
+    String str = new String();
+    State state = new State();
+    ErrorStrings err_str = new ErrorStrings();
+}
+{
+    i = ObjName(7,1,0,oStruct,pStruct)
+    {
+        if(i == 0)
+            throw new MyException(err_str.excep_str[4]);
+    }
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct);
+      }
+      ", requires " | " requires ")
+
+    (LOOKAHEAD(25)
+    
+      ( LOOKAHEAD(10)
+      
+        ( LOOKAHEAD(5)
+         (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+         {
+            state = new State();
+            str = t.toString();
+            state.setStateName(str);
+            state_flag = 1;
+         }
+        )?
+        {
+            oStruct = new ObjectStruct();
+        }
+        i = ObjName(7,2,0,oStruct,pStruct)
+        {
+            if(i == 1)
+                throw new MyException(err_str.excep_str[5]);
+            if(state_flag == 1) {
+                oStruct.States.add(state);
+                state_flag = 0;
+            }
+        }
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+            env_phys_dec(i,t,oStruct,pStruct);
+        } ", " | ", ")
+      )+
+      ( LOOKAHEAD(5)
+        (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+        {
+          state = new State();
+          str = t.toString();
+          state.setStateName(str);
+          state_flag = 1;
+        }
+      )?
+      {
+          oStruct = new ObjectStruct();
+      }
+      i = ObjName(7,2,0,oStruct,pStruct)
+      {
+        if(i == 1)
+            throw new MyException(err_str.excep_str[5]);
+        if(state_flag == 1) {
+            oStruct.States.add(state);
+            state_flag = 0;
+        }
+      }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        } ", and " | ", and "
+      )
+      ( LOOKAHEAD(5)
+        (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+        {
+            state = new State();
+            str = t.toString();
+            state.setStateName(str);
+            state_flag = 1;
+        }
+      )?
+      {
+          oStruct = new ObjectStruct();
+      }
+      i = ObjName(7,2,0,oStruct,pStruct)
+      {
+          if(i == 1)
+              throw new MyException(err_str.excep_str[5]);
+          if(state_flag == 1) {
+              oStruct.States.add(state);
+              state_flag = 0;
+          }
+      }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+            env_phys_dec(i,t,oStruct,pStruct);
+        } "." | "."
+      )
+      {
+        ls.setLinkType("requires");
+      }
+      |
+       LOOKAHEAD(25)
+       ( LOOKAHEAD(5)
+        (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+        {
+          str = t.toString();
+          state.setStateName(str);
+          state_flag = 1;
+        }
+       )?
+       {
+          oStruct = new ObjectStruct();
+       }
+       i = ObjName(7,2,0,oStruct,pStruct)
+       {
+          if(i == 1)
+              throw new MyException(err_str.excep_str[5]);
+          if(state_flag == 1) {
+              oStruct.States.add(state);
+              state_flag = 0;
+          }
+
+       }
+       (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+       {
+            env_phys_dec(i,t,oStruct,pStruct);
+       }
+       ", and " | " and ")
+       ( LOOKAHEAD(5)
+        (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+        {
+          str = t.toString();
+          state.setStateName(str);
+          state_flag = 1;
+        }
+       )?
+       {
+          oStruct = new ObjectStruct();
+       }
+       i = ObjName(7,2,0,oStruct,pStruct)
+       {
+          if(i == 1)
+              throw new MyException(err_str.excep_str[5]);
+          if(state_flag == 1) {
+              oStruct.States.add(state);
+              state_flag = 0;
+          }
+
+       }
+       (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+       {
+            env_phys_dec(i,t,oStruct,pStruct);
+       }
+       "." | ".")
+       {
+          ls.setLinkType("requires");
+       }
+      |
+      ( LOOKAHEAD(5)
+        (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+        {
+          str = t.toString();
+          state.setStateName(str);
+          state_flag = 1;
+        }
+      )?
+      {
+          oStruct = new ObjectStruct();
+      }
+      i = ObjName(7,2,0,oStruct,pStruct)
+      {
+          if(i == 1)
+              throw new MyException(err_str.excep_str[5]);
+          if(state_flag == 1) {
+              oStruct.States.add(state);
+              state_flag = 0;
+          }
+
+        }
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct);
+      }
+      "." | ".")
+      {
+        ls.setLinkType("requires");
+    }
+    )
+}
+
+/*******************************************************/
+/*               Invokation link                       */
+/* The code number is 3.                               */
+/*******************************************************/
+/**
+*   This function treats the Invokation link sentences,
+*   which are actually the link sentences. Hence,
+*   this function is called by the LinkSent() function.
+*   The code number of this type is 3.
+*
+*   @see LinkSent()
+*/
+
+void Invoke() throws MyException:
+{
+    int i,j;
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    Token t;
+    String str = new String();
+    ErrorStrings err_str = new ErrorStrings();
+}
+{
+    j = ObjName(3,1,0,oStruct,pStruct)
+
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(j,t,oStruct,pStruct);
+      }
+      ", triggers " | " triggers ")
+
+    (LOOKAHEAD(25)
+
+      ( LOOKAHEAD(10)
+
+        {
+            pStruct = new ProcessStruct();
+        }
+        i = ObjName(3,2,0,oStruct,pStruct)
+        {
+            if(i == 0)
+                throw new MyException(err_str.excep_str[6]);
+        }
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+            env_phys_dec(i,t,oStruct,pStruct);
+        } ", " | ", ")
+      )+
+
+      {
+          pStruct = new ProcessStruct();
+      }
+      i = ObjName(3,2,0,oStruct,pStruct)
+      {
+        if(i == 0)
+            throw new MyException(err_str.excep_str[6]);
+      }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        } ", and " | ", and "
+      )
+
+      {
+          pStruct = new ProcessStruct();
+      }
+      i = ObjName(3,2,0,oStruct,pStruct)
+      {
+          if(i == 0)
+              throw new MyException(err_str.excep_str[6]);
+      }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+            env_phys_dec(i,t,oStruct,pStruct);
+        } ", when it ends." | " when it ends."
+      )
+      {
+        ls.setLinkType("triggers");
+      }
+      |
+       LOOKAHEAD(25)
+
+       {
+          pStruct = new ProcessStruct();
+       }
+       i = ObjName(3,2,0,oStruct,pStruct)
+       {
+          if(i == 0)
+              throw new MyException(err_str.excep_str[6]);
+       }
+       (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+       {
+            env_phys_dec(i,t,oStruct,pStruct);
+       }
+       ", and " | " and ")
+
+       {
+          pStruct = new ProcessStruct();
+       }
+       i = ObjName(3,2,0,oStruct,pStruct)
+       {
+          if(i == 0)
+              throw new MyException(err_str.excep_str[6]);
+       }
+       (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+       {
+            env_phys_dec(i,t,oStruct,pStruct);
+       }
+       ", when it ends." | " when it ends.")
+       {
+          ls.setLinkType("triggers");
+       }
+      |
+
+      {
+          pStruct = new ProcessStruct();
+      }
+      i = ObjName(3,2,0,oStruct,pStruct)
+      {
+          if(i == 0)
+              throw new MyException(err_str.excep_str[6]);
+      }
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct);
+      }
+      ", when it ends." | " when it ends.")
+      {
+        ls.setLinkType("triggers");
+    }
+    )
+    {
+        if(j == 0){
+            ls.setLinkType(null);
+            throw new MyException(err_str.excep_str[6]);
+        }
+    }
+
+}
+
+/*******************************************************/
+/*              Object Invokation link                 */
+/* The code number is 7.                               */
+/*******************************************************/
+/**
+*   This function treats the Object Invokation link sentences,
+*   which are actually the link sentences. Hence,
+*   this function is called by the LinkSent() function.
+*   The code number of this type is 7.
+*
+*   @see LinkSent()
+*/
+
+void ObjInvoke() throws MyException:
+{
+    int i,j;
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    Token t;
+    String str = new String();
+    State state = new State();
+    ErrorStrings err_str = new ErrorStrings();
+}
+{
+
+    j = ObjName(7,1,0,oStruct,pStruct)
+
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(j,t,oStruct,pStruct);
+      }
+      ", triggers " | " triggers ")
+
+    (LOOKAHEAD(25)
+
+       ( LOOKAHEAD(10)
+         {
+            pStruct = new ProcessStruct();
+         }
+         i = ObjName(7,2,0,oStruct,pStruct)
+         {
+            if(i == 0)
+                throw new MyException(err_str.excep_str[6]);
+         }
+         (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+          {
+             env_phys_dec(i,t,oStruct,pStruct);
+          } ", " | ", ")
+       )+
+
+      {
+          pStruct = new ProcessStruct();
+      }
+      i = ObjName(7,2,0,oStruct,pStruct)
+      {
+        if(i == 0)
+            throw new MyException(err_str.excep_str[6]);
+      }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        } ", and " | ", and "
+      )
+
+      {
+          pStruct = new ProcessStruct();
+      }
+      i = ObjName(7,2,0,oStruct,pStruct)
+      {
+          if(i == 0)
+              throw new MyException(err_str.excep_str[6]);
+      }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+            env_phys_dec(i,t,oStruct,pStruct);
+         }
+         ", when its state changes." | " when its state changes."
+      )
+    //  "when its state changes."
+      {
+        ls.setLinkType("inst_event");
+      }
+      |
+       LOOKAHEAD(25)
+
+       {
+          pStruct = new ProcessStruct();
+       }
+       i = ObjName(7,2,0,oStruct,pStruct)
+       {
+          if(i == 0)
+              throw new MyException(err_str.excep_str[6]);
+       }
+       (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+       {
+            env_phys_dec(i,t,oStruct,pStruct);
+       }
+       ", and " | " and ")
+
+       {
+          pStruct = new ProcessStruct();
+       }
+       i = ObjName(7,2,0,oStruct,pStruct)
+       {
+          if(i == 0)
+              throw new MyException(err_str.excep_str[6]);
+       }
+       (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+       {
+            env_phys_dec(i,t,oStruct,pStruct);
+       }
+       ", when its state changes." | " when its state changes.")
+       {
+          ls.setLinkType("inst_event");
+       }
+      |
+
+      {
+          pStruct = new ProcessStruct();
+      }
+      i = ObjName(7,2,0,oStruct,pStruct)
+      {
+          if(i == 0)
+              throw new MyException(err_str.excep_str[6]);
+      }
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct);
+      }
+      ", when its state changes." | " when its state changes.")
+      {
+        ls.setLinkType("inst_event");
+    }
+    )
+    {
+        if(j == 1){
+            ls.setLinkType(null);
+            throw new MyException(err_str.excep_str[7]);
+        }
+    }
+    
+   }
+
+/*******************************************************/
+/*                 ObjInvokeState()                    */
+/*  Sentences like: A triggers Ping when it enters v.  */
+/*******************************************************/
+/**
+*   This function treats the Object Invokation State
+*   link sentences,
+*   which are actually the link sentences. Hence,
+*   this function is called by the LinkSent() function.
+*   The code number of this type is 7.
+*
+*   @see LinkSent()
+*/
+
+void ObjInvokeState() throws MyException:
+{
+    int i,j;
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    Token t;
+    String str = new String();
+    State state = new State();
+    ErrorStrings err_str = new ErrorStrings();
+}
+{
+    j = ObjName(7,1,0,oStruct,pStruct)
+
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(j,t,oStruct,pStruct);
+      }
+      ", triggers " | " triggers ")
+
+    (LOOKAHEAD(25)
+
+         ( LOOKAHEAD(10)
+           {
+              pStruct = new ProcessStruct();
+           }
+           i = ObjName(7,2,0,oStruct,pStruct)
+           {
+              if(i == 0)
+                 throw new MyException(err_str.excep_str[6]);
+           }
+           (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+              {
+                 env_phys_dec(i,t,oStruct,pStruct);
+              } ", " | ", ")
+         )+
+
+         {
+           pStruct = new ProcessStruct();
+         }
+         i = ObjName(7,2,0,oStruct,pStruct)
+         {
+           if(i == 0)
+              throw new MyException(err_str.excep_str[6]);
+         }
+         (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+           {
+              env_phys_dec(i,t,oStruct,pStruct);
+           } ", and " | ", and "
+          )
+
+         {
+           pStruct = new ProcessStruct();
+         }
+         i = ObjName(7,2,0,oStruct,pStruct)
+         {
+           if(i == 0)
+              throw new MyException(err_str.excep_str[6]);
+         }
+         (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+           {
+              env_phys_dec(i,t,oStruct,pStruct);
+           } ", when it enters " | " when it enters "
+         )
+         (LOOKAHEAD(5)t = <STATE>  | t = "a" ) "."
+         {
+              str = t.toString();
+
+              if(str.equals("a"))
+                 str = str.concat(" ");
+              state.setStateName(str);
+              oStruct.States.add(state);
+         }
+         {
+              ls.setLinkType("inst_event");
+         }
+      |
+      LOOKAHEAD(25)
+
+       {
+          pStruct = new ProcessStruct();
+       }
+       i = ObjName(7,2,0,oStruct,pStruct)
+       {
+          if(i == 0)
+              throw new MyException(err_str.excep_str[6]);
+       }
+       (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+       {
+            env_phys_dec(i,t,oStruct,pStruct);
+       }
+       ", and " | " and ")
+
+       {
+          pStruct = new ProcessStruct();
+       }
+       i = ObjName(7,2,0,oStruct,pStruct)
+       {
+          if(i == 0)
+              throw new MyException(err_str.excep_str[6]);
+       }
+       (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+          {
+            env_phys_dec(i,t,oStruct,pStruct);
+          }
+          ", when it enters " | " when it enters "
+       )
+       (LOOKAHEAD(5)t = <STATE>  | t = "a" ) "."
+       {
+          str = t.toString();
+
+          if(str.equals("a"))
+            str = str.concat(" ");
+          state.setStateName(str);
+          oStruct.States.add(state);
+       }
+       {
+          ls.setLinkType("inst_event");
+       }
+      |
+
+      {
+          pStruct = new ProcessStruct();
+      }
+      i = ObjName(7,2,0,oStruct,pStruct)
+      {
+          if(i == 0)
+              throw new MyException(err_str.excep_str[6]);
+      }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+       {
+          env_phys_dec(i,t,oStruct,pStruct);
+       }
+       ", when it enters " | " when it enters ")
+      (LOOKAHEAD(5)t = <STATE>  | t = "a" ) "."
+      {
+         str = t.toString();
+
+         if(str.equals("a"))
+            str = str.concat(" ");
+         state.setStateName(str);
+         oStruct.States.add(state);
+
+         ls.setLinkType("inst_event");
+      }
+    )
+    {
+        if(j == 1){
+            ls.setLinkType(null);
+            throw new MyException(err_str.excep_str[7]);
+        }
+    }
+
+}
+
+
+
+
+/*******************************************************/
+/*               Consumption link                     */
+/* The code number is 3.                               */
+/*******************************************************/
+/**
+*   This function treats the Consumption link sentences,
+*   which are actually the link sentences. Hence,
+*   this function is called by the LinkSent() function.
+*   The code number of this type is 3.
+*
+*   @see LinkSent()
+*/
+
+void Consump() throws MyException:
+{
+    int i, state_flag=0;
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    Token t;
+    String str = new String();
+    State state = new State();
+    ErrorStrings err_str = new ErrorStrings();
+}
+{
+    i = ObjName(7,1,0,oStruct,pStruct)
+    {
+        if(i == 0)
+            throw new MyException(err_str.excep_str[8]);
+    }
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct);
+      }
+      ", consumes " | " consumes ")
+
+    (LOOKAHEAD(25)
+
+      ( LOOKAHEAD(10)
+
+        ( LOOKAHEAD(5)
+         (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+         {
+            state = new State();
+            str = t.toString();
+            state.setStateName(str);
+            state_flag = 1;
+         }
+        )?
+        {
+            oStruct = new ObjectStruct();
+        }
+        i = ObjName(7,2,0,oStruct,pStruct)
+        {
+            if(i == 1)
+                throw new MyException(err_str.excep_str[5]);
+            if(state_flag == 1) {
+                oStruct.States.add(state);
+                state_flag = 0;
+            }
+        }
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+            env_phys_dec(i,t,oStruct,pStruct);
+        } ", " | ", ")
+      )+
+      ( LOOKAHEAD(5)
+        (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+        {
+          state = new State();
+          str = t.toString();
+          state.setStateName(str);
+          state_flag = 1;
+        }
+      )?
+      {
+          oStruct = new ObjectStruct();
+      }
+      i = ObjName(7,2,0,oStruct,pStruct)
+      {
+        if(i == 1)
+            throw new MyException(err_str.excep_str[9]);
+        if(state_flag == 1) {
+            oStruct.States.add(state);
+            state_flag = 0;
+        }
+      }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        } ", and " | ", and "
+      )
+      ( LOOKAHEAD(5)
+        (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+        {
+            state = new State();
+            str = t.toString();
+            state.setStateName(str);
+            state_flag = 1;
+        }
+      )?
+      {
+          oStruct = new ObjectStruct();
+      }
+      i = ObjName(7,2,0,oStruct,pStruct)
+      {
+          if(i == 1)
+              throw new MyException(err_str.excep_str[5]);
+          if(state_flag == 1) {
+              oStruct.States.add(state);
+              state_flag = 0;
+          }
+      }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+            env_phys_dec(i,t,oStruct,pStruct);
+        } "." | "."
+      )
+      {
+        ls.setLinkType("consumes");
+      }
+      |
+       LOOKAHEAD(25)
+       ( LOOKAHEAD(5)
+        (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+        {
+          str = t.toString();
+          state.setStateName(str);
+          state_flag = 1;
+        }
+       )?
+       {
+          oStruct = new ObjectStruct();
+       }
+       i = ObjName(7,2,0,oStruct,pStruct)
+       {
+          if(i == 1)
+              throw new MyException(err_str.excep_str[5]);
+          if(state_flag == 1) {
+              oStruct.States.add(state);
+              state_flag = 0;
+          }
+
+       }
+       (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+       {
+            env_phys_dec(i,t,oStruct,pStruct);
+       }
+       ", and " | " and ")
+       ( LOOKAHEAD(5)
+        (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+        {
+          str = t.toString();
+          state.setStateName(str);
+          state_flag = 1;
+        }
+       )?
+       {
+          oStruct = new ObjectStruct();
+       }
+       i = ObjName(7,2,0,oStruct,pStruct)
+       {
+          if(i == 1)
+              throw new MyException(err_str.excep_str[5]);
+          if(state_flag == 1) {
+              oStruct.States.add(state);
+              state_flag = 0;
+          }
+
+       }
+       (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+       {
+            env_phys_dec(i,t,oStruct,pStruct);
+       }
+       "." | ".")
+       {
+          ls.setLinkType("consumes");
+       }
+      |
+      ( LOOKAHEAD(5)
+        (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+        {
+          str = t.toString();
+          state.setStateName(str);
+          state_flag = 1;
+        }
+      )?
+      {
+          oStruct = new ObjectStruct();
+      }
+      i = ObjName(7,2,0,oStruct,pStruct)
+      {
+          if(i == 1)
+              throw new MyException(err_str.excep_str[5]);
+          if(state_flag == 1) {
+              oStruct.States.add(state);
+              state_flag = 0;
+          }
+
+        }
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct);
+      }
+      "." | ".")
+      {
+        ls.setLinkType("consumes");
+    }
+    )
+
+
+
+}
+
+
+
+/*******************************************************/
+/*               Affect link                           */
+/* The code number is 3.                               */
+/*******************************************************/
+/**
+*   This function treats the Affect link sentences,
+*   which are actually the link sentences. Hence,
+*   this function is called by the LinkSent() function.
+*   The code number of this type is 3.
+*
+*   @see LinkSent()
+*/
+
+void Affect() throws MyException:
+{
+    int i;
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    Token t;
+    ErrorStrings err_str = new ErrorStrings();
+}
+{
+    i = ObjName(3,1,0,oStruct,pStruct)
+    {
+        if(i == 0)
+            throw new MyException(err_str.excep_str[10]);
+    }
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct);
+      }
+      ", affects " | " affects ")
+      
+    (LOOKAHEAD(25)
+     ( LOOKAHEAD(10)
+       {
+          oStruct = new ObjectStruct();
+       }
+       i = ObjName(3,2,0,oStruct,pStruct)
+       {
+         if(i == 1)
+            throw new MyException(err_str.excep_str[11]);
+       }
+        ( LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+          {
+              env_phys_dec(i,t,oStruct,pStruct);
+          }
+          ", " | ", ")
+      )+
+      {
+          oStruct = new ObjectStruct();
+      }
+      i = ObjName(3,2,0,oStruct,pStruct)
+      {
+         if(i == 1)
+            throw new MyException(err_str.excep_str[11]);
+      }
+      ( LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        }
+        ", and " | ", and ")
+      {
+          oStruct = new ObjectStruct();
+      }
+      i = ObjName(3,2,0,oStruct,pStruct)
+      {
+         if(i == 1)
+            throw new MyException(err_str.excep_str[11]);
+      }
+      ( LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        }
+        "." | ".")
+      |
+      LOOKAHEAD(25)
+      {
+          oStruct = new ObjectStruct();
+      }
+      i = ObjName(3,2,0,oStruct,pStruct)
+      {
+         if(i == 1)
+            throw new MyException(err_str.excep_str[11]);
+      }
+      ( LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        }
+        " and " | " and ")
+      {
+          oStruct = new ObjectStruct();
+      }
+      i = ObjName(3,2,0,oStruct,pStruct)
+      {
+         if(i == 1)
+            throw new MyException(err_str.excep_str[11]);
+      }
+      ( LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        }
+        "." | ".")
+      
+      |
+     i = ObjName(3,2,0,oStruct,pStruct)
+     {
+        if(i == 1)
+            throw new MyException(err_str.excep_str[11]);
+     }
+     (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct);
+      }
+      "." | ".")
+    )
+
+    {
+        ls.setLinkType("affects");
+    }
+
+}
+
+/*******************************************************/
+/*               Yield link                           */
+/* The code number is 3.                               */
+/*******************************************************/
+
+/**
+*   This function treats the Yield link sentences,
+*   which are actually the link sentences. Hence,
+*   this function is called by the LinkSent() function.
+*   The code number of this type is 3.
+*
+*   @see LinkSent()
+*/
+
+void Yield() throws MyException:
+{
+    int i, state_flag=0;
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    Token t;
+    String str = new String();
+    State state = new State();
+    ErrorStrings err_str = new ErrorStrings();
+}
+{
+    i = ObjName(7,1,0,oStruct,pStruct)
+    {
+        if(i == 0)
+            throw new MyException(err_str.excep_str[12]);
+    }
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct);
+      }
+      ", yields " | " yields ")
+
+    (LOOKAHEAD(25)
+
+      ( LOOKAHEAD(10)
+
+        ( LOOKAHEAD(5)
+         (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+         {
+            state = new State();
+            str = t.toString();
+            state.setStateName(str);
+            state_flag = 1;
+         }
+        )?
+        {
+            oStruct = new ObjectStruct();
+        }
+        i = ObjName(7,2,0,oStruct,pStruct)
+        {
+            if(i == 1)
+                throw new MyException(err_str.excep_str[13]);
+            if(state_flag == 1) {
+                oStruct.States.add(state);
+                state_flag = 0;
+            }
+        }
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+            env_phys_dec(i,t,oStruct,pStruct);
+        } ", " | ", ")
+      )+
+      ( LOOKAHEAD(5)
+        (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+        {
+          state = new State();
+          str = t.toString();
+          state.setStateName(str);
+          state_flag = 1;
+        }
+      )?
+      {
+          oStruct = new ObjectStruct();
+      }
+      i = ObjName(7,2,0,oStruct,pStruct)
+      {
+        if(i == 1)
+            throw new MyException(err_str.excep_str[13]);
+        if(state_flag == 1) {
+            oStruct.States.add(state);
+            state_flag = 0;
+        }
+      }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        } ", and " | ", and "
+      )
+      ( LOOKAHEAD(5)
+        (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+        {
+            state = new State();
+            str = t.toString();
+            state.setStateName(str);
+            state_flag = 1;
+        }
+      )?
+      {
+          oStruct = new ObjectStruct();
+      }
+      i = ObjName(7,2,0,oStruct,pStruct)
+      {
+          if(i == 1)
+              throw new MyException(err_str.excep_str[13]);
+          if(state_flag == 1) {
+              oStruct.States.add(state);
+              state_flag = 0;
+          }
+      }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+            env_phys_dec(i,t,oStruct,pStruct);
+        } "." | "."
+      )
+      {
+        ls.setLinkType("yields");
+      }
+      |
+       LOOKAHEAD(25)
+       ( LOOKAHEAD(5)
+        (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+        {
+          str = t.toString();
+          state.setStateName(str);
+          state_flag = 1;
+        }
+       )?
+       {
+          oStruct = new ObjectStruct();
+       }
+       i = ObjName(7,2,0,oStruct,pStruct)
+       {
+          if(i == 1)
+              throw new MyException(err_str.excep_str[13]);
+          if(state_flag == 1) {
+              oStruct.States.add(state);
+              state_flag = 0;
+          }
+
+       }
+       (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+       {
+            env_phys_dec(i,t,oStruct,pStruct);
+       }
+       ", and " | " and ")
+       ( LOOKAHEAD(5)
+        (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+        {
+          str = t.toString();
+          state.setStateName(str);
+          state_flag = 1;
+        }
+       )?
+       {
+          oStruct = new ObjectStruct();
+       }
+       i = ObjName(7,2,0,oStruct,pStruct)
+       {
+          if(i == 1)
+              throw new MyException(err_str.excep_str[13]);
+          if(state_flag == 1) {
+              oStruct.States.add(state);
+              state_flag = 0;
+          }
+
+       }
+       (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+       {
+            env_phys_dec(i,t,oStruct,pStruct);
+       }
+       "." | ".")
+       {
+          ls.setLinkType("yields");
+       }
+      |
+      ( LOOKAHEAD(5)
+        (LOOKAHEAD(3)t = <STATE> " " | t = "a " )
+        {
+          str = t.toString();
+          state.setStateName(str);
+          state_flag = 1;
+        }
+      )?
+      {
+          oStruct = new ObjectStruct();
+      }
+      i = ObjName(7,2,0,oStruct,pStruct)
+      {
+          if(i == 1)
+              throw new MyException(err_str.excep_str[13]);
+          if(state_flag == 1) {
+              oStruct.States.add(state);
+              state_flag = 0;
+          }
+
+        }
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct);
+      }
+      "." | ".")
+      {
+        ls.setLinkType("yields");
+    }
+    )
+
+}
+
+/*******************************************************/
+/*               Changing link                         */
+/* The code number is 3.                               */
+/*******************************************************/
+/**
+*   This function treats the Changing link sentences,
+*   which are actually the link sentences. Hence,
+*   this function is called by the LinkSent() function.
+*   The code number of this type is 3.
+*
+*   @see LinkSent()
+*/
+void Change() throws MyException:
+{
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    State state = new State();
+    String str = new String();
+    Token t;
+    int i, j;
+    ErrorStrings err_str = new ErrorStrings();
+}
+{
+    i = ObjName(3,1,0,oStruct,pStruct)
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct);
+      }
+      ", changes " | " " "changes ")
+      
+    ( LOOKAHEAD(25)
+
+
+      (LOOKAHEAD(10)
+       {
+         oStruct = new ObjectStruct();
+       }
+       j = ObjName(3,2,0,oStruct,pStruct)
+       (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+       {
+            env_phys_dec(j,t,oStruct,pStruct);
+       }
+       ", from " | " from ")
+       (LOOKAHEAD(5)t = <STATE>  | t = "a " )
+       {
+          state = new State();
+          str = t.toString();
+          state.setStateName(str);
+          state.setFrom(true);
+          oStruct.States.add(state);
+       }
+       (" to " | "to ")
+       (LOOKAHEAD(5)t = <STATE> ", " | t = "a, " )
+       {
+         state = new State();
+         str = t.toString();
+         if(str.equals("a"))
+            str = str.concat(" ");
+          if(str.equals("a, "))
+            str = new String("a ");
+         state.setStateName(str);
+         oStruct.States.add(state);
+       }
+      )+
+      {
+        oStruct = new ObjectStruct();
+      }
+      j = ObjName(3,2,0,oStruct,pStruct)
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(j,t,oStruct,pStruct);
+      }
+      ", from " | " from ")
+      (LOOKAHEAD(5)t = <STATE>  | t = "a " )
+      {
+         state = new State();
+         str = t.toString();
+         state.setStateName(str);
+         state.setFrom(true);
+         oStruct.States.add(state);
+      }
+      (" to " | "to ")
+      (LOOKAHEAD(5)t = <STATE> ", and " | t = "a, and " )
+      {
+         state = new State();
+         str = t.toString();
+         if(str.equals("a"))
+            str = str.concat(" ");
+         if(str.equals("a, and "))
+            str = new String("a ");
+         state.setStateName(str);
+         oStruct.States.add(state);
+      }
+   //  "and "
+      {
+         oStruct = new ObjectStruct();
+      }
+      j = ObjName(3,2,0,oStruct,pStruct)
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+       {
+            env_phys_dec(j,t,oStruct,pStruct);
+       }
+       ", from " | " from ")
+      (LOOKAHEAD(5)t = <STATE>  | t = "a " )
+      {
+         state = new State();
+         str = t.toString();
+         state.setStateName(str);
+         state.setFrom(true);
+         oStruct.States.add(state);
+      }
+      (" to " | "to ")
+      (LOOKAHEAD(5)t = <STATE>  | t = "a" )
+      {
+         state = new State();
+         str = t.toString();
+         if(str.equals("a"))
+            str = str.concat(" ");
+         state.setStateName(str);
+         oStruct.States.add(state);
+      }
+      {
+        ls.setLinkType("changes");
+      }
+      "."
+     |
+     LOOKAHEAD(25)
+     j = ObjName(3,2,0,oStruct,pStruct)
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(j,t,oStruct,pStruct);
+      }
+      ", from " | " from ")
+     (LOOKAHEAD(5)t = <STATE>  | t = "a " )
+     {
+         state = new State();
+         str = t.toString();
+         state.setStateName(str);
+         state.setFrom(true);
+         oStruct.States.add(state);
+     }
+     (" to " | "to ")
+     (LOOKAHEAD(5)t = <STATE> " and " | t = "a " "and " )
+     {
+         state = new State();
+         str = t.toString();
+         if(str.equals("a"))
+            str = str.concat(" ");
+         state.setStateName(str);
+         oStruct.States.add(state);
+     }
+   //  "and "
+     {
+        oStruct = new ObjectStruct();
+     }
+     j = ObjName(3,2,0,oStruct,pStruct)
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(j,t,oStruct,pStruct);
+      }
+      ", from " | " from ")
+     (LOOKAHEAD(5)t = <STATE>  | t = "a " )
+     {
+         state = new State();
+         str = t.toString();
+         state.setStateName(str);
+         state.setFrom(true);
+         oStruct.States.add(state);
+     }
+     (" to " | "to ")
+     (LOOKAHEAD(5)t = <STATE>  | t = "a" )
+     {
+         state = new State();
+         str = t.toString();
+         if(str.equals("a"))
+            str = str.concat(" ");
+         state.setStateName(str);
+         oStruct.States.add(state);
+     }
+     {
+        ls.setLinkType("changes");
+     }
+     "."
+     |
+    
+    j = ObjName(3,2,0,oStruct,pStruct)
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(j,t,oStruct,pStruct);
+      }
+      ", from " | " from ")
+     (LOOKAHEAD(5)t = <STATE>  | t = "a " )
+     {
+         str = t.toString();
+         state.setStateName(str);
+         state.setFrom(true);
+         oStruct.States.add(state);
+     }
+     (" to " | "to ")
+     (LOOKAHEAD(5)t = <STATE>  | t = "a" )
+     {
+         state = new State();
+         str = t.toString();
+         if(str.equals("a"))
+            str = str.concat(" ");
+         state.setStateName(str);
+         oStruct.States.add(state);
+     }
+     {
+        ls.setLinkType("changes");
+     }
+     "."
+   )
+}
+
+
+
+
+/*******************************************************/
+/*               Timeout link                       */
+/* The code number is 3.                               */
+/*******************************************************/
+/**
+*   This function treats the Timeout link sentences,
+*   which are actually the link sentences. Hence,
+*   this function is called by the LinkSent() function.
+*   The code number of this type is 3.
+*
+*   @see LinkSent()
+*/
+void Timeout() throws MyException:
+{
+    int i,j;
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct1 = new ProcessStruct();
+    ProcessStruct pStruct2 = new ProcessStruct();
+    Token t,d;
+    State state = new State();
+    ErrorStrings err_str = new ErrorStrings();
+}
+{
+    i = ObjName(3,1,0,oStruct,pStruct1)
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct1);
+      }
+      ", triggers " | " triggers ")
+
+    (LOOKAHEAD(25)
+
+         (LOOKAHEAD(10)
+            {
+                pStruct2 = new ProcessStruct();
+            }
+            j = ObjName(3,2,0,oStruct,pStruct2)
+            (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+            {
+                 env_phys_dec(j,t,oStruct,pStruct2);
+            }
+            ", " | ", ")
+            {
+                 if(j == 0)
+                    throw new MyException(err_str.excep_str[6]);
+            }
+          )+
+          {
+                pStruct2 = new ProcessStruct();
+          }
+          j = ObjName(3,2,0,oStruct,pStruct2)
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+             env_phys_dec(j,t,oStruct,pStruct2);
+         }
+         ", and " | ", and ")
+         {
+            if(j == 0)
+                throw new MyException(err_str.excep_str[6]);
+         }
+       //   "and "
+          {
+            pStruct2 = new ProcessStruct();
+          }
+          j = ObjName(3,2,0,oStruct,pStruct2)
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+             env_phys_dec(j,t,oStruct,pStruct2);
+         }
+         ", when " | " when ")
+         "it lasts more than "
+         time_parse(pStruct1,state,1,1)
+          "."
+         {
+            if(j == 0)
+                throw new MyException(err_str.excep_str[6]);
+         }
+        | LOOKAHEAD(10)
+        j = ObjName(3,2,0,oStruct,pStruct2)
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+             env_phys_dec(j,t,oStruct,pStruct2);
+         }
+         ", and " | " and ")
+         {
+            if(j == 0)
+                throw new MyException(err_str.excep_str[6]);
+         }
+         {
+            pStruct2 = new ProcessStruct();
+         }
+         j = ObjName(3,2,0,oStruct,pStruct2)
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+             env_phys_dec(j,t,oStruct,pStruct2);
+         }
+         ", when " | " when ")
+         {
+            if(j == 0)
+                throw new MyException(err_str.excep_str[6]);
+         }
+         "it lasts more than "
+         time_parse(pStruct1,state,1,1)
+          "."
+    
+        |
+        j = ObjName(3,2,0,oStruct,pStruct2)
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+             env_phys_dec(j,t,oStruct,pStruct2);
+         }
+         ", when " | " when ")
+
+         "it lasts more than "
+         time_parse(pStruct1,state,1,1)
+          "."
+        {
+            if(j == 0)
+                throw new MyException(err_str.excep_str[6]);
+        }
+     )
+     {
+        if(i == 0)
+            throw new MyException(err_str.excep_str[14]);
+        ls.setLinkType("exception");
+     }
+
+}
+
+
+/*******************************************************/
+/*               StateTimeout link                       */
+/* The code number is 3.                               */
+/*******************************************************/
+/**
+*   This function treats the StateTimeout link sentences,
+*   which are actually the link sentences. Hence,
+*   this function is called by the LinkSent() function.
+*   The code number of this type is 3.
+*
+*   @see LinkSent()
+*/
+
+void StateTimeout() throws MyException:
+{
+    int i,j;
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct1 = new ProcessStruct();
+    ProcessStruct pStruct2 = new ProcessStruct();
+    Token t,d;
+    String str = new String();
+    State state = new State();
+    ErrorStrings err_str = new ErrorStrings();
+}
+{
+    i = ObjName(3,1,0,oStruct,pStruct1)
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct1);
+      }
+      ", triggers " | " triggers ")
+
+    (LOOKAHEAD(25)
+
+         (LOOKAHEAD(10)
+            {
+                pStruct2 = new ProcessStruct();
+            }
+            j = ObjName(3,2,0,oStruct,pStruct2)
+            (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+            {
+                 env_phys_dec(j,t,oStruct,pStruct2);
+            }
+            ", " | ", ")
+            {
+                 if(j == 0)
+                     throw new MyException(err_str.excep_str[6]);
+            }
+          )+
+          {
+                pStruct2 = new ProcessStruct();
+          }
+          j = ObjName(3,2,0,oStruct,pStruct2)
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+             env_phys_dec(j,t,oStruct,pStruct2);
+         }
+         ", and " | ", and ")
+         {
+            if(j == 0)
+                throw new MyException(err_str.excep_str[6]);
+         }
+       //   "and "
+          {
+            pStruct2 = new ProcessStruct();
+          }
+          j = ObjName(3,2,0,oStruct,pStruct2)
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+             env_phys_dec(j,t,oStruct,pStruct2);
+         }
+         ", when " | " when ")
+         (LOOKAHEAD(5)t = <STATE> " lasts more than " |
+                      t = "a lasts more than " )
+       {
+          state = new State();
+          str = t.toString();
+          if(str.equals("a lasts more than "))
+            str = new String("a ");
+          state.setStateName(str);
+          state.setFrom(true);
+          oStruct.States.add(state);
+       }
+         
+         time_parse(pStruct1,state,1,2)
+          "."
+         {
+            if(j == 0)
+                throw new MyException(err_str.excep_str[6]);
+         }
+        | LOOKAHEAD(10)
+        j = ObjName(3,2,0,oStruct,pStruct2)
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+             env_phys_dec(j,t,oStruct,pStruct2);
+         }
+         ", and " | " and ")
+         {
+            if(j == 0)
+                throw new MyException(err_str.excep_str[6]);
+         }
+         {
+            pStruct2 = new ProcessStruct();
+         }
+         j = ObjName(3,2,0,oStruct,pStruct2)
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+             env_phys_dec(j,t,oStruct,pStruct2);
+         }
+         ", when " | " when ")
+         {
+            if(j == 0)
+                throw new MyException(err_str.excep_str[6]);
+         }
+         (LOOKAHEAD(5)t = <STATE> " lasts more than " |
+                      t = "a lasts more than " )
+       {
+          state = new State();
+          str = t.toString();
+          if(str.equals("a lasts more than "))
+            str = new String("a ");
+          state.setStateName(str);
+          state.setFrom(true);
+          oStruct.States.add(state);
+       }
+       //  "it lasts more than "
+         time_parse(pStruct1,state,1,2)
+          "."
+
+        |
+        j = ObjName(3,2,0,oStruct,pStruct2)
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+             env_phys_dec(j,t,oStruct,pStruct2);
+         }
+         ", when " | " when ")
+         (LOOKAHEAD(5)t = <STATE> " lasts more than " |
+                      t = "a lasts more than " )
+       {
+          state = new State();
+          str = t.toString();
+          if(str.equals("a lasts more than "))
+            str = new String("a ");
+          state.setStateName(str);
+          state.setFrom(true);
+          oStruct.States.add(state);
+       }
+       //  "it lasts more than "
+         time_parse(pStruct1,state,1,2)
+          "."
+        {
+            if(j == 0)
+                throw new MyException(err_str.excep_str[6]);
+        }
+     )
+     {
+        if(i == 1)
+            throw new MyException(err_str.excep_str[7]);
+        ls.setLinkType("exception");
+     }
+
+}
+
+
+
+ 
+/*******************************************************/
+/*               Relation sentences                    */
+/* The code number is 4.
+/*******************************************************/
+/**
+*   This function is the main function that
+*   treats the Relation sentences. It detects, which
+*   type of relation the sentence is.
+*   The code number is 4.
+*
+*   @return  4 - the code number
+*/
+
+int RelSent() throws MyException:
+{
+    int i=0,j;
+    ErrorStrings err_str = new ErrorStrings();
+}
+{   LOOKAHEAD(225)
+     i = AggrPart()
+    {//   System.out.println("i = "+i);
+        if(i==5) return 5;
+        else return 4;
+    }
+      |  //41
+    LOOKAHEAD(225)
+     i = ExhibChar()
+    {
+        if(i==5) return 5;
+        else return 4;
+    }
+     | //42
+    LOOKAHEAD(225)
+     i = ClassInst()
+    {
+        if(i==5) return 5;
+        else return 4;
+    }
+     |  //43
+    LOOKAHEAD(255)
+     i = GenSpec()
+     {
+        if(i==5) return 5;
+        else return 4;
+    }
+     |  //44
+    i = General()
+    {
+        if(excep == 1) return 5;
+        else return 4;
+    }   //45
+    
+
+}
+
+
+/********************************************/
+/*        General Structural Sentence       */
+/********************************************/
+/**
+*   This function treats the General Structural
+*   Sentences, which are actually relation sentences.
+*   Hence, the RelSent() function calls it.
+*   The code number of this type of sentences is 4.
+*
+*   @return 1 if success
+*           5 if fail
+*/
+
+int General() throws MyException :
+{
+    int i=0,j,flag=0;
+    String str = new String();
+    Token t;
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    ErrorStrings err_str = new ErrorStrings();
+}
+{
+     LOOKAHEAD(20)
+     ( LOOKAHEAD(55)"Many "
+       {
+          rs.setSourceCardinality("m..n");
+          flag=1;
+       }
+       |
+       LOOKAHEAD(15)
+       t=<INTEGER>
+        {
+            str = t.toString();
+            str = str.concat("..");
+        }
+        " to "
+        (LOOKAHEAD(2) "many "
+            {
+                str = str.concat("m");
+                rs.setSourceCardinality(str);
+            }
+            | t = <INTEGER> " "
+            {
+                str = str.concat(t.toString());
+                rs.setSourceCardinality(str);
+                flag=1;
+            }
+          )
+
+       | LOOKAHEAD(15)
+       t = <INTEGER> " "
+          {
+            rs.setSourceCardinality(t.toString());
+            flag=1;
+          }
+       | LOOKAHEAD(15)
+         "An optional "
+         {
+            rs.setSourceCardinality("0..1");
+            flag=1;
+         }
+        | LOOKAHEAD(15)
+         (LOOKAHEAD(15) "Optional " | "Plural+ " )
+         {
+            rs.setSourceCardinality("0..m");
+            flag=1;
+         }
+        /* | LOOKAHEAD(15)
+            t = <A_AN> " "
+         {
+            rs.setSourceCardinality("1..1");
+           // flag=1;
+         }  */
+         |
+         "At least one "
+         {
+            rs.setSourceCardinality("1..m");
+            flag=1;
+         }
+       )?
+
+      i = ObjName(4,1,flag,oStruct,pStruct)
+      {
+          flag = 0;    /* if there was cardinality, we turn off
+                          its flag  */
+      }
+
+      (LOOKAHEAD(50) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct);
+      }
+        ", " str = tag() |
+       LOOKAHEAD(15) " " str = tag() |
+        LOOKAHEAD(15)
+        " to " str = tag()
+         {
+            str = "to ".concat(str);
+         }
+          | LOOKAHEAD(15)
+         ", to " str = tag()
+         {
+            str = "to ".concat(str);
+         }
+         |
+         LOOKAHEAD(15)
+        " to " { str = new String("to"); }
+         |
+        ", " "to " { str = new String("to"); } |
+         ", relates to " | " relates to "
+        )
+
+
+    /*  {
+        if(i == 1){
+            System.out.println("You can't use process in generalization sentence");
+            throw new MyException("You can't use process in generalization sentence");
+            return 5;
+        }
+      }
+     */
+       /********************************************/
+    /*  (LOOKAHEAD(2) "relates to "
+      {
+        rs.setRelationType("relates to");
+      }
+      | (LOOKAHEAD(15)
+         str = tag() |
+         t = "to " { str = t.toString(); }
+         )
+      */
+        {
+            rs.setForwardMeaning(str);
+            rs.setRelationType("relates to");
+           // System.out.println("str = " +str);
+        }
+     // )
+        /***************************************/
+       ( LOOKAHEAD(50)
+           (LOOKAHEAD(10)
+           {
+             oStruct = new ObjectStruct();
+             pStruct = new ProcessStruct();
+           }
+           (LOOKAHEAD(25) str = cardinality()
+              {flag = 1;}
+           )?
+           {
+             if(flag == 1){
+                oStruct.DestinationCardinality = str;
+             }
+           }
+           j = ObjName(4,2,flag,oStruct,pStruct)
+           {
+               flag = 0;
+               if(i!=j){
+                 rs.setRelationType(null);
+                 throw new MyException(err_str.excep_str[15]);
+                 return 5;
+               }
+           }
+           (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+           {
+              env_phys_dec(j,t,oStruct,pStruct);
+           }
+           ", " | ", ") )+
+
+         (LOOKAHEAD(5) str = cardinality()
+            {flag = 1;}
+         )?
+        {
+           oStruct = new ObjectStruct();
+           pStruct = new ProcessStruct();
+           if(flag == 1){
+                oStruct.DestinationCardinality = str;
+             }
+        }
+         j = ObjName(4,2,flag,oStruct,pStruct)
+         {
+            flag = 0;
+            if(i!=j){
+                 rs.setRelationType(null);
+                 throw new MyException(err_str.excep_str[15]);
+                 return 5;
+               }
+         }
+         (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+            env_phys_dec(j,t,oStruct,pStruct);
+         }
+         ", and " | ", and ")
+         (LOOKAHEAD(5) str = cardinality()
+            {flag = 1;}
+         )?
+        {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+             if(flag == 1){
+                oStruct.DestinationCardinality = str;
+             }
+        }
+         j = ObjName(4,2,flag,oStruct,pStruct)
+         {
+            flag = 0;
+            if(i!=j){
+                 rs.setRelationType(null);
+                 throw new MyException(err_str.excep_str[15]);
+                 return 5;
+               }
+         }
+         (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+            env_phys_dec(j,t,oStruct,pStruct);
+         }
+         )?
+         /**********************/
+           |
+        LOOKAHEAD(10)
+         (LOOKAHEAD(5) str = cardinality()
+            {flag = 1;}
+         )?
+        {
+           oStruct = new ObjectStruct();
+           pStruct = new ProcessStruct();
+           if(flag == 1){
+                oStruct.DestinationCardinality = str;
+           }
+        }
+        j = ObjName(4,2,flag,oStruct,pStruct)
+        {
+            flag = 0;
+            if(i!=j){
+                 rs.setRelationType(null);
+                 throw new MyException(err_str.excep_str[15]);
+                 return 5;
+               }
+        }
+         (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+            env_phys_dec(i,t,oStruct,pStruct);
+         }
+         ", and " | " and ")
+         (LOOKAHEAD(5) str = cardinality()
+            {flag = 1;}
+         )?
+        {
+           oStruct = new ObjectStruct();
+           pStruct = new ProcessStruct();
+           if(flag == 1){
+                oStruct.DestinationCardinality = str;
+           }
+        }
+        j = ObjName(4,2,flag,oStruct,pStruct)
+        {
+            flag = 0;
+            if(i!=j){
+                 rs.setRelationType(null);
+                 throw new MyException(err_str.excep_str[15]);
+                 return 5;
+               }
+        }
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+            env_phys_dec(j,t,oStruct,pStruct);
+         }
+        )?
+        /***********************/
+          |
+         (LOOKAHEAD(5) str = cardinality()
+            {flag = 1;}
+         )?
+        {
+           oStruct = new ObjectStruct();
+           pStruct = new ProcessStruct();
+           if(flag == 1){
+                oStruct.DestinationCardinality = str;
+           }
+        }
+          j = ObjName(4,2,flag,oStruct,pStruct)
+          {
+            flag = 0;
+         //   System.out.println("i = "+i);
+            if(i!=j){
+                 rs.setRelationType(null);
+                 throw new MyException(err_str.excep_str[15]);
+                 return 5;
+               }
+          }
+         (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+            env_phys_dec(j,t,oStruct,pStruct);
+         }
+         )?
+         )
+          "."
+          {return 1;}
+        |
+        ( LOOKAHEAD(55)"Many "
+       {
+          rs.setSourceCardinality("m..n");
+          flag=1;
+       }
+       |
+       LOOKAHEAD(15)
+       t=<INTEGER>
+        {
+            str = t.toString();
+            str = str.concat("..");
+        }
+        " to "
+        (LOOKAHEAD(2) "many "
+            {
+                str = str.concat("m");
+                rs.setSourceCardinality(str);
+            }
+            | t = <INTEGER> " "
+            {
+                str = str.concat(t.toString());
+                rs.setSourceCardinality(str);
+                flag=1;
+            }
+          )
+
+       | LOOKAHEAD(15)
+       t = <INTEGER> " "
+          {
+            rs.setSourceCardinality(t.toString());
+            flag=1;
+          }
+       | LOOKAHEAD(15)
+         "An optional "
+         {
+            rs.setSourceCardinality("0..1");
+            flag=1;
+         }
+        | LOOKAHEAD(15)
+         (LOOKAHEAD(15) "Optional " | "Plural+ " )
+         {
+            rs.setSourceCardinality("0..m");
+            flag=1;
+         }
+
+         |
+         "At least one "
+         {
+            rs.setSourceCardinality("1..m");
+            flag=1;
+         }
+       )?
+        
+        {
+             oStruct = new ObjectStruct();
+             pStruct = new ProcessStruct();
+        }
+        i = ObjName(4,1,flag,oStruct,pStruct)
+        {
+            if(i==1 && flag==1){
+                flag = 0;
+                rs.setRelationType(null);
+                throw new MyException(err_str.excep_str[17]);
+            }
+
+            flag = 0;
+
+        }
+       (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+            env_phys_dec(i,t,oStruct,pStruct);
+         }
+        ", and " | " and ")
+
+        (LOOKAHEAD(5) str = cardinality()
+            {flag = 1;}
+         )?
+        {
+           oStruct = new ObjectStruct();
+           pStruct = new ProcessStruct();
+           if(flag == 1){
+                oStruct.DestinationCardinality = str;
+           }
+        }
+         j = ObjName(4,2,flag,oStruct,pStruct)
+         {
+            if(j==1 && flag==1){
+                flag = 0;
+                rs.setRelationType(null);
+                throw new MyException(err_str.excep_str[17]);
+            }
+            if(i!=j){
+                 rs.setRelationType(null);
+                 throw new MyException(err_str.excep_str[15]);
+                 return 5;
+               }
+         }
+         (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+         {
+            env_phys_dec(j,t,oStruct,pStruct);
+         }
+         ", " str = tag() {i = 5;}|
+       LOOKAHEAD(15) " " str = tag() {i = 5;} |
+        LOOKAHEAD(15)
+        " to " str = tag()
+         {
+            str = "to ".concat(str);
+            i = 5;
+         }
+          | LOOKAHEAD(15)
+         ", to " str = tag()
+         {
+            str = "to ".concat(str);
+            i = 5;
+         }
+         |
+         LOOKAHEAD(15)
+        " to " { str = new String("to"); i = 5; }
+         |
+        ", " "to " { str = new String("to"); i = 5;}|
+
+        ", are equivalent"  |  " are equivalent" )
+        "."
+        {
+          if(i == 5)
+            rs.setForwardMeaning(str);
+          rs.setRelationType("are related");
+          return 1;
+        }
+}
+
+/***********************************************/
+/*      Aggregation - Participation Sentence   */
+/***********************************************/
+/**
+*   This function treats the Aggregation - Participation
+*   Sentences, which are actually relation sentences.
+*   Hence, the RelSent() function calls it.
+*   The code number of this type of sentences is 4.
+*
+*   @return 1 if success
+*           5 if fail
+*/
+int AggrPart() throws MyException :
+{
+    int i,j,flag =0;
+    String str = new String();
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    Token t;
+    ErrorStrings err_str = new ErrorStrings();
+}
+{
+     i = ObjName(4,1,0,oStruct,pStruct)
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+     {
+            env_phys_dec(i,t,oStruct,pStruct);
+     }
+    ", " | " ")
+    "consists of" " "
+     {
+        rs.setRelationType("consists of");
+     }
+     (LOOKAHEAD(125)    /* here starts the check point of the second part of
+                           the sentence*/
+     
+       (LOOKAHEAD(25)
+       (LOOKAHEAD(5) str = cardinality()
+            {flag = 1;}
+       )?
+       {
+             oStruct = new ObjectStruct();
+             pStruct = new ProcessStruct();
+       }
+       j = ObjName(4,2,flag,oStruct,pStruct)
+       {
+            if(flag == 1){
+                if(j==0)
+                    oStruct.DestinationCardinality = str;
+                else pStruct.DestinationCardinality = str;
+                flag = 0;
+           }
+       }
+       (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+       {
+            env_phys_dec(j,t,oStruct,pStruct);
+       }
+      ", " | ", ")
+       {
+            if(i != j){
+                rs.setRelationType(null);
+                throw new MyException(err_str.excep_str[16]);
+               return 5;
+            }
+      }
+      )+
+      (LOOKAHEAD(5) str = cardinality()
+            {flag = 1;}
+       )?
+      {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+      }
+      j = ObjName(4,2,flag,oStruct,pStruct)
+      {
+            if(flag == 1){
+                if(j==0)
+                    oStruct.DestinationCardinality = str;
+                else pStruct.DestinationCardinality = str;
+                flag = 0;
+           }
+       }
+      {
+            if(i != j){
+                rs.setRelationType(null);
+                throw new MyException(err_str.excep_str[16]);
+               return 5;
+            }
+      }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(j,t,oStruct,pStruct);
+      }
+      ", and " | ", and ")
+      (LOOKAHEAD(5) str = cardinality()
+            {flag = 1;}
+       )?
+      {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+      }
+      j = ObjName(4,2,flag,oStruct,pStruct)
+      {
+            if(flag == 1){
+                if(j==0)
+                    oStruct.DestinationCardinality = str;
+                else pStruct.DestinationCardinality = str;
+                flag = 0;
+           }
+       }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(i,t,oStruct,pStruct);
+      }
+      )?
+         [", in this order"]
+      {
+            if(i != j){
+                rs.setRelationType(null);
+                throw new MyException(err_str.excep_str[16]);
+                return 5;
+            }
+      }
+      |
+      LOOKAHEAD(20)
+      (LOOKAHEAD(5) str = cardinality()
+            {flag = 1;}
+       )?
+      {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+      }
+      j = ObjName(4,2,flag,oStruct,pStruct)
+      {
+            if(flag == 1){
+                if(j==0)
+                    oStruct.DestinationCardinality = str;
+                else pStruct.DestinationCardinality = str;
+                flag = 0;
+           }
+       }
+      {
+            if(i != j){
+                rs.setRelationType(null);
+                throw new MyException(err_str.excep_str[16]);
+                return 5;
+            }
+      }
+      (LOOKAHEAD(20) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(j,t,oStruct,pStruct);
+      }
+      ", and " | " and ")
+      (LOOKAHEAD(5) str = cardinality()
+            {flag = 1;}
+       )?
+      {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+      }
+      j = ObjName(4,2,flag,oStruct,pStruct)
+      {
+            if(flag == 1){
+                if(j==0)
+                    oStruct.DestinationCardinality = str;
+                else pStruct.DestinationCardinality = str;
+                flag = 0;
+           }
+       }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(j,t,oStruct,pStruct);
+      }
+      )?
+         [", in this order"]
+      {
+            if(i != j){
+                rs.setRelationType(null);
+                throw new MyException(err_str.excep_str[16]);
+                return 5;
+            }
+      }
+      |
+      (LOOKAHEAD(5) str = cardinality()
+            {flag = 1;}
+       )?
+      {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+      }
+      j = ObjName(4,2,flag,oStruct,pStruct)
+      {
+            if(flag == 1){
+                if(j==0)
+                    oStruct.DestinationCardinality = str;
+                else pStruct.DestinationCardinality = str;
+                flag = 0;
+           }
+           if(i != j){
+                rs.setRelationType(null);
+                throw new MyException(err_str.excep_str[16]);
+                return 5;
+           }
+       }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(j,t,oStruct,pStruct);
+      }
+       )?
+         )  "."
+       {
+          return 1;
+       }
+ }
+ 
+/*************************************************/
+/*      Exhibition - Characterization Sentence   */
+/*************************************************/
+/**
+*   This function treats the Exhibition - Characterization
+*   Sentences, which are actually relation sentences.
+*   Hence, the RelSent() function calls it.
+*   The code number of this type of sentences is 4.
+*
+*   @return 1 if success
+*           5 if fail
+*/
+
+int ExhibChar() throws MyException :
+{
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    Token t;
+    int i,j,k,flag=0,type=5,type2=5,first=0,first2=0;
+    String str = new String();
+    ErrorStrings err_str = new ErrorStrings();
+
+
+}
+{
+
+     i = ObjName(4,1,0,oStruct,pStruct)
+
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+     {
+            env_phys_dec(i,t,oStruct,pStruct);
+     }
+    ", " | " ")
+
+    "exhibits "
+    {
+        rs.setRelationType("exhibits");
+     }
+     (LOOKAHEAD(125)
+       (LOOKAHEAD(125)
+       (LOOKAHEAD(5) str = cardinality()
+            {
+                flag = 1;
+            }
+         )?
+        {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+             if(flag == 1){
+                oStruct.DestinationCardinality = str;
+                os.DestinationCardinality = str;
+             }
+        }
+       j = ObjName(4,2,flag,oStruct,pStruct)
+       {
+          if(j==1 && flag==1){
+                flag = 0;
+                rs.setRelationType(null);
+                throw new MyException(err_str.excep_str[17]);
+          }
+          // System.out.println("first ="+first);
+           if(first == 0){
+           //   System.out.println("I am here");
+              type = j;
+              first = 1;
+              flag = 0;
+           }
+           if(j != type) {
+              rs.setRelationType(null);
+              throw new MyException(err_str.excep_str[18]);
+              return 5;
+           }
+       }
+
+       (LOOKAHEAD(51) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(j,t,oStruct,pStruct);
+        }
+
+        ", " | ", ") )+
+       (LOOKAHEAD(5) str = cardinality()
+            {
+                flag = 1;
+            }
+         )?
+        {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+             if(flag == 1){
+                oStruct.DestinationCardinality = str;
+                os.DestinationCardinality = str;
+             }
+        }
+       j = ObjName(4,2,flag,oStruct,pStruct)
+      {
+            if(j==1 && flag==1){
+                flag = 0;
+                rs.setRelationType(null);
+                throw new MyException(err_str.excep_str[17]);
+            }
+            flag = 0;
+            if(j != type) {
+              rs.setRelationType(null);
+              throw new MyException(err_str.excep_str[18]);
+              return 5;
+            }
+       }
+       (LOOKAHEAD(20)
+       ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(j,t,oStruct,pStruct);
+        }
+        ", and " | ", and ")
+
+       (LOOKAHEAD(5) str = cardinality()
+            {
+                flag = 1;
+            }
+         )?
+        {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+             if(flag == 1){
+                oStruct.DestinationCardinality = str;
+                os.DestinationCardinality = str;
+             }
+        }
+       j = ObjName(4,2,flag,oStruct,pStruct)
+       {
+            if(j==1 && flag==1){
+                flag = 0;
+                rs.setRelationType(null);
+                throw new MyException(err_str.excep_str[17]);
+            }
+            flag = 0;
+            if(j != type){
+              rs.setRelationType(null);
+              throw new MyException(err_str.excep_str[18]);
+              return 5;
+            }
+       }
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(j,t,oStruct,pStruct);
+        }
+        )?
+
+    |
+      LOOKAHEAD(20)
+      (LOOKAHEAD(5) str = cardinality()
+            {
+                flag = 1;
+            }
+         )?
+        {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+             if(flag == 1){
+                oStruct.DestinationCardinality = str;
+                os.DestinationCardinality = str;
+             }
+        }
+      type = ObjName(4,2,flag,oStruct,pStruct)
+      {
+        if(type==1 && flag==1){
+            flag = 0;
+            rs.setRelationType(null);
+            throw new MyException(err_str.excep_str[17]);
+        }
+        flag = 0;
+      }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(type,t,oStruct,pStruct);
+      }
+      ", and " | " and ")
+
+      (LOOKAHEAD(5) str = cardinality()
+            {
+                 flag = 1;
+            }
+         )?
+        {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+             if(flag == 1){
+                oStruct.DestinationCardinality = str;
+                os.DestinationCardinality = str;
+             }
+        }
+      j = ObjName(4,2,flag,oStruct,pStruct)
+      {
+        if(j==1 && flag==1){
+            flag = 0;
+            rs.setRelationType(null);
+            throw new MyException(err_str.excep_str[17]);
+        }
+        flag = 0;
+        if(type != j){
+            rs.setRelationType(null);
+            throw new MyException(err_str.excep_str[18]);
+            return 5;
+        }
+      }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(j,t,oStruct,pStruct);
+        }
+        )?
+    |
+      (LOOKAHEAD(5) str = cardinality()
+            {
+                flag = 1;
+            }
+         )?
+        {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+             if(flag == 1){
+                oStruct.DestinationCardinality = str;
+                os.DestinationCardinality = str;
+             }
+        }
+      type = ObjName(4,2,flag,oStruct,pStruct)
+      {
+        if(type==1 && flag==1){
+            flag = 0;
+            rs.setRelationType(null);
+            throw new MyException(err_str.excep_str[17]);
+        }
+        flag = 0;
+      }
+
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(type,t,oStruct,pStruct);
+      }
+      )?
+        )
+   /*******************************************/
+      ( LOOKAHEAD(125)
+        ", as well as "
+       (LOOKAHEAD(125)
+       (LOOKAHEAD(5) str = cardinality()
+            {
+                flag = 1;
+                if(i==0){
+                    rs.setRelationType(null);
+                    throw new MyException(err_str.excep_str[17]);
+                }
+            }
+         )?
+        {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+             if(flag == 1){
+                oStruct.DestinationCardinality = str;
+                os.DestinationCardinality = str;
+             }
+        }
+       k = ObjName(4,2,flag,oStruct,pStruct)
+       {  flag = 0;
+          if(first2 == 0){
+            type2 = k;
+            first2 = 1;
+          }
+          if(k != type2 || i == k || i != type){
+            rs.setRelationType(null);
+            throw new MyException(err_str.excep_str[18]);
+            return 5;
+          }
+       }
+       (LOOKAHEAD(51) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(k,t,oStruct,pStruct);
+        }
+
+        ", " | ", ") )+
+       (LOOKAHEAD(5) str = cardinality()
+            {
+                flag = 1;
+                if(i==0){
+                    rs.setRelationType(null);
+                    throw new MyException(err_str.excep_str[17]);
+                }
+            }
+         )?
+        {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+             if(flag == 1){
+                oStruct.DestinationCardinality = str;
+                os.DestinationCardinality = str;
+             }
+        }
+       k = ObjName(4,2,flag,oStruct,pStruct)
+       {  flag = 0;
+          if(k != type2 || k == i){
+            rs.setRelationType(null);
+            throw new MyException(err_str.excep_str[18]);
+            return 5;
+          }
+       }
+       (LOOKAHEAD(20)
+       ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(k,t,oStruct,pStruct);
+        }
+        ", and " | ", and ")
+
+       (LOOKAHEAD(5) str = cardinality()
+            {
+                flag = 1;
+                if(i==0){
+                    rs.setRelationType(null);
+                    throw new MyException(err_str.excep_str[17]);
+                }
+            }
+         )?
+        {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+             if(flag == 1){
+                oStruct.DestinationCardinality = str;
+                os.DestinationCardinality = str;
+             }
+        }
+       k = ObjName(4,2,flag,oStruct,pStruct)
+       {   flag = 0;
+          if(k != type2 || k == i){
+            rs.setRelationType(null);
+            throw new MyException(err_str.excep_str[18]);
+            return 5;
+          }
+       }
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(k,t,oStruct,pStruct);
+        }
+        )?
+    |
+      LOOKAHEAD(20)
+      ", as well as "
+      (LOOKAHEAD(5) str = cardinality()
+            {
+                flag = 1;
+                if(i==0){
+                    rs.setRelationType(null);
+                    throw new MyException(err_str.excep_str[17]);
+                }
+            }
+         )?
+        {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+             if(flag == 1){
+                oStruct.DestinationCardinality = str;
+                os.DestinationCardinality = str;
+             }
+        }
+      k = ObjName(4,2,flag,oStruct,pStruct)
+      {  flag = 0;
+         if(i != type || k == i){
+            rs.setRelationType(null);
+            throw new MyException(err_str.excep_str[18]);
+            return 5;
+         }
+      }
+
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(k,t,oStruct,pStruct);
+      }
+      ", and " | " and ")
+
+      (LOOKAHEAD(5) str = cardinality()
+            {
+                flag = 1;
+                if(i==0){
+                    rs.setRelationType(null);
+                    throw new MyException(err_str.excep_str[17]);
+                }
+            }
+         )?
+        {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+             if(flag == 1){
+                oStruct.DestinationCardinality = str;
+                os.DestinationCardinality = str;
+             }
+        }
+      type2 = ObjName(4,2,flag,oStruct,pStruct)
+      {  flag = 0;
+         if(type2 != k || i != type){
+           rs.setRelationType(null);
+           throw new MyException(err_str.excep_str[18]);
+           return 5;
+         }
+      }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(type2,t,oStruct,pStruct);
+        }
+        )?
+    |  LOOKAHEAD(5)
+       ", as well as "
+      (LOOKAHEAD(5) str = cardinality()
+            {
+                flag = 1;
+                if(i==0){
+                    rs.setRelationType(null);
+                    throw new MyException(err_str.excep_str[17]);
+                }
+            }
+         )?
+        {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+             if(flag == 1){
+                oStruct.DestinationCardinality = str;
+                os.DestinationCardinality = str;
+             }
+        }
+      k = ObjName(4,2,flag,oStruct,pStruct)
+      {  flag = 0;
+         if(i != type || k == i) {
+            //System.out.println("i = "+i);
+            //System.out.println("type = "+type);
+            //System.out.println("k = "+k);
+            rs.setRelationType(null);
+            throw new MyException(err_str.excep_str[18]);
+            return 5;
+       }
+      }
+      (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+      {
+            env_phys_dec(k,t,oStruct,pStruct);
+      }
+      )?
+      )?
+    /********************************************/
+          "."
+          {return 1;}
+ }
+
+
+/*************************************************/
+/*    Generalization - Specialization Sentence   */
+/*************************************************/
+/**
+*   This function treats the Generalization - Specialization
+*   Sentences, which are actually relation sentences.
+*   Hence, the RelSent() function calls it.
+*   The code number of this type of sentences is 4.
+*
+*   @return 1 if success
+*           5 if fail
+*/
+
+int GenSpec() throws MyException :
+{
+    int i, j, env,flag = 0;
+    Token t;
+    String str = new String();
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    ErrorStrings err_str = new ErrorStrings();
+    
+}
+{   (LOOKAHEAD(25)
+    i = ObjName(4,2,0,oStruct,pStruct)
+
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+     {
+            env_phys_dec(i,t,oStruct,pStruct);
+     }
+    ", is " | " is " )
+    
+     (LOOKAHEAD(2) "a "| "an ")
+    {
+        oStruct = new ObjectStruct();
+        pStruct = new ProcessStruct();
+    }
+    j = ObjName(4,1,0,oStruct,pStruct)
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+     {
+            env_phys_dec(j,t,oStruct,pStruct);
+     }
+    )?
+    "."
+    {
+        if(i != j){
+            rs.setRelationType(null);
+            throw new MyException(err_str.excep_str[19]);
+            return 5;
+        }
+        if(i == 1){
+            rs.setRelationType(null);
+            throw new MyException(err_str.excep_str[20]);
+            return 5;
+        }
+        rs.setRelationType("is a");
+        return 1;
+    }
+    |
+    i = ObjName(4,2,0,oStruct,pStruct)
+
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+     {
+            env_phys_dec(i,t,oStruct,pStruct);
+     }
+    ", is " | " is ")
+
+
+    {
+        oStruct = new ObjectStruct();
+        pStruct = new ProcessStruct();
+    }
+    j = ObjName(4,1,0,oStruct,pStruct)
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+     {
+            env_phys_dec(j,t,oStruct,pStruct);
+     }
+    )?
+    "."
+    {
+        if(i != j){
+            rs.setRelationType(null);
+            throw new MyException(err_str.excep_str[19]);
+            return 5;
+        }
+        if(i == 0){
+            rs.setRelationType(null);
+            throw new MyException(err_str.excep_str[20]);
+            return 5;
+        }
+        rs.setRelationType("is a");
+        return 1;
+    }
+    )
+}
+
+/*************************************************/
+/*     Classification - Instantiation Sentence   */
+/*************************************************/
+/**
+*   This function treats the Classification - Instantiation
+*   Sentences, which are actually relation sentences.
+*   Hence, the RelSent() function calls it.
+*   The code number of this type of sentences is 4.
+*
+*   @return 1 if success
+*           5 if fail
+*/
+
+int ClassInst() throws MyException :
+{
+    int i,j,k, check = -1;
+    ObjectStruct oStruct = new ObjectStruct();
+    ProcessStruct pStruct = new ProcessStruct();
+    Token t;
+    ErrorStrings err_str = new ErrorStrings();
+}
+{   LOOKAHEAD(25)
+    i = ObjName(4,2,0,oStruct,pStruct)
+
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+     {
+            env_phys_dec(i,t,oStruct,pStruct);
+     }
+    ", is an instance of " | " is an instance of ")
+
+    {
+        oStruct = new ObjectStruct();
+        pStruct = new ProcessStruct();
+    }
+    j = ObjName(4,1,0,oStruct,pStruct)
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+     {
+            env_phys_dec(j,t,oStruct,pStruct);
+     }
+    )?
+    "."
+    {
+        if(i != j){
+           // System.out.println("Error 23. Consult the help.");
+            rs.setRelationType(null);
+            throw new MyException(err_str.excep_str[21]);
+            return 5;
+        }
+
+        rs.setRelationType("is an instance of");
+        return 1;
+    }
+    /***********************************************/
+    /* for two instances    */
+    | LOOKAHEAD(10)
+     i = ObjName(4,2,0,oStruct,pStruct)
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+     {
+            env_phys_dec(i,t,oStruct,pStruct);
+     }
+    ", and " | " and ")
+     {
+        oStruct = new ObjectStruct();
+        pStruct = new ProcessStruct();
+    }
+     j = ObjName(4,2,0,oStruct,pStruct)
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+     {
+            env_phys_dec(j,t,oStruct,pStruct);
+     }
+    ", are instances of " | " are instances of ")
+    // "are instances of" " "
+    {
+        oStruct = new ObjectStruct();
+        pStruct = new ProcessStruct();
+    }
+    k = ObjName(4,1,0,oStruct,pStruct)
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+     {
+            env_phys_dec(j,t,oStruct,pStruct);
+     }
+    )?
+    "."
+    {
+        if(i==j && i!=k){
+            throw new MyException(err_str.excep_str[21]);
+        }
+        rs.setRelationType("is an instance of");
+        return 1;
+    }
+    |
+    /***********************************************/
+    /* for many instances    */
+    (LOOKAHEAD(10)
+        {
+            oStruct = new ObjectStruct();
+            pStruct = new ProcessStruct();
+        }
+        i = ObjName(4,2,0,oStruct,pStruct)
+        {
+            if(check == -1)
+                check = i;
+            if(i != check)
+                throw new MyException(err_str.excep_str[21]);
+        }
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        }
+        ", " | ", ")
+    )+
+    {
+        oStruct = new ObjectStruct();
+        pStruct = new ProcessStruct();
+    }
+    i = ObjName(4,2,0,oStruct,pStruct)
+    {
+        if(i != check)
+            throw new MyException(err_str.excep_str[21]);
+     }
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+    {
+        env_phys_dec(i,t,oStruct,pStruct);
+    }
+    ", and " | ", and ")
+    {
+        oStruct = new ObjectStruct();
+        pStruct = new ProcessStruct();
+    }
+    i = ObjName(4,2,0,oStruct,pStruct)
+    {
+        if(i != check)
+            throw new MyException(err_str.excep_str[21]);
+    }
+        (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+        {
+            env_phys_dec(i,t,oStruct,pStruct);
+        }
+        ", are instances of " | " are instances of ")
+
+    {
+        oStruct = new ObjectStruct();
+        pStruct = new ProcessStruct();
+    }
+    i = ObjName(4,1,0,oStruct,pStruct)
+    {
+        if(i != check)
+            throw new MyException(err_str.excep_str[21]);
+    }
+    (LOOKAHEAD(10) ", which " t=<ENV_PHYS>
+     {
+            env_phys_dec(i,t,oStruct,pStruct);
+     }
+    )?
+    "."
+    {
+        rs.setRelationType("is an instance of");
+        return 1;
+    }
+}
+
+/************************************************************/
+/*               Service functions                          */
+/************************************************************/
+
+
+/************************************************************/
+/*                     ObjName()                            */
+/* Params:                                                  */
+/*    sent - the code number of sentence                    */
+/*    num - if it is 1, than it is source, else destination */
+/*    card_flag - if there is cardinality                   */
+/************************************************************/
+/**
+*   This is a service function which does the following
+*   things:
+*   * checks the name of the item, and decides if it is an
+*     object or a process.
+*   * checks the cardinality of the item.
+*
+*   @param  sent the code number of sentence
+*           num  if it is 1, than it is source,
+*                else destination
+*           card_flag - 1 if the cardinality is set
+*           oStruct the pointer to the ObjectStruct
+*           pStruct the pointer to the ProcessStruct
+*
+*   @return 0 if the item is an Object
+*           1 if the item is a Process
+*/
+
+int ObjName(int sent,int num,int card_flag,ObjectStruct oStruct,ProcessStruct pStruct) throws MyException:
+{
+    Token t;
+    Token t1,t2;
+    boolean suffix;
+    String segment = new String();
+    String type = new String();
+    String scope = new String();
+    int segm;
+    String init_value;
+    String str = new String();
+    int index,i=5,k=0;
+    ErrorStrings err_str = new ErrorStrings();
+
+
+}
+{
+    //t = <IDENTIFIER>
+    t = <BIG_IDENT>
+    ( i = Obj_Proc()  )?
+
+   /* ( LOOKAHEAD(2) segm = Obj_Segment(oStruct)
+      |
+      LOOKAHEAD(2) segm = Obj_Segment(oStruct) " and"
+                   segm = Obj_Segment(oStruct) |
+      (LOOKAHEAD(2) segm = Obj_Segment(oStruct) "," )+
+      segm = Obj_Segment(oStruct)", and"
+      segm = Obj_Segment(oStruct)
+    )?  */
+
+    {
+        //str = t.toString();
+        //  if(t.next != null)
+        //      t.next = t2;
+    }
+
+        str = Check_str(t,card_flag)
+
+    {
+        suffix = str.endsWith("ing");
+        
+        if(suffix == false) {  /* this is an object */
+            suffix = str.endsWith("s");
+            if(suffix == true && card_flag == 1){
+                index = str.lastIndexOf("s");
+                str = str.substring(0,index);
+            }
+            if( i==0 || i==5 ) {
+             //   System.out.println(str + " is an object");
+               // if(i==0)
+               //     str = str.concat(" Object");
+                if(sent == 1) {
+                   // os.CopyObject(oStruct);
+                    os.setObjectName(str);
+                }
+                if(sent == 3){
+                    oStruct.setObjectName(str);
+                    if(num == 1)
+                        ls.setSourceObject(oStruct);
+                    else
+                        ls.DestObjects.add(oStruct);
+                }
+                if(sent == 4){
+                    oStruct.setObjectName(str);
+                    if(card_flag == 5)
+                        rs.setSourceCardinality("m..n");
+                    if(num == 1)
+                        rs.setSourceObject(oStruct);
+                    else
+                        rs.DestObjects.add(oStruct);
+                }
+                if(sent == 7){
+                    oStruct.setObjectName(str);
+                    if(num == 1)
+                        ls.setSourceObject(oStruct);
+                    else
+                        ls.DestObjects.add(oStruct);
+                }
+                return 0;
+            }
+            else {
+             //   System.out.println(t + " is a process");
+               /* if(type != null)
+                    throw new MyException("You can't give type to process!");
+                if(scope != null)
+                    throw new MyException("You can't give scope to process!");
+               */
+              // if(i==1)
+              //      str = str.concat(" Process");
+                if(sent == 1)
+                    ps.setProcessName(str);
+                if(sent == 3){
+                  pStruct.setProcessName(str);
+                  if(num == 1){
+                    ls.setSourceProcess(pStruct);
+                  }
+                  else {
+                    ls.DestProcesses.add(pStruct);
+                  }
+                }
+                if(sent == 4){
+                  pStruct.setProcessName(str);
+                  if(card_flag == 5)
+                        rs.setSourceCardinality("m..n");
+                  if(num == 1){
+                    rs.setSourceProcess(pStruct);
+                  }
+                  else {
+                    rs.DestProcesses.add(pStruct);
+                  }
+                }
+                if(sent == 7){
+                    pStruct.setProcessName(str);
+                    if(num == 1)
+                        ls.setSourceProcess(pStruct);
+                    else
+                        ls.DestProcesses.add(pStruct);
+                }
+                return 1;
+            }
+        }
+        else {
+            suffix = str.endsWith("s");
+            if(suffix == true && card_flag == 1){
+                index = str.lastIndexOf("s");
+                str = str.substring(0,index);
+            }
+            if( i==1 || i==5 ){
+             //   System.out.println(t + " is a process");
+             //   if(i==1)
+             //       str = str.concat(" Process");
+             /*   if(type != null)
+                    throw new MyException("You can't give type to process!");
+                if(scope != null)
+                    throw new MyException("You can't give scope to process!");
+             */
+                 if(sent == 1)
+                    ps.setProcessName(str);
+                if(sent == 3){
+                  pStruct.setProcessName(str);
+                  if(num == 1){
+                    ls.setSourceProcess(pStruct);
+                  }
+                  else {
+                    ls.DestProcesses.add(pStruct);
+                  }
+                }
+                if(sent == 4){
+                    pStruct.setProcessName(str);
+                    if(card_flag == 5)
+                        rs.setSourceCardinality("m..n");
+                    if(num == 1){
+                        rs.setSourceProcess(pStruct);
+                    }
+                    else {
+                        rs.DestProcesses.add(pStruct);
+                    }
+                }
+                if(sent == 7){
+                    pStruct.setProcessName(str);
+                    if(num == 1)
+                        ls.setSourceProcess(pStruct);
+                    else
+                        ls.DestProcesses.add(pStruct);
+                }
+                return 1;
+            }
+            else {
+             //   System.out.println(str + " is an object");
+                if(type != null)
+                    oStruct.setObjectType(type);
+                if(scope != null)
+                    oStruct.setScope(scope);
+              //  if(i==0)
+              //      str = str.concat(" Object");
+                if(sent == 1) {
+                    os.setObjectName(str);
+                    os.setObjectType(type);
+                    os.setScope(oStruct.getScope());
+                }
+                if(sent == 3){
+                    oStruct.setObjectName(str);
+                    if(num == 1)
+                        ls.setSourceObject(oStruct);
+                    else
+                        ls.DestObjects.add(oStruct);
+                }
+                if(sent == 4){
+                    oStruct.setObjectName(str);
+                    if(card_flag == 5)
+                        rs.setSourceCardinality("m..n");
+                    if(num == 1)
+                        rs.setSourceObject(oStruct);
+                    else
+                        rs.DestObjects.add(oStruct);
+                }
+                if(sent == 7){
+                    oStruct.setObjectName(str);
+                    if(num == 1)
+                        ls.setSourceObject(oStruct);
+                    else
+                        ls.DestObjects.add(oStruct);
+                }
+                return 0;
+            }
+        }
+
+
+     }
+}
+
+/***************************************************/
+/** Service function.
+*   Treats the tag if there is General Relation sentence.
+*   (tag instead of "relates to")
+*
+*   @return the tag itself, which is of type String
+*/
+
+String tag():
+{
+    Token t;
+    String str = new String();
+    String str_tag = new String();
+    int len;
+}
+{   (LOOKAHEAD(25)
+    (LOOKAHEAD(5)
+     t = <STATE> " " |
+     t = <STATE> |
+     t = "a "  |
+     t = "an " |
+     t = "is " |
+     t = "can " |
+     t = "to " |
+     t = " to "|
+     " " t = "to ")
+    {
+        str = new String();
+        str = t.toString();
+        if(str.endsWith(" a")){
+            len = str.length();
+            str = str.substring(0,len-2);
+        }
+        if(str.endsWith(" an")){
+            len = str.length();
+            str = str.substring(0,len-3);
+        }
+        str_tag = str_tag.concat(str);
+        str_tag = str_tag.concat(" ");
+    }
+    )+
+    {
+        return str_tag;
+    }
+}
+
+/****************************************************/
+/**
+*   Service function.
+*   Treats the cardinality of the item.
+*
+*   @return the cardinality of the item.
+*/
+
+String cardinality():
+{
+    int flag;
+    Token t;
+    String str = new String(), j = new String();
+}
+{
+      LOOKAHEAD(15)"many "
+       {
+          return "m..n";
+       }
+       |
+       LOOKAHEAD(15)
+       t=<INTEGER>
+        {
+            str = t.toString();
+            str = str.concat("..");
+        }
+        " to "
+        (LOOKAHEAD(2) "many "
+            {
+                str = str.concat("m");
+                return str;
+            }
+            | t = <INTEGER> " "
+            {
+                str = str.concat(t.toString());
+                return str;
+            }
+          )
+
+       |
+       LOOKAHEAD(15)
+       t = <INTEGER> " "
+          {
+            return t.toString();
+          }
+       |
+       "an optional "
+       {
+            return "0..1";
+       }
+       |
+       LOOKAHEAD(15)
+       ( LOOKAHEAD(5) "optional " | "plural+ " )
+       {
+            return "0..m";
+       }
+       |
+       LOOKAHEAD(15)
+       ( LOOKAHEAD(5) "a " | "an " )
+       {
+            return "1..1";
+       }
+       |
+       "at least one "
+       {
+            return "1..m";
+       }
+       
+
+ }
+
+/*****************************************************/
+/**
+*   Service function.
+*   Treats the environmental-physical declarations.
+*
+*   @param  i - 0 if the item is an Object
+*               1 if the item is a Process
+*           t - the token (expressing as it
+*               came from the input, without casting)
+*           oStruct - the pointer to the Object Struct
+*           pStruct - the pointer to the Process Struct
+*/
+
+void env_phys_dec(int i,Token t,ObjectStruct oStruct,ProcessStruct pStruct) throws MyException:
+{
+   // Token t;
+    int env, flag =0;
+    ErrorStrings err_str = new ErrorStrings();
+}
+{
+    {
+        env = env_phys(t);
+        switch(env) {
+            case 1: if(i==0){
+                        oStruct.setIsPhysical(true);
+                        oStruct.setEnvironmental(false);
+                        return;
+                    }
+                    else {
+                        pStruct.setIsPhysical(true);
+                        pStruct.setEnvironmental(false);
+                        return;
+                    }
+            case 2: if(i==0){
+                        oStruct.setIsPhysical(false);
+                        oStruct.setEnvironmental(true);
+                        return;
+                    }
+                    else {
+                        pStruct.setIsPhysical(false);
+                        pStruct.setEnvironmental(true);
+                        return;
+                    }
+            case 3: if(i==0){
+                        oStruct.setIsPhysical(true);
+                        oStruct.setEnvironmental(true);
+                        return;
+                    }
+                    else {
+                        pStruct.setIsPhysical(true);
+                        pStruct.setEnvironmental(true);
+                        return;
+                    }
+            case 4: if(i==0) {
+                        oStruct.setIsPersistent(false);
+                        return;
+                    }
+                    else {
+                        throw new MyException(err_str.excep_str[22]);
+                    }
+            case 5: if(i==0) {
+                        oStruct.setIsPersistent(false);
+                        oStruct.setEnvironmental(true);
+                        pStruct.setIsPhysical(false);
+                        return;
+                    }
+                    else {
+                        throw new MyException(err_str.excep_str[22]);
+                    }
+            case 6: if(i==0) {
+                        oStruct.setIsPersistent(false);
+                        oStruct.setIsPhysical(true);
+                        oStruct.setEnvironmental(false);
+                        return;
+                    }
+                    else {
+                        throw new MyException(err_str.excep_str[22]);
+                    }
+            case 7: if(i==0) {
+                        oStruct.setIsPersistent(false);
+                        oStruct.setIsPhysical(true);
+                        oStruct.setEnvironmental(true);
+                        return;
+                    }
+                    else {
+                        throw new MyException(err_str.excep_str[22]);
+                    }
+            default: return;
+
+        }
+
+    }
+}
+
+
+/*****************************************************/
+/**
+*   Service function.
+*   Detects which type of env_phys declaration was entered.
+*
+*   @param t the declaration (without casting).
+*
+*   @return 1 if the declaration is "is physical"
+*           2 if the declaration is "is environmental"
+*           3 if the declaration is "is environmental and physical"
+*           4 if the declaration is "is transient"
+*           5 if the declaration is "is environmental and transient"
+*           6 if the declaration is "is physical and transient"
+*           7 if the declaration is
+*                 "is physical, environmental, and transient"
+*/
+int env_phys(Token t):
+{
+    String str = new String();
+}
+{
+    {
+        str = t.toString();
+        if(str.compareTo("is physical")  == 0 ||
+           str.compareTo(" is physical")  == 0 )
+            return 1;
+        if(str.compareTo("is environmental")  == 0 ||
+           str.compareTo(" is environmental")  == 0)
+            return 2;
+        if(str.compareTo("is environmental and physical") == 0 ||
+           str.compareTo(" is environmental and physical") == 0)
+            return 3;
+        if(str.compareTo("is transient")  == 0 ||
+           str.compareTo(" is transient")  == 0)
+            return 4;
+        if(str.compareTo("is environmental and transient") == 0 ||
+           str.compareTo(" is environmental and transient") == 0)
+            return 5;
+        if(str.compareTo("is physical and transient")  == 0 ||
+           str.compareTo(" is physical and transient")  == 0)
+            return 6;
+        else return 7;
+    }
+}
+
+/*****************************************************/
+/** Service function.
+*   Detects if there is a word "object" or "objects"
+*   at the end of the item's name.
+*
+*   @return 0 if true or 1 if false
+*/
+
+int Obj_Proc():
+{
+    String str = new String();
+    Token t;
+    
+}
+{
+    t = <OBJ_PROC>
+    {
+        str = t.toString();
+        if(str.compareTo(" object") == 0 ||
+           str.compareTo(" objects") == 0){
+            return 0;
+        }
+        else return 1;
+    }
+    
+}
+
+/*****************************************************/
+
+int Obj_Segment(ObjectStruct oStruct):
+{
+    Token t,t1;
+    String segment = new String();
+}
+{
+    LOOKAHEAD(2)
+    " is of type " t=<TYPE_DECL>
+    {
+        segment = t.toString();
+        oStruct.setObjectType(segment);
+        return 1;
+    }
+      |
+  /*  LOOKAHEAD(2)
+    " is " t=<SCOPE>
+    {
+        segment = t.toString();
+        oStruct.setScope(segment);
+        return 2;
+    }
+      |   */
+   /* "is " <ENV_PHYS> | */
+    LOOKAHEAD(2)
+    " is key"
+    {
+        oStruct.setIsKey(true);
+        return 3;
+    }
+    |
+   /* "is part " t=<INTEGER> " of index " t1=<IDENTIFIER> |  */
+    " initialized to " t=<IDENTIFIER>
+    {
+        segment = t.toString();
+        oStruct.setInitialValue(segment);
+        return 4;
+    }
+}
+
+/************************************************/
+/*
+void matc_segm(int seg_num,String segment,ObjectStruct oStruct)
+{
+}
+{
+    switch(seg_num) {
+        case 1: oStruct.setObjectType(segment);
+                break;
+        case 2: oStruct.setScope(segment);
+                break;
+        case 3: oStruct.setIsKey(true);
+                break;
+        case 4: oStruct.setInitialValue(segment);
+                break;
+    }
+}
+
+ */
+
+/***************************************************/
+/**
+*   Service function.
+*/
+String Check_str(Token t,int card) throws MyException:
+{
+    char c;
+    Character cr;
+    Token t1 = new Token();
+    String st = new String();
+    String str = new String();
+    int len;
+    ErrorStrings err_str = new ErrorStrings();
+}
+{
+    {
+        t1 = t.next;
+        str = t.toString();
+        st = t1.toString();
+     //   System.out.println("str = "+str);
+     //   System.out.println("st = "+st);
+        
+        if(str.startsWith("A ")){
+            if(card==1)
+                throw new MyException(err_str.excep_str[23]);
+            str = str.substring(2);
+        }
+
+        if(str.startsWith("An ")) {
+            if(card==1)
+                throw new MyException(err_str.excep_str[23]);
+            str = str.substring(3);
+        }
+        
+        if(str.startsWith("Many ")){
+           str = str.substring(5);
+           if(str.endsWith("s")) {
+              len = str.length();
+              str = str.substring(0,len-1);
+           }
+           card = 5;
+           rs.setSourceCardinality("m..n");
+         }
+         if(str.startsWith("Optional ")){
+            str = str.substring(9);
+            if(str.endsWith("s")) {
+              len = str.length();
+              str = str.substring(0,len-1);
+           }
+           rs.setSourceCardinality("0..m");
+         }
+        return str;
+    }
+}
+
+/*************************************************/
+/**
+*   Srevice function.
+*   Parses the time string.
+*
+*   @param  pStruct the pointer to the struct
+*           state the state in which we enter the time
+*           max  1 if we want to set the maximal time
+*           sent  1 if we want to set time in process
+*                 2 if we want to set time in state
+*/
+
+void time_parse(ProcessStruct pStruct,State state,int max,int sent) throws MyException:
+{
+    Token d, t;
+    String num = new String();
+    String per = new String();
+    String time = new String();
+    String year = new String();
+    String month = new String();
+    String day = new String();
+    String hour1 = new String();
+    String minute = new String();
+    String second = new String();
+    String milli = new String();
+    int i=0;
+    ErrorStrings err_str = new ErrorStrings();
+
+        
+}
+{
+    {
+        year = new String("0");
+        month = new String("0");
+        day = new String("0");
+        hour1 = new String("0");
+        minute = new String("0");
+        second = new String("0");
+        milli = new String("0");
+    }
+
+    (LOOKAHEAD(25)
+      d=<INTEGER> " " t=<STATE>
+      {
+        per = t.toString();
+        num = d.toString();
+
+        if( per.equals("year") || per.equals("years") ) {
+            year = new String(num);
+    //        if(i!=0)
+    //            throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("month") || per.equals("months")){
+            month = new String(num);
+     //       if(i>1)
+    //            throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("day") || per.equals("days") ){
+            day = new String(num);
+       //     if(i>2)
+      //          throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("hour") || per.equals("hours") ){
+            hour1 = new String(num);
+     //       if(i>3)
+     //           throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("minute") || per.equals("minutes") ){
+            minute = new String(num);
+       //     if(i>4)
+      //          throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("second") || per.equals("seconds") ){
+            second = new String(num);
+      //      if(i>5)
+      //          throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+
+        if(per.equals("milli second") || per.equals("milli seconds") ){
+            milli = new String(num);
+        //    if(i>5)
+       //         throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+    }
+   (LOOKAHEAD(10)
+    ", " d=<INTEGER> " " t=<STATE>
+    {
+        per = t.toString();
+        num = d.toString();
+        
+        if(per.equals("year") || per.equals("years")) {
+            year = new String(num);
+       //     if(i!=0)
+       //         throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("month") || per.equals("months")){
+            month = new String(num);
+        //    if(i>1)
+        //       throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("day") || per.equals("days") ){
+            day = new String(num);
+        //    if(i>2)
+        //        throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("hour") || per.equals("hours") ){
+            hour1 = new String(num);
+        //    if(i>3)
+        //       throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("minute") || per.equals("minutes") ){
+            minute = new String(num);
+        //    if(i>4)
+        //        throw new MyException("Error 26. Consult the help.");
+           i++;
+        }
+        if(per.equals("second") || per.equals("seconds") ){
+            second = new String(num);
+         //   if(i>5)
+        //        throw new MyException("Error 26. Consult the help.");
+            i++;
+        }
+
+        if(per.equals("milli second") || per.equals("milli seconds") ){
+            milli = new String(num);
+        //    if(i>5)
+        //        throw new MyException("Error 26. Consult the help.");
+            i++;
+        }
+    }
+   )+
+   ", and " d=<INTEGER> " " t=<STATE>
+   {
+        per = t.toString();
+        num = d.toString();
+        
+        if(per.equals("year") || per.equals("years")) {
+            year = new String(num);
+          //  if(i!=0)
+         //       throw new MyException("Error 26. Consult the help.");
+            i++;
+        }
+        if(per.equals("month") || per.equals("months")){
+            month = new String(num);
+         //   if(i>1)
+         //       throw new MyException("Error 26. Consult the help.");
+            i++;
+        }
+        if(per.equals("day") || per.equals("days") ){
+            day = new String(num);
+         //   if(i>2)
+         //       throw new MyException("Error 26. Consult the help.");
+            i++;
+        }
+        if(per.equals("hour") || per.equals("hours") ){
+            hour1 = new String(num);
+         //   if(i>3)
+        //        throw new MyException("Error 26. Consult the help.");
+            i++;
+        }
+        if(per.equals("minute") || per.equals("minutes") ){
+            minute = new String(num);
+         //   if(i>4)
+         //       throw new MyException("Error 26. Consult the help.");
+            i++;
+        }
+        if(per.equals("second") || per.equals("seconds") ){
+            second = new String(num);
+         //   if(i>5)
+         //       throw new MyException("Error 26. Consult the help.");
+            i++;
+        }
+
+        if(per.equals("milli second") || per.equals("milli seconds") ){
+            milli = new String(num);
+         //   if(i>5)
+         //       throw new MyException("Error 26. Consult the help.");
+            i++;
+        }
+        
+        time = time.concat(milli);
+        time = time.concat(";");
+        time = time.concat(second);
+        time = time.concat(";");
+        time = time.concat(minute);
+        time = time.concat(";");
+        time = time.concat(hour1);
+        time = time.concat(";");
+        time = time.concat(day);
+        time = time.concat(";");
+        time = time.concat(month);
+        time = time.concat(";");
+        time = time.concat(year);
+        
+        if(max == 1 && sent == 1){
+            pStruct.setMaxTimeActivation(time);
+            pStruct.setMinTimeActivation("0;0;0;0;0;0;0");
+        }
+        if(max == 1 && sent == 2){
+            state.setMaxTime(time);
+            state.setMinTime("0;0;0;0;0;0;0");
+        }
+        else pStruct.setMinTimeActivation(time);
+   }
+    | LOOKAHEAD(25)
+    d=<INTEGER> " " t=<STATE> " and "
+    {
+        per = t.toString();
+        num = d.toString();
+
+        if(per.equals("year") || per.equals("years")) {
+            year = new String(num);
+            if(i!=0)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("month") || per.equals("months")){
+            month = new String(num);
+            if(i>1)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("day") || per.equals("days") ){
+            day = new String(num);
+            if(i>2)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("hour") || per.equals("hours") ){
+            hour1 = new String(num);
+            if(i>3)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("minute") || per.equals("minutes") ){
+            minute = new String(num);
+            if(i>4)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("second") || per.equals("seconds") ){
+            second = new String(num);
+            if(i>5)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+
+        if(per.equals("milli second") || per.equals("milli seconds") ){
+            milli = new String(num);
+            if(i>5)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+    }
+    d=<INTEGER> " " t=<STATE>
+    {
+        per = t.toString();
+        num = d.toString();
+
+        if(per.equals("year") || per.equals("years")) {
+            year = new String(num);
+            if(i!=0)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("month") || per.equals("months")){
+            month = new String(num);
+            if(i>1)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("day") || per.equals("days") ){
+            day = new String(num);
+            if(i>2)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("hour") || per.equals("hours") ){
+            hour1 = new String(num);
+            if(i>3)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("minute") || per.equals("minutes") ){
+            minute = new String(num);
+            if(i>4)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("second") || per.equals("seconds") ){
+            second = new String(num);
+            if(i>5)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+
+        if(per.equals("milli second") || per.equals("milli seconds") ){
+            milli = new String(num);
+            if(i>5)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+
+        time = time.concat(milli);
+        time = time.concat(";");
+        time = time.concat(second);
+        time = time.concat(";");
+        time = time.concat(minute);
+        time = time.concat(";");
+        time = time.concat(hour1);
+        time = time.concat(";");
+        time = time.concat(day);
+        time = time.concat(";");
+        time = time.concat(month);
+        time = time.concat(";");
+        time = time.concat(year);
+
+        if(max == 1 && sent == 1){
+            pStruct.setMaxTimeActivation(time);
+            pStruct.setMinTimeActivation("0;0;0;0;0;0;0");
+        }
+        if(max == 1 && sent == 2){
+            state.setMaxTime(time);
+            state.setMinTime("0;0;0;0;0;0;0");
+        }
+        else pStruct.setMinTimeActivation(time);
+     }
+
+     |
+     d=<INTEGER> " " t=<STATE>
+    {
+        per = t.toString();
+        num = d.toString();
+
+        if(per.equals("year") || per.equals("years")) {
+            year = new String(num);
+            if(i!=0)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("month") || per.equals("months")){
+            month = new String(num);
+            if(i>1)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+        }
+        if(per.equals("day") || per.equals("days") ){
+            day = new String(num);
+            if(i>2)
+                throw new MyException(err_str.excep_str[24]);
+            i++;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       

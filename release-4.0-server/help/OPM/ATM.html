@@ -1,0 +1,149 @@
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <font face="arial"> <b> Approval</b> has states <b> denied</b> and <b> 
+    obtained</b> .<br><b> Bank Code is valid?</b> has states <b> no</b> and <b>
+     yes</b> .<br><b> Max Trials</b> has states <b> 3</b> .<br><b> Card Data</b>
+ identifies <b> Account</b>.<br><b> Account Number is valid?</b> has states <b>
+     no</b> and <b> yes</b> .<br><b> Keyed-in Password is correct?</b> has 
+    states <b> no</b> and <b> yes</b> .<br><b> Number Of Trials</b> has states <b>
+ 0</b> .<br><b> Transaction</b> features <b> Amount</b> and <b> Type</b>.<br></font>
+
+
+    <blockquote>
+      <b> Amount</b> is of type <b>float</b> and is private .<br>
+    </blockquote>
+    <blockquote>
+      <b> Type</b> has states <b> deposite</b> and <b> withdraw</b> .<br>
+    </blockquote>
+    <b> Transaction</b> refers to <b> Account</b>.<br><b> Credit Limit is 
+    exceeded?</b> has states <b> no</b> and <b> yes</b> .<br><b> Cash</b> 
+    features <b> Owner</b>.<br>
+
+    <blockquote>
+      <b> Owner</b> has states <b> customer</b> and <b> bank</b> .<br>
+    </blockquote>
+    <b> ATM</b> consists of <b> Screen</b>, <b> CPU</b> and <b> Keyboard</b>.<br>
+
+
+    <blockquote>
+      
+    </blockquote>
+    <blockquote>
+      
+    </blockquote>
+    <blockquote>
+      
+    </blockquote>
+    <b> Number Of Trials &gt; Max Trials?</b> has states <b> no</b> and <b> yes</b>
+ .<br><b> Customer</b>, which is environmental and physical , owns <b> Account</b>
+.<br><b> Cash Card is valid?</b> has states <b> no</b> and <b> yes</b> .<br><b>
+     Cash Card</b> features <b> Bank Code</b> and <b> Account Number</b>.<br>
+
+    <blockquote>
+      <b> Bank Code</b> is of type <b>integer</b> and is private .<br>
+    </blockquote>
+    <blockquote>
+      <b> Account Number</b> is of type <b>integer</b> and is private .<br>
+    </blockquote>
+    <b> Cash Card</b> accesses <b> Account</b>.<br><b> Password</b> protects <b>
+ Account</b>.<br><b> Consortium</b> consists of <b>5 </b> <b> Bank</b>s.<br>
+
+    <blockquote>
+      <b> Bank</b> holds <b>1..m </b><br><b> Account</b>s.<br>
+    </blockquote>
+    <b> Consortium</b> refers to <b> Card Data</b>.<br><b> Loop</b> has states <b>
+ initialized</b> and <b> uninitialized</b> .<br>Process <b> Password Comparing</b>
+ is enabled by <b> Password</b> and <b> Consortium</b> and <b> Card Data</b>.<br><b>
+ Password Comparing</b> yields <b> Keyed-in Password is correct?</b>.<br>
+    Process <b> Message Displaying</b> is guarded by <b> Loop</b> is <b> 
+    initialized</b> and <b> Number Of Trials &gt; Max Trials?</b> is <b> no</b>
+    .<br><b> Message Displaying</b> is enabled by <b> CPU</b> of <b> ATM</b>.<br><b>
+ Message Displaying</b> yields <b> Displayed Message</b>.<br>Process <b> Card 
+    Reading</b> is enabled by <b> Cash Card</b> and the agent <b> Customer</b>.<br><b>
+ Card Reading</b> yields <b> Card Data</b>.<br>Process <b> Number Of Traials 
+    Initializing</b> is guarded by <b> Cash Card is valid?</b> is <b> yes</b>.<br><b>
+ Number Of Traials Initializing</b> yields <b> Number Of Trials</b> at state <b>
+ 0</b> and <b> Loop</b> at state <b> initialized</b>.<br><b> Number Of Traials 
+    Initializing</b> affects <b> Loop</b> from <b> uninitialized</b> to <b> 
+    initialized</b> and <b> Loop</b> from <b> uninitialized</b> to <b> 0</b>.<br>
+Process <b> Credit Limit Checking</b> is guarded by <b> Type</b> of <b> 
+    Transaction</b> is <b> withdraw</b>.<br><b> Credit Limit Checking</b> is 
+    enabled by <b> Card Data</b> and <b> Amount</b> of <b> Transaction</b> and <b>
+ Bank</b> of <b> Consortium</b>.<br><b> Credit Limit Checking</b> yields <b> 
+    Credit Limit is exceeded?</b>.<br>Process <b> Password Keying</b> is 
+    enabled by <b> Keyboard</b> of <b> ATM</b> and the agent <b> Customer</b>.<br><b>
+ Password Keying</b> yields <b> Keyed-in Password</b>.<br>Process <b> Denial 
+    Notifying</b> is guarded by <b> Credit Limit is exceeded?</b> is <b> yes</b>
+.<br><b> Denial Notifying</b> is enabled by <b> Card Data</b>.<br><b> Denial 
+    Notifying</b> yields <b> Denial Notice</b>.<br>Process <b> Transaction 
+    Processing</b> is guarded by <b> Approval</b> is <b> obtained</b>.<br><b> 
+    Transaction Processing</b> is enabled by <b> Bank</b> of <b> Consortium</b>
+     and <b> ATM</b> and <b> Card Data</b>.<br><b> Transaction Processing</b> 
+    yields <b> Denial Notice</b> and <b> Transaction</b>.<br><b> Transaction 
+    Processing</b> affects <b> Account</b>.<br>Process <b> Notifying</b> is 
+    guarded by <b> Approval</b> is <b> denied</b>.<br><b> Notifying</b> yields <b>
+ Denial Notice</b>.<br>Process <b> Account Number Checking</b> is guarded by <b>
+ Bank Code is valid?</b> is <b> yes</b>.<br><b> Account Number Checking</b> is 
+    enabled by <b> Bank</b> of <b> Consortium</b> and <b> Account Number</b> 
+    of <b> Cash Card</b> and <b> Card Data</b>.<br><b> Account Number Checking</b>
+ yields <b> Account Number is valid?</b>.<br>Process <b> Trial Comparing</b> 
+    is enabled by <b> Number Of Trials</b> and <b> Max Trials</b> is <b> 3</b>.<br><b>
+ Trial Comparing</b> yields <b> Number Of Trials &gt; Max Trials?</b>.<br>
+    Process <b> Approval Denying</b> is guarded by <b> Cash Card is valid?</b> 
+    is <b> no</b>.<br><b> Approval Denying</b> yields <b> Approval</b> at 
+    state <b> denied</b>.<br>Process <b> Access Denying</b> is guarded by <b> 
+    Account Number is valid?</b> is <b> no</b> and <b> Bank Code is valid?</b> 
+    is <b> no</b>.<br><b> Access Denying</b> yields <b> Cash Card is valid?</b>
+     at state <b> no</b>.<br>Process <b> Password Checking</b> is guarded by <b>
+ Cash Card is valid?</b> is <b> yes</b>.<br><b> Password Checking</b> is 
+    enabled by <b> ATM</b> and <b> Consortium</b> and the agent <b> Customer</b>
+ and <b> Card Data</b>.<br><b> Password Checking</b> yields <b> Approval</b> 
+    and <b> Max Trials</b> at state <b> 3</b>.<br>Process <b> Approving</b> is 
+    guarded by <b> Keyed-in Password is correct?</b> is <b> yes</b>.<br><b> 
+    Approving</b> yields <b> Approval</b> at state <b> obtained</b>.<br>
+    Process <b> Cash Dispending</b> is guarded by <b> Credit Limit is exceeded?</b>
+ is <b> no</b> and <b> Type</b> of <b> Transaction</b> is <b> withdraw</b>.<br><b>
+ Cash Dispending</b> is enabled by <b> Card Data</b> and <b> Amount</b> of <b> 
+    Transaction</b>.<br><b> Cash Dispending</b> affects <b> Account</b>.<br>
+    Process <b> Transaction Executing</b> is enabled by <b> Bank</b> of <b> 
+    Consortium</b> and <b> ATM</b> and the agent <b> Customer</b> and <b> Cash 
+    Card</b> and <b> Consortium</b>.<br><b> Transaction Executing</b> yields <b>
+ Transaction</b> and <b> Denial Notice</b>.<br><b> Transaction Executing</b> 
+    affects <b> Account</b>.<br>Process <b> Password Requesting</b> is guarded 
+    by <b> Loop</b> is <b> initialized</b> and <b> Number Of Trials &gt; Max 
+    Trials?</b> is <b> no</b>.<br><b> Password Requesting</b> is enabled by 
+    the agent <b> Customer</b> and <b> Screen</b> of <b> ATM</b>.<br>Process <b>
+ Cash Card Approving</b> is guarded by <b> Account Number is valid?</b> is <b> 
+    yes</b>.<br><b> Cash Card Approving</b> yields <b> Cash Card is valid?</b> 
+    at state <b> yes</b>.<br>Process <b> Confiscating</b> is guarded by <b> 
+    Number Of Trials &gt; Max Trials?</b> is <b> yes</b>.<br><b> Confiscating</b>
+ yields <b> Approval</b> at state <b> denied</b>.<br><b> Confiscating</b> 
+    consumes <b> Number Of Trials</b>.<br>Process <b> Transaction Querying</b> 
+    is guarded by <b> Approval</b> is <b> obtained</b>.<br><b> Transaction 
+    Querying</b> is enabled by the agent <b> Customer</b>.<br><b> Transaction 
+    Querying</b> yields <b> Transaction</b>.<br>Process <b> Incrementing</b> 
+    affects <b> Number Of Trials</b>.<br>Process <b> Account Checking</b> is 
+    enabled by <b> ATM</b> and <b> Bank</b> of <b> Consortium</b> and <b> Cash 
+    Card</b> and <b> Consortium</b>.<br><b> Account Checking</b> yields <b> 
+    Approval</b> and <b> Card Data</b>.<br>Process <b> Bank Code Checking</b> 
+    is enabled by <b> Bank Code</b> of <b> Cash Card</b> and <b> Card Data</b> 
+    and <b> Consortium</b>.<br><b> Bank Code Checking</b> yields <b> Bank Code 
+    is valid?</b>.<br>Process <b> Cash Card Validating</b> is enabled by <b> 
+    Bank</b> of <b> Consortium</b> and the agent <b> Customer</b> and <b> 
+    Consortium</b> and <b> Cash Card</b> and <b> ATM</b>.<br><b> Cash Card 
+    Validating</b> yields <b> Card Data</b> and <b> Cash Card is valid?</b>.<br>
+Process <b> Reading</b> is enabled by the agent <b> Customer</b> and <b> 
+    Displayed Message</b>.<br>Process <b> Cash Accepting</b> is guarded by <b> 
+    Type</b> of <b> Transaction</b> is <b> deposite</b>.<br><b> Cash Accepting</b>
+ is enabled by the agent <b> Customer</b> and <b> Card Data</b> and <b> Amount</b>
+ of <b> Transaction</b>.<br><b> Cash Accepting</b> affects <b> Owner</b> of <b>
+     Cash</b> from <b> customer</b> to <b> bank</b>.<br>State-entrance event 
+    of state <b> no</b> of <b> Keyed-in Password is correct?</b> triggers <b> 
+    Incrementing</b>.<br>Process-termination event of <b> Reading</b> triggers <b>
+ Password Keying</b>.<br>Process-termination event of <b> Password Requesting</b>
+ triggers <b> Password Keying</b>.<br>
+  </body>
+</html>

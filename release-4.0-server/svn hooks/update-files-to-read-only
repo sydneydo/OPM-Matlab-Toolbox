@@ -1,0 +1,3 @@
+svn co url://repo1 wc
+svn propset -R svn:needs-lock yes wc
+svn ci wc -m "Set needs:lock property on all files in repository" 

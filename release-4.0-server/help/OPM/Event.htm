@@ -1,0 +1,157 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Felix Laventman">
+   <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+   <title>Event</title>
+</head>
+<body>
+
+<h2><font color="#666666" size="+2"><span style="mso-fareast-language: EN-US">5.
+</span></font><font SIZE="+2"><font color="#666666"><span style="mso-fareast-language: EN-US">Procedural
+Links</span></font><span style="mso-fareast-language:
+EN-US">&nbsp;</span></font></h2>
+<h2 style="text-indent: -20.7pt; mso-text-indent-alt: 2.85pt; line-height: 150%"><font SIZE="+2">&nbsp;&nbsp;<font color="#008000">&nbsp;
+5.3 Event Links</font></font></h2>
+<font size="+1"><b>Event links&nbsp;</b>denote process executions due to
+internal and external events. There are <a href="#to">time-out exception events</a>,
+<a href="#invocation">process termination events</a>, <a href="#enterance">state
+entrance events</a>, <a href="#change">state change events and external events</a>.&nbsp;</font>
+<p><font size="+1"><b><a name="to"></a>Time-out
+exception links</b> connect timed processes or states with processes that should
+be activated in cases the processes/states violate their time constraints.&nbsp; Time-out exception links
+are symbolized by cross headed arrows.</font></p>
+<p><span lang="HE" dir="RTL" style="font-size:12.0pt;font-family:&quot;Times New Roman&quot;;mso-fareast-font-family:
+&quot;Times New Roman&quot;;mso-ansi-language:EN-US;mso-fareast-language:HE;mso-bidi-language:
+HE"><!--[if gte vml 1]><v:shapetype id="_x0000_t75" coordsize="21600,21600"
+ o:spt="75" o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe" filled="f"
+ stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="_x0000_i1025" type="#_x0000_t75" style='width:217.5pt;
+ height:135pt'>
+ <v:imagedata src="file:///C:/WINDOWS/TEMP/msoclip1/01/clip_image001.png"
+  o:title="" croptop="8685f" cropbottom="36953f" cropleft="18369f" cropright="23049f"
+  gain="1.5625" grayscale="t"/>
+</v:shape><![endif]-->
+<img src="../images/Exception.jpg" v:shapes="_x0000_i1025" width="290" height="180"></span></p>
+<p><font size="+1">After 3 minutes that <b>Timed Processing</b> runs, <b>Exception
+Handling</b> should be activated.<br>
+After 3 minutes that <b>Object Status</b> is in its <b>timed state</b>, <b>Exception
+Handling</b> should be activated.<br>
+<br>
+<b><a name="invocation"></a>Invocation
+links</b> are procedural links between invoking processes and invoked ones. The
+termination of the invoking processes activates the invoked processes. Invocation links
+are denoted by flash arrows.</font></p>
+<p><span lang="HE" dir="RTL" style="font-size:12.0pt;font-family:&quot;Times New Roman&quot;;mso-fareast-font-family:
+&quot;Times New Roman&quot;;mso-ansi-language:EN-US;mso-fareast-language:HE;mso-bidi-language:
+HE"><!--[if gte vml 1]><v:shapetype id="_x0000_t75" coordsize="21600,21600"
+ o:spt="75" o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe" filled="f"
+ stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="_x0000_i1025" type="#_x0000_t75" style='width:217.5pt;
+ height:63pt'>
+ <v:imagedata src="file:///C:/WINDOWS/TEMP/msoclip1/01/clip_image001.png"
+  o:title="" croptop="31426f" cropbottom="25425f" cropleft="18369f"
+  cropright="24475f" gain="79922f" grayscale="t"/>
+</v:shape><![endif]-->
+<img src="../images/Invocation.jpg" v:shapes="_x0000_i1025" width="290" height="84"></span><font size="+1">
+<br><br>
+<b>Invoking Processing </b>termination triggers <b>Invoke Processing</b>.</font></p>
+<p>&nbsp;</p>
+<p><font size="+1"><b><a name="enterance"></a>State entrance event links </b>connect
+between states and the processes which are triggered when the corresponding
+objects enter the specific states. The process may change the object state.
+State entrance event links are denoted by <a href="Enabling.htm#instrument">instrument
+links</a> with "E" literal inside. If the triggered process changes the object
+state, then it is denoted by a <a href="Transformation.htm#consumption">consumption
+link</a> with &quot;E&quot; literal along its head.</font></p>
+<p><span lang="HE" dir="RTL" style="font-size:12.0pt;font-family:&quot;Times New Roman&quot;;mso-fareast-font-family:
+&quot;Times New Roman&quot;;mso-ansi-language:EN-US;mso-fareast-language:HE;mso-bidi-language:
+HE"><!--[if gte vml 1]><v:shapetype id="_x0000_t75" coordsize="21600,21600"
+ o:spt="75" o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe" filled="f"
+ stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="_x0000_i1025" type="#_x0000_t75" style='width:226.5pt;
+ height:113.25pt'>
+ <v:imagedata src="file:///C:/WINDOWS/TEMP/msoclip1/01/clip_image001.png"
+  o:title="" croptop="39795f" cropbottom="7738f" cropleft="24058f" cropright="14458f"
+  gain="86232f" grayscale="t"/>
+</v:shape><![endif]-->
+<img src="../images/Enterance.jpg" v:shapes="_x0000_i1025" width="302" height="151"></span></p>
+<p><font size="+1">Left figure: When <b>Object Status</b> enters its <b>before </b>state,
+<b>State Entrance Processing </b>is activated. It does not change <b>Object
+Status</b>.</font></p>
+<p><font size="+1">Right figure: When <b>Object Status</b> enters its <b>before </b>state,
+<b>State Entrance Processing </b>is activated. It also changes <b>Object Status</b>
+from <b>before</b> to <b>after</b>.</font></p>
+<p><font size="+1"><b><a name="change"></a>State change event links </b>connect
+between objects and the processes which are triggered when there is a change of
+value or state in the corresponding objects. State change event links are
+denoted by <a href="Enabling.htm#instrument">instrument links</a> with "E"
+literal inside. If the connected object is environmental then the links are
+called <b>external links</b>.&nbsp;</font></p>
+<p>&nbsp;</p>
+<p>
+<font color="#000000"><a href="OPMreferenceManual.htm">
+help topics</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="OPMreferenceManual.htm">OPM
+Reference Manual&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="Transformation.htm">previous</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="../OPM/Scaling.htm">next</a></font>
+</p>
+<p>&nbsp;</p>
+<p>
+<font color="#000000"><font size=+1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><a href="OPMreferenceManual.htm">
+ </a></font>
+</p>
+</body>
+</html>

@@ -1,0 +1,7 @@
+[groups]
+users=sl1,sl2,sl3,sl4,sl5
+
+[Systems:/]
+@users = rw
+* = 
+

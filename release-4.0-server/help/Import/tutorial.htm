@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+
+<head>
+  <title>Import Tutorial</title>
+</head>
+
+<body>
+<h1 style="text-indent:-20.7pt;mso-text-indent-alt:2.85pt">
+      <font size="5">
+          <span style="font-style: normal; font-variant: normal; font-weight: normal; font-family: Times New Roman">&nbsp;&nbsp;&nbsp;
+              <font color="#666666">
+                  <span style="mso-bidi-font-size: 16.0pt; text-decoration: none; text-underline: none; font-style: normal; font-variant: normal; font-weight: normal; font-family: Times New Roman">
+                      Import Tutorial
+                  </span>
+              </font>
+          </span>
+      </font>
+</h1>
+<p>
+In this tutorial we will go through the process opening a global model and importing a model
+into it. We will use the ATM example as our imported model.
+</p>
+
+<br><br>
+<h3>Import Process Flow</h3>
+<ol>
+<li><a href="#open global model">Open <span title="The Main model. Import is done into it">Global Model</span></a></li>
+<li><a href="#choose import place">Select where the imported model will be placed</a></li>
+<li><a href="#choose menu">Open Import Dialog</a></li>
+<li><a href="#choose imported">Choose <span title="The Imported Model." >Imported Model</span></a></li>
+<li><a href="#save">Save current model (if it's a new model)</a>
+<li><a href="#import">Import Done</a></li>
+</ol>
+
+
+<br><br>
+<h3 ID="open global model">Open Global Model</h3>
+<p >
+First, we need to create a global model, i.e., a base model in which an imported
+model will be copied. Open the 
+<img src="images\opcat_icon.gif" border=0><a  href="Demo Global Before Import.opz">Global OPM Model</a> 
+in Opcat by clicking on it, or create a new model with the following objects in it.
+</p>
+<img  src=images/imp1.jpg>
+<p>Our global model consists of a Process which is connected by an agent and a object.</p>
+
+<br><br>
+<h3 ID="choose import place">Select Import Place</h3>
+<p>Within a global model, the imported model could be placed in two different locations:
+<ul>
+	<li>Within an in-zoomed thing (process or object). In order to import the model there, the user
+	should choose the in-zoomed thing before importing.</li>
+	<li>Outside of the in-zoomed thing.</li>
+</ul>
+The imported model will be placed in the exact same position in which is was laid in the original model.<br>
+For this example, we shell import the ATM example into the in-zoomed process, named "Main Feature". 
+Notice that the process is selected.<br><br>
+
+<font size="-1">Tip: In Order to avoid graphical problems,
+we enlarge the in-zoomed process to cover as much of the OPD as possible.
+To make sure the ATM fits in the selected process we shall open the
+ATM model and make sure that it is small enough to be placed within hte main process. </font><br><br>
+In the next picture you see the global model with the main process in-zoomed and enlarged:
+<p>
+<img src="images/imp5.jpg">
+
+
+
+<br><br>
+<h3 ID="choose menu">Open Import Dialog</h3>
+<p>
+There are two ways to open the import menu.
+<ul>
+<li>Choose the Import Icon from the toolbar&nbsp;<img src="images/imp9.jpg" align="middle"></li>
+<li>Open the Import menu in the System Menu&nbsp;<br></li>
+</ul>
+<p><img src="images/imp2.jpg" align="top">
+<p>
+
+<h3 ID = "choose imported">Choose Imported model</h3>
+<p>In the import dialog window we choose the OPM file to be imported by clicking on the <b>Browse</b>
+button. The File Chooser dialog is opened and we are able to locate and select the imported model.
+<br>
+  <img src="images/imp4.jpg">
+ <br>
+ 
+<br><br>
+<h3 ID = "save">Saving the Global Model</h3>
+<p>
+In order preserve model integrity, Opcat requires models to be saved before performing import. 
+If the model is not new it will be saved <b>Automatically</b> before performing the import.
+If the model is a new model and was not saved before, the 
+<span title="save model" style="border-bottom: thin dotted #000000">save model dialog box</span> appears, 
+and the user is prompted to save the model <br><br>
+<img src="images/imp12.jpg">
+<br><br>
+</p>
+
+
+<h3 ID="import">Import Done</h3>
+<p>The Imported ATM model in the in-zoomed process. 
+Click on <img src="images\opcat_icon.gif" border=0><a href="imported_afterwards.opz">Model after import</a> 
+in order to open Opcat with the model. The OPD in which the elemented were
+imported to should look like the screenshot below:
+</p><br>
+<img src="images/imp8-reduced.jpg">
+<br><br>
+If the user imported the elements outside of the in-zoomed thing, then
+the outcome will look like 
+<a href="images/imp7.jpg">this</a>.
+
+<p><br><br>
+<P style="text-indent: -20.7pt; mso-text-indent-alt: 2.85pt"><SPAN style="mso-fareast-language:EN-US"><FONT SIZE=+1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</FONT><A HREF="index.htm">Back to import help topics</A></SPAN>
+
+</body>
+
+</html>

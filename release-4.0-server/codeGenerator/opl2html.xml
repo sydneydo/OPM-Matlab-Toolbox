@@ -1,0 +1,1333 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema  xmlns:xs="http://www.w3.org/2001/XMLSchema.dtd" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<Template no = "1" name = "OPLscript">
+     <Template_schema>
+          <xs:element name="OPLscript">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element ref="ThingSentenceSet" maxOccurs="unbounded"/>
+                     <xs:element name = "SystemDescription" type="xs:string" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="systemName" type="xs:string" use="required"/>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "1" lang = "html">
+          <Operation no = "0">
+               <Action function = "createFile">
+                    <Parameter name = "path" value = "\"/>
+                    <Parameter name = "file" value = "system.htm"/>
+               </Action>
+               <Translation>
+                    <File name="$$systemName$$">
+                    </File>
+               </Translation>
+          </Operation>
+          <Operation no = "1">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ThingSentenceSet"/>
+               </Action>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "2" name = "ThingSentenceSet">
+     <Template_schema>
+          <xs:element name="ThingSentenceSet">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element ref="ObjectEnvironmentalPhysicalSentence" minOccurs="0"/>
+                     <xs:element ref="ObjectInheritanceSentence" minOccurs="0"/>
+                     <xs:element ref="ObjectStateSentence" minOccurs="0"/>
+                     <xs:element ref="ObjectExhibitionSentenceSet" minOccurs="0"/>
+                     <xs:element ref="ObjectAggregationSentenceSet" minOccurs="0"/>
+                     <xs:element ref="ObjectUniDirectionalRelationSentence" minOccurs="0" maxOccurs="unbounded"/>
+                     <xs:element ref="ObjectBiDirectionalRelationSentence" minOccurs="0" maxOccurs="unbounded"/>
+                     <xs:element name = "ObjectDescription" type="xs:string" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="subjectThingName" type="xs:string" use="required"/>
+                <xs:attribute name="subjectExhibitionFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="subjectAggregationFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="systemName" type="xs:string" use="required"/>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "2" lang = "html">
+          <Operation no = "0">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ObjectEnvironmentalPhysicalSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "1">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ObjectInheritanceSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "2">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ObjectStateSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "3">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ObjectExhibitionSentenceSet"/>
+               </Action>
+          </Operation>
+          <Operation no = "4">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ObjectAggregationSentenceSet"/>
+               </Action>
+          </Operation>
+          <Operation no = "5">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ObjectUniDirectionalRelationSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "6">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ObjectBiDirectionalRelationSentence"/>
+               </Action>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "3" name = "ObjectExhibitionSentence">
+     <Template_schema>
+          <xs:element name="ObjectExhibitionSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ObjectName" type="xs:string"/>
+                     <xs:element ref="ExhibitedObject" minOccurs="0" maxOccurs="unbounded"/>
+                     <xs:element ref="Operation" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "3" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                       An exhibition sentence of $$ObjectName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "5" name = "ExhibitedObject">
+     <Template_schema>
+          <xs:element name="ExhibitedObject">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "MinimalCardinality" type="xs:int"/>
+                     <xs:element name = "MaximalCardinality" type="xs:int"/>
+                     <xs:element name = "AttributeName" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+</Template> 
+
+<Template no = "8" name = "ThingSentenceSet">
+     <Template_schema>
+          <xs:element name="ThingSentenceSet">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element ref="TypeDeclarationSentence"/>
+                     <xs:element name = "ObjectDescription" type="xs:string" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="subjectThingName" type="xs:string" use="required"/>
+                <xs:attribute name="subjectExhibitionFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="subjectAggregationFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="systemName" type="xs:string" use="required"/>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "4" lang = "html">
+          <Operation no = "0">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "TypeDeclarationSentence"/>
+               </Action>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "9" name = "TypeDeclarationSentence">
+     <Template_schema>
+          <xs:element name="TypeDeclarationSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ObjectName" type="xs:string"/>
+                     <xs:element name = "ObjectType" type="xs:string"/>
+                     <xs:element name = "InitialValue" type="xs:string" minOccurs="0"/>
+                     <xs:element name = "ObjectScope" type="xs:string"/>
+                </xs:sequence>
+                <xs:attribute name="fatherName" type="xs:string" use="optional"/>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "5" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                        Type declaration sentence for $$ObjectName$$ of type $$ObjectType$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "27" name = "ProcessExhibitionSentence">
+     <Template_schema>
+          <xs:element name="ProcessExhibitionSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ProcessName" type="xs:string"/>
+                     <xs:element ref="Operation" minOccurs="0" maxOccurs="unbounded"/>
+                     <xs:element ref="ExhibitedObject" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "6" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                       An exhibition sentence of $$ProcessName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "30" name = "ThingSentenceSet">
+     <Template_schema>
+          <xs:element name="ThingSentenceSet">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element ref="ProcessEnvironmentalPhysicalSentence" minOccurs="0"/>
+                     <xs:element ref="ProcessInheritanceSentence" minOccurs="0"/>
+                     <xs:element ref="ProcessExhibitionSentenceSet" minOccurs="0"/>
+                     <xs:element ref="ProcessAggregationSentenceSet" minOccurs="0"/>
+                     <xs:element ref="ProcessUniDirectionalRelationSentence" minOccurs="0" maxOccurs="unbounded"/>
+                     <xs:element ref="ProcessBiDirectionalRelationSentence" minOccurs="0" maxOccurs="unbounded"/>
+                     <xs:element ref="ConditionSentence" minOccurs="0"/>
+                     <xs:element ref="EnablingSentence" minOccurs="0"/>
+                     <xs:element ref="EffectSentence" minOccurs="0"/>
+                     <xs:element ref="ChangingSentence" minOccurs="0"/>
+                     <xs:element ref="ConsumptionSentence" minOccurs="0"/>
+                     <xs:element ref="ResultSentence" minOccurs="0"/>
+                     <xs:element ref="ProcessInZoomingSentenceSet" minOccurs="0"/>
+                     <xs:element name = "ProcessDescription" type="xs:string" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="subjectThingName" type="xs:string" use="required"/>
+                <xs:attribute name="subjectExhibitionFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="subjectAggregationFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="systemName" type="xs:string" use="required"/>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "8" lang = "html">
+          <Operation no = "0">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ProcessEnvironmentalPhysicalSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "1">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ProcessInheritanceSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "2">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ProcessExhibitionSentenceSet"/>
+               </Action>
+          </Operation>
+          <Operation no = "3">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ProcessAggregationSentenceSet"/>
+               </Action>
+          </Operation>
+          <Operation no = "4">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ProcessUniDirectionalRelationSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "5">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ProcessBiDirectionalRelationSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "6">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ConditionSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "7">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "EnablingSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "8">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "EffectSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "9">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ChangingSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "10">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ConsumptionSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "11">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ResultSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "12">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ProcessInZoomingSentenceSet"/>
+               </Action>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "39" name = "ObjectEnvironmentalPhysicalSentence">
+     <Template_schema>
+          <xs:element name="ObjectEnvironmentalPhysicalSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ObjectName" type="xs:string"/>
+                     <xs:element name = "Environmental" type="xs:boolean"/>
+                     <xs:element name = "Physical" type="xs:boolean"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "9" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                         An env-phy sentence of $$ObjectName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "45" name = "ProcessEnvironmentalPhysicalSentence">
+     <Template_schema>
+          <xs:element name="ProcessEnvironmentalPhysicalSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ProcessName" type="xs:string"/>
+                     <xs:element name = "Environmental" type="xs:boolean"/>
+                     <xs:element name = "Physical" type="xs:boolean"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "10" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                         An env-phy sentence of $$ProcessName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "47" name = "ObjectExhibitionSentenceSet">
+     <Template_schema>
+          <xs:element name="ObjectExhibitionSentenceSet">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element ref="ObjectExhibitionSentence"/>
+                     <xs:element ref="ThingSentenceSet" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "11" lang = "html">
+          <Operation no = "0">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ObjectExhibitionSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "1">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ThingSentenceSet"/>
+               </Action>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "48" name = "ProcessExhibitionSentenceSet">
+     <Template_schema>
+          <xs:element name="ProcessExhibitionSentenceSet">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element ref="ProcessExhibitionSentence"/>
+                     <xs:element ref="ThingSentenceSet" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "12" lang = "html">
+          <Operation no = "0">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ProcessExhibitionSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "1">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ThingSentenceSet"/>
+               </Action>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "49" name = "ObjectAggregationSentenceSet">
+     <Template_schema>
+          <xs:element name="ObjectAggregationSentenceSet">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element ref="ObjectAggregationSentence"/>
+                     <xs:element ref="ThingSentenceSet" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "13" lang = "html">
+          <Operation no = "0">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ObjectAggregationSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "1">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ThingSentenceSet"/>
+               </Action>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "50" name = "ObjectAggregationSentence">
+     <Template_schema>
+          <xs:element name="ObjectAggregationSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ObjectName" type="xs:string"/>
+                     <xs:element ref="AggregatedObject" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "14" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                         An aggregation sentence of $$ObjectName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "51" name = "ProcessAggregationSentenceSet">
+     <Template_schema>
+          <xs:element name="ProcessAggregationSentenceSet">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element ref="ProcessAggregationSentence"/>
+                     <xs:element ref="ThingSentenceSet" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "15" lang = "html">
+          <Operation no = "0">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ProcessAggregationSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "1">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ThingSentenceSet"/>
+               </Action>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "52" name = "ProcessAggregationSentence">
+     <Template_schema>
+          <xs:element name="ProcessAggregationSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ProcessName" type="xs:string"/>
+                     <xs:element name = "AggregatedProcess" type="xs:string" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "16" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                         An aggregation sentence of $$ProcessName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "53" name = "ObjectInheritanceSentence">
+     <Template_schema>
+          <xs:element name="ObjectInheritanceSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ObjectName" type="xs:string"/>
+                     <xs:element name = "InheritanceFatherName" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "17" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                         An inheritance sentence of $$ObjectName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "57" name = "ProcessInheritanceSentence">
+     <Template_schema>
+          <xs:element name="ProcessInheritanceSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ProcessName" type="xs:string"/>
+                     <xs:element name = "InheritanceFatherName" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "18" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                         An inheritance sentence of $$ProcessName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "62" name = "StateClause">
+     <Template_schema>
+          <xs:element name="StateClause">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "StateName" type="xs:string"/>
+                     <xs:element name = "Initial" type="xs:boolean"/>
+                     <xs:element name = "Final" type="xs:boolean"/>
+                     <xs:element name = "Default" type="xs:boolean"/>
+                     <xs:element ref="MinTimeValue" minOccurs="0"/>
+                     <xs:element ref="MaxTimeValue" minOccurs="0"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "40" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                      A state sentence of $$StateName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "67" name = "MinTimeValue">
+     <Template_schema>
+          <xs:element name="MinTimeValue">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "Years" type="xs:int" minOccurs="0"/>
+                     <xs:element name = "Months" type="xs:int" minOccurs="0"/>
+                     <xs:element name = "Weeks" type="xs:int" minOccurs="0"/>
+                     <xs:element name = "Days" type="xs:int" minOccurs="0"/>
+                     <xs:element name = "Hours" type="xs:int" minOccurs="0"/>
+                     <xs:element name = "Minutes" type="xs:int" minOccurs="0"/>
+                     <xs:element name = "Seconds" type="xs:int" minOccurs="0"/>
+                     <xs:element name = "MilliSeconds" type="xs:int" minOccurs="0"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+</Template> 
+
+<Template no = "69" name = "MaxTimeValue">
+     <Template_schema>
+          <xs:element name="MaxTimeValue">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "Years" type="xs:int" minOccurs="0"/>
+                     <xs:element name = "Months" type="xs:int" minOccurs="0"/>
+                     <xs:element name = "Weeks" type="xs:int" minOccurs="0"/>
+                     <xs:element name = "Days" type="xs:int" minOccurs="0"/>
+                     <xs:element name = "Hours" type="xs:int" minOccurs="0"/>
+                     <xs:element name = "Minutes" type="xs:int" minOccurs="0"/>
+                     <xs:element name = "Seconds" type="xs:int" minOccurs="0"/>
+                     <xs:element name = "MilliSeconds" type="xs:int" minOccurs="0"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+</Template> 
+
+<Template no = "70" name = "ObjectUniDirectionalRelationSentence">
+     <Template_schema>
+          <xs:element name="ObjectUniDirectionalRelationSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "SourceMinimalCardinality" type="xs:int"/>
+                     <xs:element name = "SourceMaximalCardinality" type="xs:int"/>
+                     <xs:element name = "SourceName" type="xs:string"/>
+                     <xs:element name = "RelationName" type="xs:string"/>
+                     <xs:element name = "DestinationMinimalCardinality" type="xs:int"/>
+                     <xs:element name = "DestinationMaximalCardinality" type="xs:int"/>
+                     <xs:element name = "DestinationName" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "20" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                         A general, uni-dirctional relation sentence named $$RelationName$$ from $$SourcetName$$ to $$DestinationName$$ 
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "71" name = "ObjectBiDirectionalRelationSentence">
+     <Template_schema>
+          <xs:element name="ObjectBiDirectionalRelationSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "SourceMinimalCardinality" type="xs:int"/>
+                     <xs:element name = "SourceMaximalCardinality" type="xs:int"/>
+                     <xs:element name = "SourceName" type="xs:string"/>
+                     <xs:element name = "DestinationMinimalCardinality" type="xs:int"/>
+                     <xs:element name = "DestinationMaximalCardinality" type="xs:int"/>
+                     <xs:element name = "DestinationName" type="xs:string"/>
+                     <xs:element name = "RelationName" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "21" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                         A general, bi-directional relation sentence named $$RelationName$$ between $$SourceName$$ and $$DestinationName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "72" name = "ProcessUniDirectionalRelationSentence">
+     <Template_schema>
+          <xs:element name="ProcessUniDirectionalRelationSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "SourceName" type="xs:string"/>
+                     <xs:element name = "RelationName" type="xs:string"/>
+                     <xs:element name = "DestinationName" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "23" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                         A general, uni-directional  relation sentence named $$RelationName$$ from $$SourceName$$ to $$DestinationName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "73" name = "ProcessBiDirectionalRelationSentence">
+     <Template_schema>
+          <xs:element name="ProcessBiDirectionalRelationSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "SourceName" type="xs:string"/>
+                     <xs:element name = "DestinationName" type="xs:string"/>
+                     <xs:element name = "RelationName" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "24" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                         A general, bi-directional relation sentence named $$RelationName$$ between $$SourceName and  $$DestinationName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "74" name = "ConditionSentence">
+     <Template_schema>
+          <xs:element name="ConditionSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ProcessName" type="xs:string"/>
+                     <xs:element name = "LogicalRelation" type="xs:string" minOccurs="0"/>
+                     <xs:element ref="ConditionClause" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "25" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                         A condition sentence of $$ProcessName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "75" name = "ConditionClause">
+     <Template_schema>
+          <xs:element name="ConditionClause">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "MinimalCardinality" type="xs:int"/>
+                     <xs:element name = "MaximalCardinality" type="xs:int"/>
+                     <xs:element name = "ObjectName" type="xs:string"/>
+                     <xs:element name = "StateName" type="xs:string" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="objectType" type="xs:string" use="required"/>
+                <xs:attribute name="subjectThingName" type="xs:string" use="required"/>
+                <xs:attribute name="subjectExhibitionFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="subjectAggregationFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="logicalRelation" type="xs:string" use="optional"/>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+</Template> 
+
+<Template no = "79" name = "ProcessInZoomingSentenceSet">
+     <Template_schema>
+          <xs:element name="ProcessInZoomingSentenceSet">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element ref="ProcessInZoomingSentence"/>
+                     <xs:element ref="ThingSentenceSet" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "30" lang = "html">
+          <Operation no = "0">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ProcessInZoomingSentence"/>
+               </Action>
+          </Operation>
+          <Operation no = "1">
+               <Action function = "translate4all">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "template" value = "ThingSentenceSet"/>
+               </Action>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "80" name = "ProcessInZoomingSentence">
+     <Template_schema>
+          <xs:element name="ProcessInZoomingSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ProcessName" type="xs:string"/>
+                     <xs:element name = "InZoomedProcess" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                     <xs:element name = "InZoomedObject" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "26" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                         An in-zooming sentence of $$ProcessName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "81" name = "EffectSentence">
+     <Template_schema>
+          <xs:element name="EffectSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ProcessName" type="xs:string"/>
+                     <xs:element name = "LogicalRelation" type="xs:string" minOccurs="0"/>
+                     <xs:element ref="EffectClause" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "27" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                         An effect sentence of $$ProcessName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "82" name = "EffectClause">
+     <Template_schema>
+          <xs:element name="EffectClause">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "MinimalCardinality" type="xs:int"/>
+                     <xs:element name = "MaximalCardinality" type="xs:int"/>
+                     <xs:element name = "ObjectName" type="xs:string"/>
+                </xs:sequence>
+                <xs:attribute name="objectType" type="xs:string" use="required"/>
+                <xs:attribute name="subjectThingName" type="xs:string" use="required"/>
+                <xs:attribute name="subjectExhibitionFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="subjectAggregationFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="logicalRelation" type="xs:string" use="optional"/>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+</Template> 
+
+<Template no = "83" name = "ResultSentence">
+     <Template_schema>
+          <xs:element name="ResultSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ProcessName" type="xs:string"/>
+                     <xs:element name = "LogicalRelation" type="xs:string" minOccurs="0"/>
+                     <xs:element ref="ResultClause" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "28" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                         A result sentence of $$ProcessName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "84" name = "ResultClause">
+     <Template_schema>
+          <xs:element name="ResultClause">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "MinimalCardinality" type="xs:int"/>
+                     <xs:element name = "MaximalCardinality" type="xs:int"/>
+                     <xs:element name = "StateName" type="xs:string" minOccurs="0"/>
+                     <xs:element name = "ObjectName" type="xs:string"/>
+                </xs:sequence>
+                <xs:attribute name="objectType" type="xs:string" use="required"/>
+                <xs:attribute name="subjectThingName" type="xs:string" use="required"/>
+                <xs:attribute name="subjectExhibitionFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="subjectAggregationFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="logicalRelation" type="xs:string" use="optional"/>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+</Template> 
+
+<Template no = "85" name = "ChangingSentence">
+     <Template_schema>
+          <xs:element name="ChangingSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ProcessName" type="xs:string"/>
+                     <xs:element name = "LogicalRelation" type="xs:string" minOccurs="0"/>
+                     <xs:element ref="ChangingClause" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "29" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                         A changing sentence of $$ProcessName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "86" name = "ChangingClause">
+     <Template_schema>
+          <xs:element name="ChangingClause">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "MinimalCardinality" type="xs:int"/>
+                     <xs:element name = "MaximalCardinality" type="xs:int"/>
+                     <xs:element name = "ObjectName" type="xs:string"/>
+                     <xs:element name = "SourceStateName" type="xs:string"/>
+                     <xs:element name = "DestinationStateName" type="xs:string"/>
+                </xs:sequence>
+                <xs:attribute name="objectType" type="xs:string" use="required"/>
+                <xs:attribute name="subjectThingName" type="xs:string" use="required"/>
+                <xs:attribute name="subjectExhibitionFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="subjectAggregationFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="logicalRelation" type="xs:string" use="optional"/>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+</Template> 
+
+<Template no = "88" name = "ObjectStateSentence">
+     <Template_schema>
+          <xs:element name="ObjectStateSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ObjectName" type="xs:string"/>
+                     <xs:element ref="StateClause" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "38" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                      A state enumeration sentence of $$ObjectName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "89" name = "EnablingSentence">
+     <Template_schema>
+          <xs:element name="EnablingSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ProcessName" type="xs:string"/>
+                     <xs:element name = "LogicalRelation" type="xs:string" minOccurs="0"/>
+                     <xs:element ref="EnablingClause" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "41" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                      An enabling sentence of $$ProcessName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "90" name = "EnablingClause">
+     <Template_schema>
+          <xs:element name="EnablingClause">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "MinimalCardinality" type="xs:int"/>
+                     <xs:element name = "MaximalCardinality" type="xs:int"/>
+                     <xs:element name = "StateName" type="xs:string" minOccurs="0"/>
+                     <xs:element name = "ObjectName" type="xs:string"/>
+                </xs:sequence>
+                <xs:attribute name="objectType" type="xs:string" use="required"/>
+                <xs:attribute name="subjectThingName" type="xs:string" use="required"/>
+                <xs:attribute name="subjectExhibitionFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="subjectAggregationFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="logicalRelation" type="xs:string" use="optional"/>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+</Template> 
+
+<Template no = "91" name = "AggregatedObject">
+     <Template_schema>
+          <xs:element name="AggregatedObject">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "MinimalCardinality" type="xs:int"/>
+                     <xs:element name = "MaximalCardinality" type="xs:int"/>
+                     <xs:element name = "ObjectName" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+</Template> 
+
+<Template no = "92" name = "ConsumptionSentence">
+     <Template_schema>
+          <xs:element name="ConsumptionSentence">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "ProcessName" type="xs:string"/>
+                     <xs:element name = "LogicalRelation" type="xs:string" minOccurs="0"/>
+                     <xs:element ref="ConsumptionClause" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+     <Translation_schema no = "59" lang = "html">
+          <Operation no = "0">
+               <Action function = "insertAtLocation">
+                    <Parameter name = "path" value = ""/>
+                    <Parameter name = "file" value = ""/>
+                    <Parameter name = "location" value = "BEFORE_ENDING_TAG"/>
+                    <Parameter name = "tagName" value = "File"/>
+                    <Parameter name = "attributeName" value = ""/>
+                    <Parameter name = "attributeValue" value = ""/>
+               </Action>
+               <Translation>
+                    <sentence>
+                         A consumption sentence of $$ProcessName$$
+                    </sentence>
+               </Translation>
+          </Operation>
+     </Translation_schema>
+</Template> 
+
+<Template no = "93" name = "ConsumptionClause">
+     <Template_schema>
+          <xs:element name="ConsumptionClause">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "MinimalCardinality" type="xs:int"/>
+                     <xs:element name = "MaximalCardinality" type="xs:int"/>
+                     <xs:element name = "StateName" type="xs:string" minOccurs="0"/>
+                     <xs:element name = "ObjectName" type="xs:string"/>
+                </xs:sequence>
+                <xs:attribute name="objectType" type="xs:string" use="required"/>
+                <xs:attribute name="subjectThingName" type="xs:string" use="required"/>
+                <xs:attribute name="subjectExhibitionFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="subjectAggregationFatherName" type="xs:string" use="optional"/>
+                <xs:attribute name="logicalRelation" type="xs:string" use="optional"/>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+</Template> 
+
+<Template no = "94" name = "Operation">
+     <Template_schema>
+          <xs:element name="Operation">
+             <xs:complexType>
+                 <xs:sequence>
+                     <xs:element name = "OperationName" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          
+     </Template_schema>
+</Template> 
+
+</xs:schema>

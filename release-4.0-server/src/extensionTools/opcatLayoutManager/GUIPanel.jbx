@@ -1,0 +1,17 @@
+[PropertyInfo]
+borderLayout1,BorderLayout,false,false, , ,false,<default>
+borderLayout2,BorderLayout,false,false, , ,false,<default>
+componentTree,JTree,false,false, , ,false,<default>
+gridLayout1,GridLayout,false,false, , ,false,<default>
+highlightButton,JButton,false,false, , ,false,<default>
+jLabel1,JLabel,false,false, , ,false,<default>
+jPanel1,JPanel,false,false, , ,false,<default>
+jPanel2,JPanel,false,false, , ,false,<default>
+jSplitPane1,JSplitPane,false,false, , ,false,<default>
+mySys,IXSystem,false,false, , ,false,<default>
+refreshButton,JButton,false,false, , ,false,<default>
+[IconNames]
+
+
+
+

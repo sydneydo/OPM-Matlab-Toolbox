@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Opcat2" default="build" basedir=".">
+
+
+	<condition property="linux">
+		<and>
+			<os family="unix" />
+		</and>
+	</condition>
+
+	<condition property="windows">
+		<and>
+			<os family="windows" />
+		</and>
+	</condition>
+
+
+	<property name="version" value="4.0b" />
+	<property name="things" value="150" />
+	<property name="base_dir" value="build_${version}_${things}" />
+	<property name="remove_debug_grid" value="true" />
+
+
+
+	<target name="setlinux" if="linux">
+		<property name="installer_path" value="${file.separator}opt${file.separator}cxoffice${file.separator}bin" />
+		<property name="installer_name" value="cxstart" />
+		<property name="arg_line" value="--bottle opcat-build  C:/Program Files/Inno Setup 5/Compil32.exe " />
+		<property name="root_dir" value="${file.separator}home${file.separator}raanan${file.separator}OPCAT_Build${file.separator}${base_dir}" />
+	</target>
+
+
+	<target name="setwindows" if="windows">
+		<property name="installer_path" value="C:${file.separator}Program Files${file.separator}Inno Setup 5" />
+		<property name="installer_name" value="Compil32.Exe" />
+		<property name="arg_line" value=" " />
+		<property name="root_dir" value="c:${file.separator}OPCAT_Build${file.separator}${base_dir}" />
+		<property name="svnantpath" value="c:${file.separator}eclipse${file.separator}svnant" />
+		<property name="svnantlibpath" value="${svnantpath}${file.separator}lib" />
+	</target>
+
+	<condition property="dodebug">
+		<and>
+			<istrue value="${remove_debug_grid}" />
+		</and>
+	</condition>
+
+	<target name="touch_debug" if="dodebug">
+		<replace file="${root_dir}${file.separator}src${file.separator}gui${file.separator}Opcat2.java" token="Debug.setDebugLevelToCore();" value="Debug.setLEVEL(0);" />
+		<touch file="${root_dir}${file.separator}src${file.separator}gui${file.separator}util${file.separator}Debug.java" />
+	</target>
+
+
+	<target name="init" depends="setwindows,setlinux" description="Delete all generated directories, and creates new ones">
+
+		<delete dir="${root_dir}" />
+		<mkdir dir="${root_dir}" />
+
+		<copy todir="${root_dir}">
+			<fileset dir="${basedir}">
+				<exclude name="**/*.class" />
+			</fileset>
+		</copy>
+
+		<property name="installer" value="${installer_path}${file.separator}${installer_name}" />
+
+		<tstamp>
+			<format property="TODAY" pattern="d-MMMM-yyyy" locale="en" />
+		</tstamp>
+
+		<path id="classpath">
+			<fileset dir="lib">
+				<include name="**${file.separator}*.jar" />
+			</fileset>
+		</path>
+
+		<property name="bin_dir" value="${root_dir}${file.separator}bin" />
+		<mkdir dir="${bin_dir}" />
+
+		<property name="restricted" value="${root_dir}${file.separator}Build${file.separator}restricted${file.separator}temp" />
+		<property name="unrestricted" value="${root_dir}${file.separator}Build${file.separator}unrestricted${file.separator}temp" />
+
+		<mkdir dir="${root_dir}${file.separator}Build${file.separator}restricted" />
+		<mkdir dir="${root_dir}${file.separator}Build${file.separator}unrestricted" />
+		<mkdir dir="${restricted}" />
+		<mkdir dir="${unrestricted}" />
+
+		<replace file="${root_dir}${file.separator}whatsnew.txt" token="{vesrion}" value="${version}" />
+
+		<replace file="${root_dir}${file.separator}src${file.separator}gui${file.separator}AboutDialog.java" token="Version:       VERSION" value="Version:       ${version}" />
+		<replace file="${root_dir}${file.separator}src${file.separator}gui${file.separator}AboutDialog.java" token="Date:  CompileDate" value="Date:  ${TODAY}" />
+		<touch file="${root_dir}${file.separator}src${file.separator}gui${file.separator}AboutDialog.java" />
+
+		<replace file="${root_dir}${file.separator}src${file.separator}gui${file.separator}license${file.separator}RestrictedLicense.java" token="private static final int MAX_NUM_OF_THINGS = 150;" value="private static final int MAX_NUM_OF_THINGS = ${things};" />
+		<touch file="${root_dir}${file.separator}src${file.separator}gui${file.separator}license${file.separator}RestrictedLicense.java" />
+
+		<touch file="${root_dir}${file.separator}src${file.separator}gui${file.separator}Opcat2.java" />
+
+		<delete dir="${unrestricted}" />
+		<delete dir="${restricted}" />
+
+		<mkdir dir="${unrestricted}" />
+		<mkdir dir="${unrestricted}${file.separator}examples" />
+		<mkdir dir="${unrestricted}${file.separator}backup" />
+		<mkdir dir="${unrestricted}${file.separator}icons" />
+		<mkdir dir="${unrestricted}${file.separator}models" />
+		<mkdir dir="${unrestricted}${file.separator}help" />
+		<mkdir dir="${unrestricted}${file.separator}lib" />
+		<mkdir dir="${unrestricted}${file.separator}Output" />
+		<mkdir dir="${unrestricted}${file.separator}codeGenerator" />
+		<mkdir dir="${unrestricted}${file.separator}api" />
+		<mkdir dir="${unrestricted}${file.separator}api${file.separator}doc" />
+
+		<copy todir="${unrestricted}${file.separator}examples">
+			<fileset dir="${root_dir}${file.separator}Examples" />
+		</copy>
+
+		<copy todir="${unrestricted}${file.separator}help">
+			<fileset dir="${root_dir}${file.separator}help" />
+		</copy>
+		<copy todir="${unrestricted}${file.separator}codeGenerator">
+			<fileset dir="${root_dir}${file.separator}codeGenerator" />
+		</copy>
+		<copy todir="${unrestricted}${file.separator}lib">
+			<fileset dir="${root_dir}${file.separator}lib" />
+		</copy>
+		<copy todir="${unrestricted}${file.separator}api">
+			<fileset dir="${root_dir}${file.separator}lib" />
+		</copy>
+
+		<copy file="${root_dir}${file.separator}Build${file.separator}Opcat2_16x16.ico" todir="${unrestricted}" />
+		<copy file="${root_dir}${file.separator}Build${file.separator}Opcat2_32x32.ICO" todir="${unrestricted}" />
+		<copy file="${root_dir}${file.separator}Build${file.separator}Opcat2.html" todir="${unrestricted}" />
+		<copy file="${root_dir}${file.separator}Build${file.separator}conf.txt" todir="${unrestricted}" />
+		<copy file="${root_dir}${file.separator}Build${file.separator}doreq" tofile="${unrestricted}${file.separator}doreq" />
+		<copy file="${root_dir}${file.separator}Build${file.separator}Opcat2.exe" todir="${unrestricted}" />
+		<copy file="${root_dir}${file.separator}Build${file.separator}salicense.dat" todir="${unrestricted}" />
+		<copy file="${root_dir}${file.separator}Build${file.separator}Dataform.xlt" todir="${unrestricted}" />
+		<copy file="${root_dir}${file.separator}Build${file.separator}systems.ops" todir="${unrestricted}" />
+		<copy file="${root_dir}${file.separator}Build${file.separator}colors.ops" todir="${unrestricted}" />
+		<copy file="${root_dir}${file.separator}Build${file.separator}opcat.bat" todir="${unrestricted}" />
+		<copy file="${root_dir}${file.separator}lib${file.separator}pgs.properties" todir="${unrestricted}" />
+
+		<copy todir="${restricted}">
+			<fileset dir="${unrestricted}" />
+		</copy>
+
+		<copy file="${root_dir}${file.separator}Build${file.separator}unrestricted_license.lic" tofile="${unrestricted}${file.separator}license.lic" />
+		<copy file="${root_dir}${file.separator}Build${file.separator}restricted_license.lic" tofile="${restricted}${file.separator}license.lic" />
+
+		<copy file="${root_dir}${file.separator}Build${file.separator}unrestricted.iss" todir="${unrestricted}" />
+		<copy file="${root_dir}${file.separator}Build${file.separator}restricted.iss" todir="${restricted}" />
+
+		<copy file="${root_dir}${file.separator}Build${file.separator}RestrictedVersionEULA.rtf" todir="${restricted}" />
+
+
+	</target>
+
+
+	<target name="jar" description="Compile OPCAT" depends="init,touch_debug">
+
+		<javac srcdir="${root_dir}${file.separator}src" destdir="${bin_dir}" nowarn="true">
+			<classpath refid="classpath" />
+		</javac>
+
+		<copy todir="${bin_dir}">
+			<fileset dir="${root_dir}${file.separator}src" casesensitive="no">
+				<exclude name="**${file.separator}*.java" />
+			</fileset>
+		</copy>
+
+		<jar destfile="${restricted}${file.separator}Opcat2.jar" basedir="${bin_dir}">
+			<manifest>
+				<attribute name="Main-Class" value="gui.Opcat2" />
+				<attribute name="Class-Path" value="lib${file.separator}lib${file.separator}jaxb-impl.jar   
+				lib${file.separator}tablelib.jar			lib${file.separator}CodeGenerator.jar   lib${file.separator}jaxb-impl.jar    	
+				lib${file.separator}jdom.jar            	lib${file.separator}commons-collections.jar
+				lib${file.separator}jaxb-libs.jar			lib${file.separator}jaxb-xjc.jar	
+				lib${file.separator}xerces.jar				lib${file.separator}jaxb-api.jar		lib${file.separator}javacsv.jar					
+				lib${file.separator}PgsLookAndFeel.jar		lib${file.separator}PgsLookAndFeel-jide.jar
+				lib${file.separator}swingfx.jar				lib${file.separator}relaxngDatatype.jar	
+				lib${file.separator}jai_core.jar			lib${file.separator}jai_codec.jar
+				lib${file.separator}AnimatedTransitions.jar	lib${file.separator}TimingFramework.jar	
+				lib${file.separator}svnkit.jar				lib${file.separator}svnkit-cli.jar
+				lib${file.separator}svnkit-javahl.jar		lib${file.separator}jna.jar		
+				lib${file.separator}swingx-0.9.4.jar		lib${file.separator}swing-beaninfo-0.9.4.jar
+				lib${file.separator}Filters.jar				lib${file.separator}MultipleGradientPaint.jar
+				lib${file.separator}swing-layout.jar		lib${file.separator}swing-worker.jar
+				lib${file.separator}hsqldb.jar				lib${file.separator}servlet.jar
+				lib${file.separator}trilead.jar				lib${file.separator}mysql-connector-java-5.1.7-bin.jar
+				lib${file.separator} 						images${file.separator} 	. " />
+			</manifest>
+		</jar>
+
+		<copy file="${restricted}${file.separator}Opcat2.jar" todir="${unrestricted}" />
+	</target>
+
+
+	<target name="javadoc" description="JARs the Task" depends="jar">
+		<javadoc destdir="${unrestricted}${file.separator}api${file.separator}doc" author="true" version="true" use="true" windowtitle="OPCAT II API">
+
+			<fileset dir="${root_dir}${file.separator}src" defaultexcludes="yes">
+				<include name="**${file.separator}*.java" />
+			</fileset>
+
+			<doctitle>
+				<![CDATA[<h1>OPCAT II</h1>]]>
+			</doctitle>
+
+		<bottom>
+			<![CDATA[<i>Copyright &#169; 2008 OPCAT Inc. All Rights Reserved.</i>]]>
+			</bottom>
+
+	<tag name="todo" scope="all" description="To do:" />
+	<group title="OPCAT II API" packages="src.*" />
+	<link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="C:${file.separator}tmp" />
+	<link href="http://developer.java.sun.com/developer/products/xml/docs/api/" />
+</javadoc>
+</target>
+
+<target name="jar_cleanup" description="cleanup after jar is run" depends="javadoc">
+<copy file="${unrestricted}${file.separator}Opcat2.jar" tofile="${unrestricted}${file.separator}api${file.separator}Opcat2.jar" />
+<copy todir="${restricted}${file.separator}api${file.separator}doc">
+	<fileset dir="${unrestricted}${file.separator}api${file.separator}doc" />
+</copy>
+<copy file="${restricted}${file.separator}Opcat2.jar" tofile="${restricted}${file.separator}api${file.separator}Opcat2.jar" />
+</target>
+
+
+<target name="create_exe" description="make setup files" depends="build,javadoc,jar_cleanup">
+<exec dir="${restricted}" executable="${installer}">
+	<arg line=" ${arg_line} /cc restricted.iss" />
+</exec>
+
+<exec dir="${unrestricted}" executable="${installer}">
+	<arg line=" ${arg_line} /cc unrestricted.iss" />
+</exec>
+
+<copy file="${unrestricted}${file.separator}Output${file.separator}unrestricted.exe" tofile="${unrestricted}${file.separator}..${file.separator}opcat-${version}-installer.exe" />
+<copy file="${restricted}${file.separator}Output${file.separator}restricted.exe" tofile="${restricted}${file.separator}..${file.separator}opcat-${version}-limited-installer.exe" />
+<copy file="${root_dir}${file.separator}Build${file.separator}Autorun.inf" tofile="${unrestricted}${file.separator}..${file.separator}Autorun.inf" />
+<copy file="${root_dir}${file.separator}Build${file.separator}Autorun.inf" tofile="${restricted}${file.separator}..${file.separator}Autorun.inf" />
+<copy file="${root_dir}${file.separator}whatsnew.txt" tofile="${unrestricted}${file.separator}..${file.separator}whatsnew.txt" />
+<copy file="${root_dir}${file.separator}whatsnew.txt" tofile="${restricted}${file.separator}..${file.separator}whatsnew.txt" />
+<zip destfile="${unrestricted}${file.separator}..${file.separator}opcat-${version}-api.zip" basedir="${unrestricted}${file.separator}api" />
+<zip destfile="${restricted}${file.separator}..${file.separator}opcat-${version}-api.zip" basedir="${restricted}${file.separator}api" />
+
+<delete dir="${unrestricted}" />
+<delete dir="${restricted}" />
+
+</target>
+
+<target name="test">
+<property name="test.class.name" value="server.database.TestDatabase" />
+
+<path id="test.classpath">
+	<pathelement location="${unrestricted}" />
+	<pathelement location="${root_dir}${file.separator}lib/junit-4.5.jar" />
+	<fileset dir="${root_dir}${file.separator}lib">
+		<include name="**/*.jar" />
+	</fileset>
+	<fileset dir="${unrestricted}">
+		<include name="**/*.jar" />
+	</fileset>
+</path>
+
+
+<junit fork="yes" haltonfailure="yes">
+	<test name="${test.class.name}" />
+	<formatter type="plain" usefile="false" />
+	<classpath refid="test.classpath" />
+</junit>
+</target>
+
+
+
+<target name="build" depends="init,jar,test" description="building and running junit tests without packaging">
+
+</target>
+
+
+</project>

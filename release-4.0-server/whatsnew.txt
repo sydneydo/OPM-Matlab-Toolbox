@@ -1,0 +1,546 @@
+
+OPCAT Systems Ltd.
+
+----------------------------------------
+What's New In OPCAT {vesrion} 
+----------------------------------------
+
+CHANGE - 0000291: Use roles activation times in simulation (if exists)
+ 
+CHANGE - Agent is not a regular link and could be connected when other links are connected.  
+
+
+----------------------------------------
+What's New In OPCAT 3.1
+----------------------------------------
+
+NEW - Simulation Settings loaded from configuration file. 
+
+NEW - Description to links. Shown under the line when set in the link properties dialog. 
+
+NEW - When a referenced Role has an icon set, the Role icon is shown.  
+
+NEW - ability to add icons to Processes, Objects, Links. "show_icons" added to configuration file. Icons opaque value added to configuration file.
+
+NEW - when hovering over the row-header of "show appearances" grid, If an HTML export has been done to the model in the model directory, the OPD of the instance is presented.
+
+NEW - new menu item "Show appearances" for a requirement when right clicking on the grid. 
+
+NEW - 0000268: Ability to run  animation without on-screen animation.
+
+NEW - 0000267: Models repository, ability to browse, open and add as library user models from within OPCAT.
+
+NEW - 0000266: Ability to search OPCAT Grid 
+
+NEW - 0000253: Children definition in Animation
+
+NEW - When fixing a Validation issue, if a thing with the correct role is present in the OPD then the user is asked if he wants to fix the existing role. 
+
+NEW - Resource column added to the "Project Summary" report.
+
+NEW - The ability to "Fix Warning" from the validation grid by right-click on a warning. 
+
+NEW - When inserting a thing from a library or fixing a validation warning the user is asked, when appropriate, for the placement of the inserted object (inside or outside the main entity of the OPD). 
+
+NEW - New "Place" column in the Validation Grid, this column has ("Interface", "Internal") options. this column refers to the warning.
+
+NEW - "simulation_level_range" added to configuration file with initial value of 3. This value is used by the Simulation module to handle process at the same height as one level. larger value means the processes could be less aligned.
+
+NEW - Holding "Control" key while selecting in OPD will zoom into the selected area. Return to normal size by new menu in OPD "right-click" pop-up menu.
+
+NEW - Parent field in imported object CSV files.
+
+NEW - An "show_opl" in the configuration file. setting it to false will prevent OPL text in OPL window.  
+
+CHANGE - When inserting tagged elements into a view, A Thing with out a parent is used for the insertion.     
+
+CHANGE - Set minimum size for tools panel (lower panel of OPCAT) to prevent buttons and grids size problems. value could be changed via the configuration file.  
+
+CHANGE - OPCAT Install changes only one value in the windows registry, (OPCAT_HOME Environment settings), (MAC or UNIX users need to set OPCAT_HOME Environment variable). All the directories could be changed via the configuration file.  
+
+CHANGE - Default models directory is set to %OPCAT_HOME%\models. This could be changed in the configuration file. 
+
+CHANGE - Drawing Role name on a Thing is optional and could be set in the configuration file.
+
+CHANGE - During Simulation Objects defined inside a Process are not created automatically, The object needs to be created.
+
+CHANGE - When using the complete links action on a Thing with a parent, the user is asked if to insert new elements inside the parent.
+
+CHANGE - When fixing a validation error, on a Thing with a parent, the user is asked if to insert new elements inside the parent.
+
+CHANGE - "UD" in view name to "View"
+
+BUG - EXHIBITION_RELATION treatment (for objects) in simulation. (sons objects would not de-activate/activate according to parent) 
+
+BUG - Renumber of OPD's changed name of view's to it's original name. 
+
+BUG - Changing a Thing would remove the classification libraries connections.     
+
+BUG - While in Animation mode, objects inside processes would not be destroyed. 
+
+BUG - Loading a library which has a library fails. 
+
+BUG - Deleting OPD from the OPD right-click menu would not refresh the OPD tree. 
+
+BUG - 0000269: Errors when closing or Clearing grid from grid buttons 
+
+BUG - Inserting a thing from a policy library would not copy the physical, activation times and resource values. 
+
+BUG - 0000225: < or > in states kills the OPL.
+
+BUG - 0000219: Change CSV export from the grid to support line breaks in names.
+
+BUG - 0000217: delete a thing in a view which contains other things.
+
+BUG - OPCAT would not run when file path is not separated with a "\" i.e. Windows.
+
+BUG - Tab names of entities with more then one line would not show correctly. 
+
+BUG - double clicking on a grid row when project has zero things in it causes a message. 
+
+BUG - Error when creating UML sequence and activity diagrams. 
+
+BUG - Error in resource unit when changing an existing object. 
+
+BUG - Deleted relations would partly show, when deleting an outside property of a process which has included things.
+
+BUG - Format brush do not work with links.   
+
+KNOWN BUGS - Life-Span graph misses the first processes in an in-zoomed process
+
+KNOWN BUGS - Re-validating a policy will sometimes give partial results. 
+
+KNOWN BUGS - 0000193: Copy Things belonging to inside and outside in-zoomed process at the same time will fail
+
+KNOWN BUGS - 0000192: Sometimes coloring links from the grid  or the first element in OPD will not be colored.
+
+KNOWN BUGS - 0000184: Import fails on big projects. (java memory. use the supplied script for running opcat and not the desktop icon) 
+
+KNOWN BUGS - 0000077: XOR/OR destroyed by resizing.
+
+KNOWN BUGS - 0000212: Simulation does not support OR, XOR. (work around this by - marking the alternative links in the model with path (a,b,c etc.) in addition to the OR, XOR mark.)
+
+KNOWN BUGS - 0000194: Problem when dragging a link from object to its internal state. (work around this by -  Instead of dragging the link, delete the link and create a new one from the state.)
+
+KNOWN BUGS - 0000107: Resizing object with states. when resizing object which have states the states can be moved outside the object boundaries which makes it impossible to see them later.
+
+KNOWN BUGS - 0000214: Do not found message for meta-libraries that were deleted.
+
+KNOWN BUGS - 0000213: Structural Links outside the canvas. In a crowded diagrams, part of the structural link sometimes disappears outside the canvas
+
+KNOWN BUGS - 0000132: Zoom-In into an object with states duplicates the object. (work around this by - delete the duplicated object in the in-zoom OPD. In zoom of Objects is not recommended.)
+
+----------------------------------------
+What's New In OPCAT 3.0
+----------------------------------------
+
+NEW - When importing a meta library which was added as Policy, Imported Things are kept connected to source library. 
+
+NEW - Right-click on Library to insert a Thing from the Library now supports inserting into the Main Entity of the OPD (select the main entity before inserting)
+
+NEW - During Animation double-click on a Thing will show its instances in the grid.
+
+NEW - Validation of Policies supports States. 
+
+NEW - "Copy to Parent OPD" action on right-click of Things. This action copies the selected thing to the parent OPD, without the need to paste. 
+
+NEW - Model file name is presented at the Top Frame border of OPCAT. (Also a fix for bug 0000168)
+
+NEW - Relative path of file URL's, same as the meta-libraries relative path (relative path is kept to the project's directory; if the URL is defined in another disk absolute path is saved). 
+
+NEW - Ability to create new Views for Things, any number of views could be created. "Right-click" on a Thing and press "Create View"
+
+NEW - Ability to change a View name via "right-click" on a view in the left side bar. 
+
+NEW - SQL of a Database can be generated from OPM Model. (EXPERIMANTAL)
+
+NEW - Local database representing the OPM model. HSQLDB (hsqldb.org) is used. This will be the base for reports and compression of models using SQL queries. (EXPERIMANTAL)
+
+NEW - Resources consumption can be set on an effect link of a leaf process. 
+
+NEW - Measurement Unit support for objects. 
+
+NEW - Complete Links for all OPD or ConnectionEdge (Object, Process, State). Completes all missing links for this entity
+
+NEW - Complete Links and add missing Things connected to this Thing and are not in this OPD
+
+NEW - Projects Directory, in which all OPCAT Projects reside. This is the directory used for generating multi-systems views. 
+
+NEW - Animation option, Stop at Agents. Causes the system to halt when an Agent is reached (See the OPM book)
+
+NEW - Libraries are divided into two categories, Design Policies and Classification. Only Policies should be verified. 
+
+BUG - 0000186: Structural links creation in Import
+
+BUG - 0000209: Fundamental relations disappearing
+
+BUG - Source General Relation would not get moved during merge. 
+
+BUG - 0000180: Events and Agents, isDescendantLink. Added a warning if this condition is met in animation. 
+
+BUG - 0000135: Thing stays red after search
+
+BUG - 0000182: OPCAT gets slow after animation
+
+BUG - Sorting in the LifeSpanGraph did not work. 
+
+BUG - Thing URL ending with upper case letters would not be seen by animation. 
+
+BUG - 0000185: Structural links does not show the type (hidden)
+
+BUG - 0000189: OPL text size could not be changed.
+
+BUG - 0000190: Wrong output from Policies verification
+
+BUG - 0000191: Verification table converted to OPCAT Grid.
+
+BUG - 0000171: merge unfolded objects.
+
+BUG - 0000202: Two things with the same name would show as one in the Things View.
+
+BUG - Wrong Messages when Paste after a Cut. 
+
+BUG - Event Link in Animation would have worked incorrectly in levels greater then 1. 
+
+BUG - 0000176: Two states could be set as initial or final.
+
+BUG - 0000171: In Testing mode two states could be activated.
+
+BUG - 0000130: Animation starting would not start correctly.
+
+BUG - 0000127: States appear in upper OPDs. When a state is added, it is hidden in other instances of this object.
+
+
+CHANGE - Removed AutoScroll of LifeSpanGraph in Animation. 
+
+CHANGE - "Show libraries" tool-bar button shows opcat libraries marked as classification libraries. 
+
+CHANGE - GUI re-make.
+
+CHANGE - Insert Roles action, inserts the Things inside a Thing with the selected Role. 
+
+CHANGE - 0000164, 0000126: Agent Links are treated as in the OPM Book (i.e. not an event but an enabler)
+
+CHANGE - Add undo to Insert Roles menu
+
+CHANGE - Layout inserted roles inside the selected Role if it exists. 
+
+CHANGE - OPCAT configuration items added to conf.txt file.
+
+
+
+----------------------------------------
+What's New In OPCAT 2.9
+----------------------------------------
+NEW - An option to connect any OPM thing to a meta data in the grid. 
+
+NEW - An option to hide a part of project using the Meta-Hide feature. 
+
+NEW - An option to show only a part of project using the Meta-Show feature. 
+
+NEW - The ability to connect Events with Condition or Enablers in an OR-XOR connection. 
+
+NEW - Ability to connect Object to a Process with a Condition Link. 
+
+NEW - Consistency rule, to prevent connecting two Things which are not consistent if one of them is in-zoomed
+
+NEW - Consistency helper, a new menu to right-click on a Thing. This menu uses consistency rules to generate a report on the global consistency of this thing. 
+
+NEW - Testing View. 
+
+NEW - Insert Roles Action, added support for getting all the sons of a Role. 
+
+NEW - CSV Edit form.
+
+NEW - "Show In Grid" for OPD's. Right-click on an OPD in the tree to show in the grid. 
+
+NEW - Sent to back property saved in opz file. 
+
+NEW - Support inheritance from meta-libraries and current project
+
+NEW - Unfolded diagrams are called "UD" and are kept at level 1 of the tree. 
+
+NEW - OPD numbers are kept constant. A new menu "Regenerate OPD numbers" under "View" created for regenerating the OPD numbers if needed
+
+NEW - Support for Low-Level Processes min-activation-time in testing mode.
+
+NEW - OPCAT directories are now kept in the registry; a restart is needed after install. 
+
+NEW - A hidden backup directory in the root OPCAT directory. This holds one copy of the system before the last save. 
+
+NEW - Testing mode now supports running when windows are not in full screen. This enables the animation to be viewed in more then one OPD at a time. 
+
+NEW - Objects inside zoomed-in Object are treated as connected to the parent by aggregation relation. 
+
+NEW - Processes inside zoomed-in Object are treated as connected to the parent by exhibition relation.
+
+NEW - Objects inside zoomed-in Process are treated as connected to the parent by exhibition relation. 
+
+NEW - Processes inside zoomed-in Process are treated as connected to the parent 	by aggregation relation.
+
+NEW - Last opened files remains after OPCAT install. 
+
+NEW - Unfolding properties dialog. 
+
+CHANGE - Testing Mode does not open windows in full screen but uses parent OPD size
+
+CHANGE - States are auto-arranged in new objects until the first time a dragging of a state is preformed. 
+
+CHANGE - The analyze Meta-Tag report has been changed and include more information on the connected things from the same Meta-Data file. 
+
+CHANGE - Color of a Meta-Tag is presented in the Grid. 
+
+CHANGE - connecting a condition or an instrument from a state to a process the "state is not a result" message should not appear if the state is "Initial"
+
+CHANGE - Tree numbering is kept after SD addition. 
+
+CHANGE - Events in Animation are not considered stopping conditions. 
+
+BUG - Quit was possible during file save which could result in corrupted opz 	file 
+
+BUG - Close all grid panels upon exit or close. 
+
+BUG - Things could be outside OPD drawing area. 
+
+BUG - When copy an incomplete set of things Paste would fail. 
+
+BUG - Removing a meta-model would keep it in the list with null path. 
+
+BUG - In Analyze Meta-Data tag, when the tag had a link connected to it an error occurred. 
+
+BUG - Search dialog would keep search results.
+
+BUG - New links created when copy, in-zoom or dragging links. 
+
+BUG - When opening OPCAT by dbl-clicking on a model the Meta-Tag icon would not 	appear
+
+BUG - While loading CSV files if rows had incomplete data the load would fail. 
+
+BUG - Sort in the first column of the Grid would fail for String ID's. 
+
+BUG - Testing mode would not start sometimes. 
+
+BUG - when adding a thing to the first SD all things would stay selected. 
+
+BUG - when merging Things with states, merge would fail. 
+
+BUG - Project summary would fail if a real URL exists in a thing. 
+
+KNOWN BUG - Testing mode would get 100% CPU.			Work Around - Closing of the project and reopening it is a must. 
+KNOWN BUG - Numbering of OPD's. 					Work Around - if numbers get corrupted use re-number from edit menu. 
+KNOWN BUG - Problem when dragging a link from object to his internal State. Work Around - deleting the link and creating again from the state. 
+
+----------------------------------------
+What's New In OPCAT 2.86 Version
+----------------------------------------
+
+NEW - Lifespan Diagram, in testing mode display things life cycle. 
+
+NEW - Metadata Analyze report shows the connections of the metadata connected 	items.
+
+NEW - Browse Keys, Back,Up,Forward. 
+
+NEW - Outlook style views.
+
+NEW - When inserting a thing via the Meta View, user is asked if to keep the 	link alive (as a role). 
+
+NEW - Summary report on a project. Invoke by mouse left click on tree node.
+
+NEW - Project Type field. set it in the project properties tab. influences the 	metaview. Meta View is divided into sub categories using this field.
+
+NEW - Insert Roles Menu in OPD right-click. Inserts all the things connected to 	a role to the current OPD at left-top. 
+
+NEW - In Testing (old Animation), Objects states could be set Initial or Final 	using a new Objects Tab during Testing Planning. 
+
+NEW - Complete Scenarios could be saved and loaded using the right menu. 
+
+NEW - Compare Scenarios report for diff between scenarios. 
+
+NEW - Support MetaData types other the Req. the imported CSV file should have:
+        First Line -    Type (Tasks, Req)
+        Seconded Line - Header names
+        Rest -          Data (no empty field should exist)
+
+NEW - Export the Grid as CSV or XML. 
+
+NEW - Report to user when trying to copy inconsistent set of things. For example: trying to copy a non connected link. 
+
+NEW - a Thing could become a generic Thing, which can not be zoomed-in as it has a Role and is Env. In Order to support generic function calling.
+
+NEW - Import a CSV Things file (For Bank Poalim) 
+
+NEW - Multi Connecting selected things when connecting Things with Structural Links
+
+NEW - Generic Things can not be zoomed-in or unfolded. 
+
+NEW - MetaData Analysis Report, invoked from the right-mouse menu
+
+NEW - Support for Level field in imported metadata libraries. 
+
+NEW - Coloring the project for each level in a metadata csv file. 
+
+NEW - Coloring the project for each role in a metadata library. 
+
+NEW - in testing mode, if an object has a final state, the final state is activated when object is destroyed
+
+NEW - relative path is saved in connected meta data libraries. 
+
+
+CHANGE - Rewrite of the Cut-Paste Action, Solved Consistency bugs and Improve speed by 100%.
+CHANGE - Sort Roles in Thing Properties Dialog by A-B Order. 
+CHANGE - Unmark Autoarrange States as default when creating objects. 
+CHANGE - Removed "If the object name ends with ing"... message when creating a new object. 
+CHANGE - Fix OPL sentence when object got only one state.
+
+BUG - Minimum size of the Grid could be 0. Now the user could make the Grid tab any size. 
+BUG - When using the Consistency helper Objects where created with wrong attributes. 
+BUG - Merge things which are connected to a State would fail. 
+BUG - Cut-Paste, if not used correctly, could cause inconsistency in the project. (Solved by the rewrite, see changed above)
+BUG - OPD tree did not refresh after OPD delete. 
+BUG - Dbl-Click on a header row in a group-by Grid would cause error. 
+BUG - Copy of an Unfolded Object would not connect the unfolded OPD to the new instance. 
+BUG - Unfolding will always ask about bringing related things. 
+BUG - After search a Thing color would stay red. 
+BUG - Drawing area will not fit to internal components when paste. 
+BUG - Search would return 0 results if Instances Tab is displayed.
+BUG - state would not keep visible status on COPY of objects.
+BUG - capitalize first letters in things description. 
+BUG - Testing mode had to be started twice in some cases. 
+BUG - deleting an Object was not allowed if the object had an unfolded OPD
+
+
+
+----------------------------------------
+What's New In OPCAT 2.85 Version
+----------------------------------------
+
+				 
+NEW - Views, 
+		OPCAT navigation left pane was rearranged. 
+		The OPD-Things tab was removed and replaced by the Views. There are three Views. The "OPD" 
+		view (the old OPD tab), The "OPD-Things" view (the old OPD-Things tab) and a new "Things" view. The
+		"Things" view shows all the things in the project arranged 	alphabetically. 
+		New actions on the views - in the OPD-Things view a copy of a Thing to the OPD was added by pressing 
+		The right-mouse click on the Thing to be copied. 
+		
+Things View - right mouse click on a Thing brings the new Things view menu. In this menu you can Copy, Delete,
+View Thing Instances, In Zoom and Unfold a thing. When View Instances is pressed (or dbl-click on a thing) all instances of the Thing are presented in the tools grid, dbl-click on an instance will show this instance (same as the search mechanism). 
+		
+NEW - Merge Things in the "Things" View on the left pane; Drop a Thing on another Thing will merge the dropped Thing into the 		target Thing. This is extremely helpful to eliminate Things redundancies after importing a diagram.  
+	  	There is small BUG here; you can not drag the current node. I.e.when you want to drag a node, first click 		on a different node to make it current and then start dragging the needed node. 		
+	  
+NEW - New Thing right-click Menu item, "Show Instances". Pressing right click on a Thing will shows all instances of the Thing.The results will appear in the Grid.
+
+NEW - Consistency Rule; Adding - adding an instrument or condition link from state to process will check that the designed system's operation will reach this state during at least one of the operation's scenarios. If not then a warning is issued.
+			 
+NEW - When creating a document OPL files of each OPD are created.
+
+NEW - Export as CSV (Elta File)
+
+NEW - Requirements subsystem, CSV files are supported as input.
+
+NEW - Features restrictions. OPCAT could enable or disable the CSV and 	Requirements feature by customer.
+
+NEW - Copy format tool. Enable a user to copy the format of a selected Process or Object to another Thing. 
+
+NEW - Meta Library View. A new view in which the Project Meta Libraries could be used as Patterns in order to make the implementation Model
+	 
+
+CHANGED - java 5.0 code changes
+CHANGED - Linux compatibility fixed. OPCAT runs on Linux as MS Windows. 
+CHANGED - The name of the inner files are synchronized with the thing name when creating a document 
+CHANGED - When loading a corrupt file, loading will continue and load all the non corrupt sections. 
+
+BUG - No "SAVE Or NOT" question after doing a merge.
+BUG - Search when there is a thing in the clipboard fail or will show one item.		
+BUG - when you try to copy a link, OPCAT goes out of focus and you can not copy, delete or any edit action. (BUG 0000119)
+BUG - Meta libs could not remove a connection to a Role after a saved file loaded again. 
+BUG - Fix dbl-Click on the Grid when data is filtered, sorted or grouped. 
+BUG - No "SAVE Or NOT" question after loading a new Meta Library
+BUG - No "SAVE Or NOT" question after changing project properties.
+BUG - No "SAVE Or NOT" question after doing an Import Action.
+
+
+
+----------------------------------------
+What's New In OPCAT Version 2.8
+----------------------------------------
+
+NEW - Consistency Framework. At the moment 4 consistency rules are implemented - 
+		Deleting - 	deleting an instance. 
+		Adding   - 	adding a Thing inside a zoomed-in Process. The added thing could be placed in each 				OPD of the zoomed-in process
+		Adding   - 	adding a thing in the SD. The added thing could be placed in any OPD in which a thing 				in th eSD appeares.
+		Adding   -	adding a thing outside a zoomed-in Process. The added thing could be added to each 				OPD in which the zoomed-in process 	resides. 
+	
+	The user can turn off the checking when adding a thing by choosing the new "Addintion Helper" 
+	"Off" radio button in the general tab of thing adding. 
+NEW - Animation of Things URL if the URL ends with BMP, JPG or JPEG. 	
+
+CHANGED - Improved Animation logging to log more errors. 
+CHANGED - Improved thing size when paste into a zoomed-in thing
+
+BUG - When Unfolding or Paste, Things could go outside screen border. 
+
+
+
+----------------------------------------
+What's New In OPCAT Version 2.76
+----------------------------------------
+
+NEW - Ask User When Adding a Link (Only if there are more than one occurrence of the source-destination) 
+NEW - Animation events Logging
+NEW - Ask User when deleting a Thing (Only if there is more than one occurrence
+NEW - OPCAT Grid to replace the extension tools panel (used for now in the animation logging). 
+NEW - Search
+NEW - OPD List in generated documents (with a link to the picture if present)
+
+CHANGED - New additions to the OPCAT II API (Debug window).
+CHANGED - Removed forcing the first letter to be capital. 
+
+Bug fixes
+---------
+BUG - Animation could be inconsistent between runs. 
+BUG - Animation could not handle Events links.
+BUG - Cut did not copy all of Process settings.
+BUG - Import did not copy all of Process settings.
+BUG - Import caused links and states change in location in reference to the original
+BUG - CUT did not paste at the cursor when paste inside zoomed-in things. 
+
+
+
+
+----------------------------------------
+What's New In OPCAT Version 2.75
+----------------------------------------
+NEW - Description field in objects
+NEW - Cut and Paste - The CUT Or Copy in OPCAT II does not check the validity of the new model created by this edit operation, validity checks are planned in future releases. 
+
+CHANGED - removal of the index page from objects
+CHANGED - description tab name changed to detail. 
+CHANGED - black reuse was removed.
+CHANGED - import help. 
+CHANGED - internal behavior of menu and mouse actions to be faster and safer.
+
+Bug fixes
+---------
+BUG - Import faster by 80%.
+BUG - Import changes the imported project graphics layout.
+BUG - Copy does not work correctly with Keyboard.
+BUG - URL invocation with empty string. 
+BUG - Caps in first letters of the URL string. 
+BUG - Import saves imported file without warning after import. 
+
+
+----------------------------------------
+What's New In OPCAT Version 2.74
+----------------------------------------
+NEW - URL feature to objects and process - The URL is entered in the URL textbox at the details tag of the thing properties dialog. 
+When the mouse is dragged on a Thing which has a URL defined the border color changes to red and a tooltip "Control-LeftMouse" appears.
+In Order to activate the URL, press Control+Left Mouse button. 
+
+
+
+----------------------------------------
+What's New In OPCAT Version 2.73
+----------------------------------------
+Initial Commercial release. 

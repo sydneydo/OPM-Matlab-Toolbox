@@ -1,0 +1,468 @@
+<!-- saved from url=(0022)http://internet.e-mail -->
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="GENERATOR" CONTENT="Microsoft FrontPage 4.0">
+</HEAD>
+<BODY>
+
+<P><A NAME="Value"></A>Token Value
+
+<P><A NAME="ThingName"></A>Token ThingName
+
+<P><A NAME="PositiveInteger"></A>Token PositiveInteger
+
+<P><A NAME="ScopeObject"></A>Token ScopeObject
+
+<P><A NAME="ScopeProcess"></A>Token ScopeProcess
+
+<P><A NAME="FeatureAssignment"></A>Token FeatureAssignment
+
+<P><A NAME="LogicalRelation"></A>Token LogicalRelation
+
+<P><A NAME="LogicalRelationWithoutXor"></A>Token LogicalRelationWithoutXor
+
+<P><A NAME="Modifier"></A>Token Modifier
+
+<P><A NAME="LowerIndex"></A>Token LowerIndex
+
+<P><A NAME="UpperIndex"></A>Token UpperIndex
+
+<P><A NAME="minTimeValueP"></A>Token minTimeValueP
+
+<P><A NAME="maxTimeValueP"></A>Token maxTimeValueP
+
+<P><A NAME="minTimeValueS"></A>Token minTimeValueS
+
+<P><A NAME="maxTimeValueS"></A>Token maxTimeValueS
+
+<P><A NAME="minTimeValueL"></A>Token minTimeValueL
+
+<P><A NAME="maxTimeValueL"></A>Token maxTimeValueL
+
+<P><A NAME="EnvPhySupAttr"></A>Token EnvPhySupAttr
+
+<P><A NAME="MultiplicityExpression"></A>Token MultiplicityExpression
+
+<P><A NAME="F"></A>Token F
+
+<P><A NAME="A"></A>Token A
+
+<P><A NAME="SimpleTypeName"></A>Token SimpleTypeName
+
+<P><A NAME="EnvPhySupTranDeclaration"></A>Token EnvPhySupTranDeclaration
+
+<P><A NAME="SimpleTypeDeclaration"></A>Token SimpleTypeDeclaration
+
+<P><A NAME="OptEPSTD"></A>Token OptEPSTD
+
+<P><A NAME="StateName"></A>Token StateName
+
+<P><A NAME="OPL"></A>OPL := 
+<BR> <A HREF="#ObjProc">ObjProc</A> <A HREF="#Event">Event</A>;
+
+<P><A NAME="ObjProc"></A>ObjProc := 
+<BR> <A HREF="#ObjectSentenceList">ObjectSentenceList</A> <A HREF="#ObjProc">ObjProc</A> |
+<BR> <A HREF="#ProcessSentenceList">ProcessSentenceList</A> <A HREF="#ObjProc">ObjProc</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="HierarchicalThingName"></A>HierarchicalThingName := 
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#OfThingName">OfThingName</A>;
+
+<P><A NAME="OfThingName"></A>OfThingName := 
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="HierarchicalThingNames"></A>HierarchicalThingNames := 
+<BR> <A HREF="#ThingName">ThingName</A> 's' <A HREF="#OfThingName">OfThingName</A>;
+
+<P><A NAME="ObjectSentenceList"></A>ObjectSentenceList := 
+<BR> <A HREF="#EPSILON">EPSILON</A> |
+<BR> <A HREF="#ObjectSentence">ObjectSentence</A> <A HREF="#ObjectSentenceList">ObjectSentenceList</A>;
+
+<P><A NAME="ObjectSentence"></A>ObjectSentence := 
+<BR> <A HREF="#SimpleObjectSentence">SimpleObjectSentence</A> |
+<BR> <A HREF="#ComplexObjectSentence">ComplexObjectSentence</A>;
+
+<P><A NAME="SimpleObjectSentence"></A>SimpleObjectSentence := 
+<BR> <A HREF="#ThingName">ThingName</A> 'is' <A HREF="#EnvPhySupTranDeclaration">EnvPhySupTranDeclaration</A> '.' |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#SimpleTypeDeclaration">SimpleTypeDeclaration</A> '.';
+
+<P><A NAME="ComplexObjectSentence"></A>ComplexObjectSentence := 
+<BR> <A HREF="#ComplexObjectStatement">ComplexObjectStatement</A> |
+<BR> <A HREF="#ComplexObjectSentence">ComplexObjectSentence</A> <A HREF="#ComplexObjectStatement">ComplexObjectStatement</A>;
+
+<P><A NAME="ComplexObjectStatement"></A>ComplexObjectStatement := 
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#OptEPSTD">OptEPSTD</A> 'is' <A HREF="#A">A</A> <A HREF="#HierarchicalThingName">HierarchicalThingName</A> ',' 'the' <A HREF="#ThingName">ThingName</A> 'of which is' <A HREF="#StateName">StateName</A> '.' |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#OptEPSTD">OptEPSTD</A> 'specializes' <A HREF="#HierarchicalThingName">HierarchicalThingName</A> '.' |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#OptEPSTD">OptEPSTD</A> 'has states' <A HREF="#StateList">StateList</A> '.' |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#OptEPSTD">OptEPSTD</A> 'features' <A HREF="#CharacterizationList">CharacterizationList</A> '.' |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#OptEPSTD">OptEPSTD</A> 'consists of' <A HREF="#AggregateList">AggregateList</A> '.' |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#OptEPSTD">OptEPSTD</A> <A HREF="#StateName">StateName</A> <A HREF="#ObjectPartnerList">ObjectPartnerList</A> '.' |
+<BR> <A HREF="#ThingName">ThingName</A> 'instantiates' <A HREF="#HierarchicalThingName">HierarchicalThingName</A> 'with' <A HREF="#F">F</A> <A HREF="#FeatureAssignments">FeatureAssignments</A> '.';
+
+<P><A NAME="StateList"></A>StateList := 
+<BR> <A HREF="#StateDescription">StateDescription</A> |
+<BR> <A HREF="#StateDesc">StateDesc</A> <A HREF="#StateDescription">StateDescription</A> 'and' <A HREF="#StateDescription">StateDescription</A>;
+
+<P><A NAME="StateDesc"></A>StateDesc := 
+<BR> <A HREF="#StateDescription">StateDescription</A> ',' <A HREF="#StateDesc">StateDesc</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="StateDescription"></A>StateDescription := 
+<BR> <A HREF="#StateName">StateName</A> <A HREF="#Mtwo">Mtwo</A>;
+
+<P><A NAME="Mtwo"></A>Mtwo := 
+<BR> ', which is timed from' <A HREF="#MinTimeValueS">MinTimeValueS</A> 'to' <A HREF="#MaxTimeValueS">MaxTimeValueS</A> 'and is final, ' |
+<BR> ', which is timed from' <A HREF="#MinTimeValueS">MinTimeValueS</A> 'to' <A HREF="#MaxTimeValueS">MaxTimeValueS</A> 'and is initial, ' |
+<BR> ', which is final, ' |
+<BR> ', which is initial, ' |
+<BR> ', which is timed from' <A HREF="#MinTimeValueS">MinTimeValueS</A> 'to' <A HREF="#MaxTimeValueS">MaxTimeValueS</A> ', ' |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="Timed"></A>Timed := 
+<BR> 'timed from' <A HREF="#MinTimeValueP">MinTimeValueP</A> 'to' <A HREF="#MaxTimeValueP">MaxTimeValueP</A> |
+<BR> 'timed from' <A HREF="#MinTimeValueS">MinTimeValueS</A> 'to' <A HREF="#MaxTimeValueS">MaxTimeValueS</A> |
+<BR> 'timed from' <A HREF="#MinTimeValueL">MinTimeValueL</A> 'to' <A HREF="#MaxTimeValueL">MaxTimeValueL</A>;
+
+<P><A NAME="AggregateList"></A>AggregateList := 
+<BR> <A HREF="#ObjectListWithPossibleMultiplicity">ObjectListWithPossibleMultiplicity</A> |
+<BR> <A HREF="#Aggs">Aggs</A> <A HREF="#ObjectListWithPossibleMultiplicity">ObjectListWithPossibleMultiplicity</A> 'and' <A HREF="#ObjectListWithPossibleMultiplicity">ObjectListWithPossibleMultiplicity</A>;
+
+<P><A NAME="Aggs"></A>Aggs := 
+<BR> <A HREF="#ObjectListWithPossibleMultiplicity">ObjectListWithPossibleMultiplicity</A> ',' <A HREF="#Aggs">Aggs</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="ObjectPartnerList"></A>ObjectPartnerList := 
+<BR> <A HREF="#HierarchicalThingName">HierarchicalThingName</A> |
+<BR> <A HREF="#MultiplicityExpression">MultiplicityExpression</A> <A HREF="#HierarchicalThingName">HierarchicalThingName</A> |
+<BR> <A HREF="#MultiplicityExpression">MultiplicityExpression</A> <A HREF="#HierarchicalThingNames">HierarchicalThingNames</A>;
+
+<P><A NAME="FeatureAssignments"></A>FeatureAssignments := 
+<BR> <A HREF="#FeatureAssignment">FeatureAssignment</A> |
+<BR> <A HREF="#FAs">FAs</A> <A HREF="#FeatureAssignment">FeatureAssignment</A> 'and' <A HREF="#FeatureAssignment">FeatureAssignment</A>;
+
+<P><A NAME="FAs"></A>FAs := 
+<BR> <A HREF="#FeatureAssignment">FeatureAssignment</A> ',' <A HREF="#FAs">FAs</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="ProcessSentenceList"></A>ProcessSentenceList := 
+<BR> <A HREF="#EPSILON">EPSILON</A> |
+<BR> <A HREF="#ProcessSentence">ProcessSentence</A> <A HREF="#ProcessSentenceList">ProcessSentenceList</A>;
+
+<P><A NAME="EventSentenceList"></A>EventSentenceList := 
+<BR> <A HREF="#EPSILON">EPSILON</A> |
+<BR> <A HREF="#EventSentence">EventSentence</A> <A HREF="#EventSentenceList">EventSentenceList</A>;
+
+<P><A NAME="ProcessSentence"></A>ProcessSentence := 
+<BR> 'Process' <A HREF="#ProcessStatement">ProcessStatement</A> <A HREF="#MPS">MPS</A>;
+
+<P><A NAME="MPS"></A>MPS := 
+<BR> <A HREF="#MPS">MPS</A> <A HREF="#ProcessStatement">ProcessStatement</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="Wtimed"></A>Wtimed := 
+<BR> ', which is' <A HREF="#Timed">Timed</A> ',' |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="ProcessStatement"></A>ProcessStatement := 
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#TimedProcess">TimedProcess</A> 'is' <A HREF="#EnvPhySupDeclaration">EnvPhySupDeclaration</A> '.' |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#OptTEPSD">OptTEPSD</A> 'is' <A HREF="#A">A</A> <A HREF="#HierarchicalThingName">HierarchicalThingName</A> ', the' <A HREF="#ThingName">ThingName</A> 'of which is' <A HREF="#StateName">StateName</A> '.' |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#OptTEPSD">OptTEPSD</A> 'specializes' <A HREF="#HierarchicalThingName">HierarchicalThingName</A> '.' |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#OptTEPSD">OptTEPSD</A> 'features' <A HREF="#CharacterizationList">CharacterizationList</A> '.' |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#OptTEPSD">OptTEPSD</A> 'consists of ' <A HREF="#ProcessExecution">ProcessExecution</A> '.' |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#OptTEPSD">OptTEPSD</A> 'is guarded by' <A HREF="#GuardingExpression">GuardingExpression</A> '.' |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#OptTEPSD">OptTEPSD</A> 'is enabled by' <A HREF="#EnablingExpression">EnablingExpression</A> '.' |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#OptTEPSD">OptTEPSD</A> 'yields' <A HREF="#YieldExpression">YieldExpression</A> '.' |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#OptTEPSD">OptTEPSD</A> 'consumes' <A HREF="#ConsumptionExpression">ConsumptionExpression</A> '.' |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#OptTEPSD">OptTEPSD</A> 'affects' <A HREF="#EffectExpression">EffectExpression</A> '.';
+
+<P><A NAME="OptTEPSD"></A>OptTEPSD := 
+<BR> ', which is' <A HREF="#TimedEnvPhySupDeclaration">TimedEnvPhySupDeclaration</A> ',' |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="TimedEnvPhySupDeclaration"></A>TimedEnvPhySupDeclaration := 
+<BR> <A HREF="#TimedEnvPhySupAttr">TimedEnvPhySupAttr</A> |
+<BR> <A HREF="#TimedEnv">TimedEnv</A> <A HREF="#TimedEnvPhySupAttr">TimedEnvPhySupAttr</A> 'and' <A HREF="#TimedEnvPhySupAttr">TimedEnvPhySupAttr</A>;
+
+<P><A NAME="TimedEnv"></A>TimedEnv := 
+<BR> <A HREF="#TimedEnvPhySupAttr">TimedEnvPhySupAttr</A> ',' <A HREF="#TimedEnv">TimedEnv</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="EnvPhySupDeclaration"></A>EnvPhySupDeclaration := 
+<BR> <A HREF="#EnvPhySupAttr">EnvPhySupAttr</A> |
+<BR> <A HREF="#EnvPhy">EnvPhy</A> <A HREF="#EnvPhySupAttr">EnvPhySupAttr</A> 'and' <A HREF="#EnvPhySupAttr">EnvPhySupAttr</A>;
+
+<P><A NAME="EnvPhy"></A>EnvPhy := 
+<BR> <A HREF="#EnvPhySupAttr">EnvPhySupAttr</A> ',' <A HREF="#EnvPhy">EnvPhy</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="CharacterizationList"></A>CharacterizationList := 
+<BR> <A HREF="#ObjectListWithPossibleMultiplicity">ObjectListWithPossibleMultiplicity</A> |
+<BR> <A HREF="#ObjMult">ObjMult</A> <A HREF="#ObjectWithPossibleMultiplicity">ObjectWithPossibleMultiplicity</A> 'and Process' <A HREF="#ThingName">ThingName</A> |
+<BR> <A HREF="#ObjMult">ObjMult</A> <A HREF="#ProcessList">ProcessList</A>;
+
+<P><A NAME="ObjMult"></A>ObjMult := 
+<BR> <A HREF="#ObjectWithPossibleMultiplicity">ObjectWithPossibleMultiplicity</A> ',' <A HREF="#ObjMult">ObjMult</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="ObjectListWithPossibleMultiplicity"></A>ObjectListWithPossibleMultiplicity := 
+<BR> <A HREF="#ObjectWithPossibleMultiplicity">ObjectWithPossibleMultiplicity</A> |
+<BR> <A HREF="#ObjMult">ObjMult</A> <A HREF="#ObjectWithPossibleMultiplicity">ObjectWithPossibleMultiplicity</A> 'and' <A HREF="#ObjectWithPossibleMultiplicity">ObjectWithPossibleMultiplicity</A>;
+
+<P><A NAME="ObjectWithPossibleMultiplicity"></A>ObjectWithPossibleMultiplicity := 
+<BR> <A HREF="#ThingName">ThingName</A> |
+<BR> <A HREF="#MultiplicityExpression">MultiplicityExpression</A> <A HREF="#ThingName">ThingName</A> |
+<BR> <A HREF="#MultiplicityExpression">MultiplicityExpression</A> <A HREF="#ThingNames">ThingNames</A>;
+
+<P><A NAME="ProcessList"></A>ProcessList := 
+<BR> 'Process' <A HREF="#ThingName">ThingName</A> |
+<BR> <A HREF="#ProcList">ProcList</A> 'Process' <A HREF="#ThingName">ThingName</A> 'and Process' <A HREF="#ThingName">ThingName</A>;
+
+<P><A NAME="ProcList"></A>ProcList := 
+<BR> 'Process' <A HREF="#ThingName">ThingName</A> ',' <A HREF="#ProcList">ProcList</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="ProcessExecution"></A>ProcessExecution := 
+<BR> <A HREF="#SingleThread">SingleThread</A> |
+<BR> <A HREF="#PrecExe">PrecExe</A> <A HREF="#SingleThread">SingleThread</A> 'and' <A HREF="#SingleThread">SingleThread</A>;
+
+<P><A NAME="ProcExe"></A>ProcExe := 
+<BR> <A HREF="#SingleThread">SingleThread</A> ',' <A HREF="#ProcExe">ProcExe</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="SingleThread"></A>SingleThread := 
+<BR> '(' <A HREF="#ParallelExecution">ParallelExecution</A> ')' |
+<BR> <A HREF="#ThingName">ThingName</A>;
+
+<P><A NAME="ParallelExecution"></A>ParallelExecution := 
+<BR> <A HREF="#ParExe">ParExe</A> <A HREF="#ThingName">ThingName</A> 'and' <A HREF="#ThingName">ThingName</A> ', which are executed in parallel';
+
+<P><A NAME="ParExe"></A>ParExe := 
+<BR> <A HREF="#ThingName">ThingName</A> ',' <A HREF="#ParExe">ParExe</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="Guard"></A>Guard := 
+<BR> <A HREF="#ObjectOfList">ObjectOfList</A> 'is' <A HREF="#ValueExpression">ValueExpression</A> <A HREF="#OptWord">OptWord</A>;
+
+<P><A NAME="LogicalGuardingExpression"></A>LogicalGuardingExpression := 
+<BR> <A HREF="#Guard">Guard</A> |
+<BR> <A HREF="#LogicalGuardingExpression">LogicalGuardingExpression</A> <A HREF="#LogicalRelation">LogicalRelation</A> <A HREF="#LogicalGuardingExpression">LogicalGuardingExpression</A> |
+<BR> '(' <A HREF="#LogicalGuardingExpression">LogicalGuardingExpression</A> ')';
+
+<P><A NAME="EnablingExpression"></A>EnablingExpression := 
+<BR> <A HREF="#Enabler">Enabler</A> |
+<BR> <A HREF="#EnablingExpression">EnablingExpression</A> <A HREF="#LogicalRelation">LogicalRelation</A> <A HREF="#EnablingExpression">EnablingExpression</A> |
+<BR> '(' <A HREF="#EnablingExpression">EnablingExpression</A> ')';
+
+<P><A NAME="Enabler"></A>Enabler := 
+<BR> <A HREF="#isAgent">isAgent</A> <A HREF="#ObjectOfList">ObjectOfList</A> <A HREF="#isValueExp">isValueExp</A> <A HREF="#OptWord">OptWord</A>;
+
+<P><A NAME="isAgent"></A>isAgent := 
+<BR> 'the agent' |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="isValueExp"></A>isValueExp := 
+<BR> 'is' <A HREF="#ValueExpression">ValueExpression</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="OptWord"></A>OptWord := 
+<BR> '(' <A HREF="#IdentifierExpression">IdentifierExpression</A> ')' |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="YieldExpression"></A>YieldExpression := 
+<BR> <A HREF="#ObjectOfList">ObjectOfList</A> <A HREF="#Yielder">Yielder</A> <A HREF="#OptWord">OptWord</A> |
+<BR> <A HREF="#YieldExpression">YieldExpression</A> <A HREF="#LogicalRelation">LogicalRelation</A> <A HREF="#YieldExpression">YieldExpression</A> |
+<BR> '(' <A HREF="#YieldExpression">YieldExpression</A> ')';
+
+<P><A NAME="Yielder"></A>Yielder := 
+<BR> 'at state' <A HREF="#StateName">StateName</A> |
+<BR> 'at state identical to' <A HREF="#ObjectOfList">ObjectOfList</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="ConsumptionExpression"></A>ConsumptionExpression := 
+<BR> <A HREF="#Consumer">Consumer</A> |
+<BR> '(' <A HREF="#ConsumptionExpression">ConsumptionExpression</A> ')' |
+<BR> <A HREF="#ConsumptionExpression">ConsumptionExpression</A> <A HREF="#LogicalRelation">LogicalRelation</A> <A HREF="#ConsumptionExpression">ConsumptionExpression</A>;
+
+<P><A NAME="Consumer"></A>Consumer := 
+<BR> <A HREF="#ObjectOfList">ObjectOfList</A> <A HREF="#isReg">isReg</A> <A HREF="#OptWord">OptWord</A>;
+
+<P><A NAME="isReg"></A>isReg := 
+<BR> 'regardless of state' |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="EffectExpression"></A>EffectExpression := 
+<BR> <A HREF="#Effecter">Effecter</A> |
+<BR> <A HREF="#EffectExpression">EffectExpression</A> <A HREF="#LogicalRelation">LogicalRelation</A> <A HREF="#EffectExpression">EffectExpression</A> |
+<BR> '(' <A HREF="#EffectExpression">EffectExpression</A> ')';
+
+<P><A NAME="Effecter"></A>Effecter := 
+<BR> <A HREF="#ObjectOfList">ObjectOfList</A> <A HREF="#isReg">isReg</A> <A HREF="#OptWord">OptWord</A> |
+<BR> <A HREF="#ObjectOfList">ObjectOfList</A> 'from' <A HREF="#ValueList">ValueList</A> <A HREF="#ToDestinationValue">ToDestinationValue</A> <A HREF="#OptWord">OptWord</A> |
+<BR> <A HREF="#ObjectOfList">ObjectOfList</A> 'from any state' <A HREF="#isExcept">isExcept</A> <A HREF="#ToDestinationValue">ToDestinationValue</A> <A HREF="#OptWord">OptWord</A>;
+
+<P><A NAME="isExcept"></A>isExcept := 
+<BR> ',except' <A HREF="#ValueList">ValueList</A> ',' |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="ToDestinationValue"></A>ToDestinationValue := 
+<BR> 'to' <A HREF="#Value">Value</A> |
+<BR> 'exclusively to' <A HREF="#Val">Val</A> <A HREF="#Value">Value</A> ', or to' <A HREF="#Value">Value</A>;
+
+<P><A NAME="Val"></A>Val := 
+<BR> <A HREF="#Value">Value</A> ',' <A HREF="#Val">Val</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="ValueList"></A>ValueList := 
+<BR> <A HREF="#Value">Value</A> |
+<BR> <A HREF="#Val">Val</A> <A HREF="#Value">Value</A> 'and' <A HREF="#Value">Value</A>;
+
+<P><A NAME="Event"></A>Event := 
+<BR> <A HREF="#Event">Event</A> <A HREF="#EventSentenceList">EventSentenceList</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="EventSentence"></A>EventSentence := 
+<BR> <A HREF="#EventNameAndTypeList">EventNameAndTypeList</A> <A HREF="#isOf">isOf</A> 'triggers' <A HREF="#TriggeredProcessSet">TriggeredProcessSet</A> '.';
+
+<P><A NAME="isOf"></A>isOf := 
+<BR> 'of' <A HREF="#OfList">OfList</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="EventNameAndTypeList"></A>EventNameAndTypeList := 
+<BR> 'State-entrance event of state' <A HREF="#StateName">StateName</A> 'of' <A HREF="#HierarchicalThingName">HierarchicalThingName</A> |
+<BR> 'State-timeout event of state' <A HREF="#StateName">StateName</A> 'of' <A HREF="#HierarchicalThingName">HierarchicalThingName</A> |
+<BR> 'State-change event of state' <A HREF="#StateName">StateName</A> 'of' <A HREF="#HierarchicalThingName">HierarchicalThingName</A> |
+<BR> 'Process-timeout event of' <A HREF="#HierarchicalThingName">HierarchicalThingName</A> |
+<BR> 'Process-termination event of' <A HREF="#HierarchicalThingName">HierarchicalThingName</A> |
+<BR> 'External event of' <A HREF="#HierarchicalThingName">HierarchicalThingName</A> |
+<BR> 'Reaction-timeout event of' <A HREF="#HierarchicalThingName">HierarchicalThingName</A>;
+
+<P><A NAME="OfList"></A>OfList := 
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#Ofa">Ofa</A> |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#Ofb">Ofb</A> |
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#Ofa">Ofa</A> 'associated with' <A HREF="#OfList">OfList</A>;
+
+<P><A NAME="Ofa"></A>Ofa := 
+<BR> <A HREF="#ObjectIdListWithBraces">ObjectIdListWithBraces</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="Ofb"></A>Ofb := 
+<BR> <A HREF="#ObjectIdListWithBraces">ObjectIdListWithBraces</A> 'of' <A HREF="#OfList">OfList</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="ObjectIdListWithBraces"></A>ObjectIdListWithBraces := 
+<BR> '[' <A HREF="#ObjectIdList">ObjectIdList</A> ']';
+
+<P><A NAME="ObjectIdList"></A>ObjectIdList := 
+<BR> <A HREF="#ThingName">ThingName</A> 'in {' <A HREF="#ObjectIdSet">ObjectIdSet</A> '}' |
+<BR> <A HREF="#ObjList">ObjList</A> <A HREF="#ThingName">ThingName</A> 'in {' <A HREF="#ObjectIdSet">ObjectIdSet</A> '} and' <A HREF="#ThingName">ThingName</A> 'in {' <A HREF="#ObjectIdSet">ObjectIdSet</A> '}';
+
+<P><A NAME="ObjList"></A>ObjList := 
+<BR> <A HREF="#ThingName">ThingName</A> 'in {' <A HREF="#ObjectIdSet">ObjectIdSet</A> '},' <A HREF="#ObjList">ObjList</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="ObjectIdSet"></A>ObjectIdSet := 
+<BR> <A HREF="#LowerIndex">LowerIndex</A> 'to' <A HREF="#UpperIndex">UpperIndex</A> |
+<BR> <A HREF="#ValSet">ValSet</A>;
+
+<P><A NAME="ValSet"></A>ValSet := 
+<BR> <A HREF="#Vala">Vala</A> <A HREF="#Value">Value</A>;
+
+<P><A NAME="Vala"></A>Vala := 
+<BR> <A HREF="#Value">Value</A> ',' <A HREF="#Vala">Vala</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="TriggeredProcessSet"></A>TriggeredProcessSet := 
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#TPa">TPa</A> <A HREF="#TPb">TPb</A> <A HREF="#TPc">TPc</A>;
+
+<P><A NAME="TPa"></A>TPa := 
+<BR> 'of' <A HREF="#ObjectOfList">ObjectOfList</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="TPb"></A>TPb := 
+<BR> 'of' <A HREF="#sOfList">sOfList</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="TPc"></A>TPc := 
+<BR> 'with reaction time,' <A HREF="#Timed">Timed</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="sOfList"></A>sOfList := 
+<BR> <A HREF="#ThingName">ThingName</A> <A HREF="#ObjectIds">ObjectIds</A> <A HREF="#Objs">Objs</A>;
+
+<P><A NAME="Objs"></A>Objs := 
+<BR> 'of' <A HREF="#ThingName">ThingName</A> <A HREF="#ObjectIds">ObjectIds</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="ObjectIds"></A>ObjectIds := 
+<BR> '[' <A HREF="#ThN">ThN</A> <A HREF="#ThingName">ThingName</A> ']' |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="ThN"></A>ThN := 
+<BR> <A HREF="#ThingName">ThingName</A> ',' <A HREF="#ThN">ThN</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="ObjectOfList"></A>ObjectOfList := 
+<BR> <A HREF="#HierarchicalThingName">HierarchicalThingName</A> 'associated with' <A HREF="#HierarchicalThingName">HierarchicalThingName</A> |
+<BR> <A HREF="#HierarchicalThingName">HierarchicalThingName</A> <A HREF="#ExpWithoutPath">ExpWithoutPath</A> <A HREF="#HThingName">HThingName</A> |
+<BR> 'any' <A HREF="#HierarchicalThingName">HierarchicalThingName</A> <A HREF="#MultExp">MultExp</A> |
+<BR> 'all' <A HREF="#HierarchicalThingName">HierarchicalThingName</A> <A HREF="#MultExp">MultExp</A> |
+<BR> 'all' <A HREF="#HierarchicalThingNames">HierarchicalThingNames</A> <A HREF="#MultExp">MultExp</A>;
+
+<P><A NAME="ObjectExpressionWithoutPath"></A>ObjectExpressionWithoutPath := 
+<BR> <A HREF="#ThingName">ThingName</A> 'is' <A HREF="#ValueExpression">ValueExpression</A> |
+<BR> <A HREF="#ObjectExpressionWithoutPath">ObjectExpressionWithoutPath</A> <A HREF="#LogicalRelationWithoutXor">LogicalRelationWithoutXor</A> <A HREF="#ObjectExpressionWithoutPath">ObjectExpressionWithoutPath</A> |
+<BR> '(' <A HREF="#ObjectExpressionWithoutPath">ObjectExpressionWithoutPath</A> ')';
+
+<P><A NAME="MultExp"></A>MultExp := 
+<BR> <A HREF="#Mb">Mb</A> <A HREF="#Mc">Mc</A>;
+
+<P><A NAME="Mb"></A>Mb := 
+<BR> '(' <A HREF="#MultiplicityExpression">MultiplicityExpression</A> ')' |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="Mc"></A>Mc := 
+<BR> <A HREF="#Md">Md</A> <A HREF="#Me">Me</A>;
+
+<P><A NAME="HThingName"></A>HThingName := 
+<BR> 'of' <A HREF="#HierarchicalThingName">HierarchicalThingName</A> |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="Md"></A>Md := 
+<BR> <A HREF="#ExpWithoutPath">ExpWithoutPath</A> |
+<BR> 'associated with' <A HREF="#HierarchicalThingName">HierarchicalThingName</A>;
+
+<P><A NAME="ExpWithoutPath"></A>ExpWithoutPath := 
+<BR> 'with state (' <A HREF="#ObjectExpressionWithoutPath">ObjectExpressionWithoutPath</A> ')' |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+<P><A NAME="ValueExpression"></A>ValueExpression := 
+<BR> <A HREF="#Value">Value</A> |
+<BR> <A HREF="#Modifier">Modifier</A> <A HREF="#Value">Value</A> |
+<BR> <A HREF="#ObjectOfList">ObjectOfList</A> |
+<BR> <A HREF="#Modifier">Modifier</A> <A HREF="#ObjectOfList">ObjectOfList</A> |
+<BR> <A HREF="#StateName">StateName</A> |
+<BR> 'from' <A HREF="#PositiveInteger">PositiveInteger</A> 'to' <A HREF="#PositiveInteger">PositiveInteger</A> |
+<BR> '(' <A HREF="#LogicalValueExpressionWithoutParentheses">LogicalValueExpressionWithoutParentheses</A> ')';
+
+<P><A NAME="LogicalValueExpressionWithoutParentheses"></A>LogicalValueExpressionWithoutParentheses := 
+<BR> <A HREF="#ValueExpression">ValueExpression</A> |
+<BR> <A HREF="#ValueExpression">ValueExpression</A> <A HREF="#LogicalRelationWithoutXor">LogicalRelationWithoutXor</A> <A HREF="#LogicalValueExpression">LogicalValueExpression</A> |
+<BR> <A HREF="#LogicalValueExpressionWithoutParentheses">LogicalValueExpressionWithoutParentheses</A> <A HREF="#LogicalRelationWithoutXor">LogicalRelationWithoutXor</A> <A HREF="#LogicalValueExpression">LogicalValueExpression</A>;
+
+<P><A NAME="LogicalValueExpression"></A>LogicalValueExpression := 
+<BR> <A HREF="#ValueExpression">ValueExpression</A> |
+<BR> <A HREF="#ValueExpression">ValueExpression</A> <A HREF="#LogicalRelationWithoutXor">LogicalRelationWithoutXor</A> <A HREF="#LogicalValueExpression">LogicalValueExpression</A> |
+<BR> '(' <A HREF="#LogicalValueExpression">LogicalValueExpression</A> ')';
+
+<P><A NAME="TimedEnvPhySupAttr"></A>TimedEnvPhySupAttr := 
+<BR> <A HREF="#EnvPhySupAttr">EnvPhySupAttr</A> |
+<BR> <A HREF="#TimedProcess">TimedProcess</A>;
+
+<P><A NAME="TimedProcess"></A>TimedProcess := 
+<BR> ', which is' <A HREF="#Timed">Timed</A> ',' |
+<BR> <A HREF="#EPSILON">EPSILON</A>;
+
+</BODY>
+</HTML>
+

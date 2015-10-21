@@ -1,0 +1,801 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:element name = "AgentSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "LogicalRelation" type="xs:string"/>
+                    <xs:element name = "TriggeredProcessName" type="xs:string" maxOccurs="unbounded"/>
+		    <xs:element name = "TriggeredProcessRole" type="xs:string" maxOccurs="unbounded"/>
+                    <xs:element name = "PathLabel" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="MinReactionTime" minOccurs="0"/>
+                    <xs:element ref="MaxReactionTime" minOccurs="0"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "Role">
+	<xs:complexType>
+		<xs:attribute name="RoleName" type="xs:string" use="required"/>
+		<xs:attribute name="Library" type="xs:string" use="optional"/>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name = "AggregatedObject">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "MinimalCardinality" type="xs:int"/>
+                    <xs:element name = "MaximalCardinality" type="xs:int"/>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ChangingClause">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "MinimalCardinality" type="xs:int"/>
+                    <xs:element name = "MaximalCardinality" type="xs:int"/>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "SourceStateName" type="xs:string"/>
+                    <xs:element name = "DestinationStateName" type="xs:string"/>
+               </xs:sequence>
+          <xs:attribute name="objectType" type="xs:string" use="required"/>
+          <xs:attribute name="subjectThingName" type="xs:string" use="required"/>
+          <xs:attribute name="subjectThingRole" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectExhibitionFatherName" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectExhibitionFatherRole" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectAggregationFatherName" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectAggregationFatherRole" type="xs:string" use="optional"/>
+          <xs:attribute name="logicalRelation" type="xs:string" use="optional"/>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ChangingSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ProcessName" type="xs:string"/>
+		    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "LogicalRelation" type="xs:string" minOccurs="0"/>
+                    <xs:element ref="ChangingClause" maxOccurs="unbounded"/>
+                    <xs:element name = "PathLabel" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ConditionClause">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "MinimalCardinality" type="xs:int"/>
+                    <xs:element name = "MaximalCardinality" type="xs:int"/>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "StateName" type="xs:string" minOccurs="0"/>
+               </xs:sequence>
+          <xs:attribute name="objectType" type="xs:string" use="required"/>
+          <xs:attribute name="subjectThingName" type="xs:string" use="required"/>
+	  <xs:attribute name="subjectThingRole" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectExhibitionFatherName" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectExhibitionFatherRole" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectAggregationFatherName" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectAggregationFatherRole" type="xs:string" use="optional"/>
+          <xs:attribute name="logicalRelation" type="xs:string" use="optional"/>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ConditionSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ProcessName" type="xs:string"/>
+		    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "LogicalRelation" type="xs:string" minOccurs="0"/>
+                    <xs:element ref="ConditionClause" maxOccurs="unbounded"/>
+                    <xs:element name = "PathLabel" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ConsumptionClause">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "MinimalCardinality" type="xs:int"/>
+                    <xs:element name = "MaximalCardinality" type="xs:int"/>
+                    <xs:element name = "StateName" type="xs:string" minOccurs="0"/>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+		    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+          <xs:attribute name="objectType" type="xs:string" use="required"/>
+          <xs:attribute name="subjectThingName" type="xs:string" use="required"/>
+          <xs:attribute name="subjectThingRole" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectExhibitionFatherName" type="xs:string" use="optional"/>
+	  <xs:attribute name="subjectExhibitionFatherRole" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectAggregationFatherName" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectAggregationFatherRole" type="xs:string" use="optional"/>
+          <xs:attribute name="logicalRelation" type="xs:string" use="optional"/>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ConsumptionSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ProcessName" type="xs:string"/>
+		    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "LogicalRelation" type="xs:string" minOccurs="0"/>
+                    <xs:element ref="ConsumptionClause" maxOccurs="unbounded"/>
+                    <xs:element name = "PathLabel" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "EffectClause">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "MinimalCardinality" type="xs:int"/>
+                    <xs:element name = "MaximalCardinality" type="xs:int"/>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+		    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+          <xs:attribute name="objectType" type="xs:string" use="required"/>
+          <xs:attribute name="subjectThingName" type="xs:string" use="required"/>   	            	  <xs:attribute name="subjectThingRole" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectExhibitionFatherName" type="xs:string" use="optional"/>
+	  <xs:attribute name="subjectExhibitionFatherRole" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectAggregationFatherName" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectAggregationFatherRole" type="xs:string" use="optional"/>
+          <xs:attribute name="logicalRelation" type="xs:string" use="optional"/>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "EffectSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ProcessName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "LogicalRelation" type="xs:string" minOccurs="0"/>
+                    <xs:element ref="EffectClause" maxOccurs="unbounded"/>
+                    <xs:element name = "PathLabel" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "EnablingClause">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "MinimalCardinality" type="xs:int"/>
+                    <xs:element name = "MaximalCardinality" type="xs:int"/>
+                    <xs:element name = "StateName" type="xs:string" minOccurs="0"/>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+          <xs:attribute name="objectType" type="xs:string" use="required"/>
+          <xs:attribute name="subjectThingName" type="xs:string" use="required"/>
+          <xs:attribute name="subjectThingRole" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectExhibitionFatherName" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectExhibitionFatherRole" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectAggregationFatherName" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectAggregationFatherRole" type="xs:string" use="optional"/>
+          <xs:attribute name="logicalRelation" type="xs:string" use="optional"/>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "EnablingSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ProcessName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "LogicalRelation" type="xs:string" minOccurs="0"/>
+                    <xs:element ref="EnablingClause" maxOccurs="unbounded"/>
+                    <xs:element name = "PathLabel" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ExhibitedObject">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "MinimalCardinality" type="xs:int"/>
+                    <xs:element name = "MaximalCardinality" type="xs:int"/>
+                    <xs:element name = "AttributeName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "GeneralEventSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "IsObjectWithStates" type="xs:boolean"/>
+                    <xs:element name = "LogicalRelation" type="xs:string"/>
+                    <xs:element name = "TriggeredProcessName" type="xs:string" maxOccurs="unbounded"/>
+                    <xs:element name = "PathLabel" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="MinReactionTime" minOccurs="0"/>
+                    <xs:element ref="MaxReactionTime" minOccurs="0"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "MaxReactionTime">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element ref="TimeValue"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "MaxTimeoutValue">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element ref="TimeValue"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "MaxTimeValue">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element ref="TimeValue"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "MinReactionTime">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element ref="TimeValue"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "MinTimeValue">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element ref="TimeValue"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ObjectAggregationSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="AggregatedObject" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ObjectAggregationSentenceSet">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element ref="ObjectAggregationSentence"/>
+                    <xs:element ref="ThingSentenceSet" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ObjectBiDirectionalRelationSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "SourceMinimalCardinality" type="xs:int"/>
+                    <xs:element name = "SourceMaximalCardinality" type="xs:int"/>
+                    <xs:element name = "SourceName" type="xs:string"/>
+                    <xs:element ref = "DestinationRole" minOccurs="0"/>
+                    <xs:element name = "DestinationMinimalCardinality" type="xs:int"/>
+                    <xs:element name = "DestinationMaximalCardinality" type="xs:int"/>
+                    <xs:element name = "DestinationName" type="xs:string"/>
+                    <xs:element ref = "SourceRole" minOccurs="0"/>
+                    <xs:element name = "RelationName" type="xs:string"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "SourceRole">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element ref = "Role" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+<xs:element name = "DestinationRole">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element ref = "Role" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name = "ObjectEnvironmentalPhysicalSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "Environmental" type="xs:boolean"/>
+                    <xs:element name = "Physical" type="xs:boolean"/>
+                    <xs:element name = "Transient" type="xs:boolean"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ObjectExhibitionSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref="ExhibitedObject" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="Operation" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ObjectExhibitionSentenceSet">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element ref="ObjectExhibitionSentence"/>
+                    <xs:element ref="ThingSentenceSet" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ObjectIndex">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "IndexName" type="xs:string"/>
+                    <xs:element name = "IndexLocation" type="xs:int"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ObjectInheritanceSentenceSet">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+		    <xs:element ref ="ObjectInheritanceSentence" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ObjectInheritanceSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "InheritanceFatherName" type="xs:string"/>
+                    <xs:element name = "InheritanceFatherRole" type="xs:string" minOccurs="0"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ObjectInstanceSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "InstanceFatherName" type="xs:string"/>
+                    <xs:element name = "InstanceFatherRole" type="xs:string" minOccurs="0"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ObjectInZoomingSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "InZoomedObject" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+		    <xs:element name = "InZoomedProcess" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "InZoomedObject" >
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "InZoomedProcess" >
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ProcessName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+
+<xs:element name = "ObjectInZoomingSentenceSet">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element ref="ObjectInZoomingSentence"/>
+                    <xs:element ref="ThingSentenceSet" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ObjectStateSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="StateClause" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ObjectUniDirectionalRelationSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "SourceMinimalCardinality" type="xs:int"/>
+                    <xs:element name = "SourceMaximalCardinality" type="xs:int"/>
+                    <xs:element name = "SourceName" type="xs:string"/>
+                    <xs:element ref = "SourceRole" minOccurs="0"/>
+                    <xs:element name = "RelationName" type="xs:string"/>
+                    <xs:element name = "DestinationMinimalCardinality" type="xs:int"/>
+                    <xs:element name = "DestinationMaximalCardinality" type="xs:int"/>
+                    <xs:element name = "DestinationName" type="xs:string"/>
+                    <xs:element ref = "DestinationRole" minOccurs="0"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "Operation">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "OperationName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "OPLscript">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element ref="ThingSentenceSet" maxOccurs="unbounded"/>
+                    <xs:element name = "SystemDescription" type="xs:string" minOccurs="0"/>
+               </xs:sequence>
+          <xs:attribute name="systemName" type="xs:string" use="required"/>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ProcessAggregationSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ProcessName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "AggregatedProcess" type="xs:string" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ProcessAggregationSentenceSet">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element ref="ProcessAggregationSentence"/>
+                    <xs:element ref="ThingSentenceSet" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ProcessBiDirectionalRelationSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "SourceName" type="xs:string"/>
+                    <xs:element ref = "SourceRole" minOccurs="0"/>
+                    <xs:element name = "DestinationName" type="xs:string"/>
+                    <xs:element ref = "DestinationRole" minOccurs="0"/>
+                    <xs:element name = "RelationName" type="xs:string"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ProcessEnvironmentalPhysicalSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ProcessName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "Environmental" type="xs:boolean"/>
+                    <xs:element name = "Physical" type="xs:boolean"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ProcessExhibitionSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ProcessName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="Operation" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="ExhibitedObject" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ProcessExhibitionSentenceSet">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element ref="ProcessExhibitionSentence"/>
+                    <xs:element ref="ThingSentenceSet" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ProcessInheritanceSentenceSet">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+		    <xs:element ref ="ProcessInheritanceSentence" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ProcessInheritanceSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "InheritanceFatherName" type="xs:string"/>
+                    <xs:element name = "InheritanceFatherRole" type="xs:string" minOccurs="0"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ProcessInstanceSentence">
+     <xs:complexType>
+          <xs:choice>
+                <xs:sequence>
+                    <xs:element name = "ProcessName" type="xs:string"/>
+		    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "InstanceFatherName" type="xs:string"/>
+		    <xs:element name = "InstanceFatherRole" type="xs:string" minOccurs="0"/>
+               </xs:sequence>
+          </xs:choice>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ProcessInvocationSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ProcessName" type="xs:string"/>
+		    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "LogicalRelation" type="xs:string"/>
+                    <xs:element name= "TriggeredProcess" type="xs:string" maxOccurs="unbounded"/>
+                    <xs:element name = "PathLabel" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="MinReactionTime" minOccurs="0"/>
+                    <xs:element ref="MaxReactionTime" minOccurs="0"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "TriggeredProcess" >
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name= "TriggeredProcessName" type="xs:string"/>
+                    <xs:element name= "TriggeredProcessRole" type="xs:string"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+
+<xs:element name = "ProcessInZoomingSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ProcessName" type="xs:string"/>
+                    <xs:element name = "InZoomedProcess" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "InZoomedObject" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ProcessInZoomingSentenceSet">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element ref="ProcessInZoomingSentence"/>
+                    <xs:element ref="ThingSentenceSet" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ProcessTimeoutSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ProcessName" type="xs:string"/>
+		    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "LogicalRelation" type="xs:string"/>
+                    <xs:element name = "TriggeredProcess" type="xs:string" maxOccurs="unbounded"/>
+                    <xs:element name = "PathLabel" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="MinReactionTime" minOccurs="0"/>
+                    <xs:element ref="MaxReactionTime" minOccurs="0"/>
+                    <xs:element ref="MaxTimeoutValue"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ProcessUniDirectionalRelationSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "SourceName" type="xs:string"/>
+		    <xs:element ref = "SourceRole" minOccurs="0"/>
+                    <xs:element name = "RelationName" type="xs:string"/>
+                    <xs:element name = "DestinationName" type="xs:string"/>
+		    <xs:element ref = "DestinationRole" minOccurs="0"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ResultClause">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "MinimalCardinality" type="xs:int"/>
+                    <xs:element name = "MaximalCardinality" type="xs:int"/>
+                    <xs:element name = "StateName" type="xs:string" minOccurs="0"/>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+		    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+          <xs:attribute name="objectType" type="xs:string" use="required"/>
+          <xs:attribute name="subjectThingName" type="xs:string" use="required"/>
+          <xs:attribute name="subjectThingRole" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectExhibitionFatherName" type="xs:string" use="optional"/>
+	  <xs:attribute name="subjectExhibitionFatherRole" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectAggregationFatherName" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectAggregationFatherRole" type="xs:string" use="optional"/>
+          <xs:attribute name="logicalRelation" type="xs:string" use="optional"/>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ResultSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ProcessName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "LogicalRelation" type="xs:string" minOccurs="0"/>
+                    <xs:element ref="ResultClause" maxOccurs="unbounded"/>
+                    <xs:element name = "PathLabel" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "StateClause">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "StateName" type="xs:string"/>
+                    <xs:element name = "Initial" type="xs:boolean"/>
+                    <xs:element name = "Final" type="xs:boolean"/>
+                    <xs:element name = "Default" type="xs:boolean"/>
+                    <xs:element ref="MinTimeValue" minOccurs="0"/>
+                    <xs:element ref="MaxTimeValue" minOccurs="0"/>
+                    <xs:element name = "StateDescription" type="xs:string" minOccurs="0"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "StateEntranceSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "StateName" type="xs:string"/>
+                    <xs:element name = "LogicalRelation" type="xs:string"/>
+                    <xs:element name = "TriggeredProcess" type="xs:string" maxOccurs="unbounded"/>
+                    <xs:element name = "PathLabel" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="MinReactionTime" minOccurs="0"/>
+                    <xs:element ref="MaxReactionTime" minOccurs="0"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "StateTimeoutSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "StateName" type="xs:string"/>
+                    <xs:element name = "LogicalRelation" type="xs:string"/>
+                    <xs:element name = "TriggeredProcess" type="xs:string" maxOccurs="unbounded"/>
+                    <xs:element name = "PathLabel" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="MinReactionTime" minOccurs="0"/>
+                    <xs:element ref="MaxReactionTime" minOccurs="0"/>
+                    <xs:element ref="MaxTimeoutValue" minOccurs="0"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "ThingSentenceSet">
+     <xs:complexType>
+          <xs:choice>
+               <xs:sequence>
+                    <xs:element name = "ObjectDescription" type="xs:string" minOccurs="0"/>
+                    <xs:element name = "ObjectScope" type="xs:string"/>
+                    <xs:element name = "IsKey" type="xs:boolean"/>
+                    <xs:element ref="ObjectIndex" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="ObjectEnvironmentalPhysicalSentence" minOccurs="0"/>
+                    <xs:element ref="ObjectInheritanceSentenceSet" minOccurs="0"/>
+                    <xs:element ref="ObjectInstanceSentence" minOccurs="0"/>
+                    <xs:element ref="ObjectStateSentence" minOccurs="0"/>
+                    <xs:element ref="ObjectExhibitionSentenceSet" minOccurs="0"/>
+                    <xs:element ref="ObjectAggregationSentenceSet" minOccurs="0"/>
+                    <xs:element ref="ObjectUniDirectionalRelationSentence" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="ObjectBiDirectionalRelationSentence" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="AgentSentence" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="GeneralEventSentence" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="StateEntranceSentence" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="StateTimeoutSentence" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="ObjectInZoomingSentenceSet" minOccurs="0"/>
+		    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+               <xs:sequence>
+
+                    <xs:element ref="TypeDeclarationSentence"/>
+                    <xs:element name = "ObjectDescription" type="xs:string" minOccurs="0"/>
+                    <xs:element name = "IsKey" type="xs:boolean"/>
+                    <xs:element ref="ObjectIndex" minOccurs="0" maxOccurs="unbounded"/>
+		    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+               <xs:sequence>
+                    <xs:element name = "ProcessDescription" type="xs:string" minOccurs="0"/>
+                    <xs:element name = "ProcessScope" type="xs:string"/>
+                    <xs:element ref="MinTimeValue" minOccurs="0"/>
+                    <xs:element ref="MaxTimeValue" minOccurs="0"/>
+                    <xs:element ref="ProcessEnvironmentalPhysicalSentence" minOccurs="0"/>
+                    <xs:element ref="ProcessInheritanceSentenceSet" minOccurs="0"/>
+                    <xs:element ref="ProcessInstanceSentence" minOccurs="0"/>
+                    <xs:element ref="ProcessExhibitionSentenceSet" minOccurs="0"/>
+                    <xs:element ref="ProcessAggregationSentenceSet" minOccurs="0"/>
+                    <xs:element ref="ProcessUniDirectionalRelationSentence" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="ProcessBiDirectionalRelationSentence" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="ConditionSentence" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="EnablingSentence" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="EffectSentence" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="ChangingSentence" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="ConsumptionSentence" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="ResultSentence" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name = "ProcessBody" type="xs:string" minOccurs="0"/>
+                    <xs:element ref="ProcessTimeoutSentence" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="ProcessInvocationSentence" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element ref="ProcessInZoomingSentenceSet" minOccurs="0"/>
+		    <xs:element ref = "Role" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+	       <xs:sequence>
+		    <xs:element name="Existential" type="xs:string"/>
+	       </xs:sequence>
+          </xs:choice>
+          <xs:attribute name="subjectThingName" type="xs:string" use="required"/>
+	  <xs:attribute name="subjectExhibitionFatherName" type="xs:string" use="optional"/>
+          <xs:attribute name="subjectAggregationFatherName" type="xs:string" use="optional"/>
+	  <xs:attribute name="transID" type="xs:string" use="optional"/>
+          <xs:attribute name="systemName" type="xs:string" use="required"/>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "TimeValue">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "Years" type="xs:int" minOccurs="0"/>
+                    <xs:element name = "Months" type="xs:int" minOccurs="0"/>
+                    <xs:element name = "Weeks" type="xs:int" minOccurs="0"/>
+                    <xs:element name = "Days" type="xs:int" minOccurs="0"/>
+                    <xs:element name = "Hours" type="xs:int" minOccurs="0"/>
+                    <xs:element name = "Minutes" type="xs:int" minOccurs="0"/>
+                    <xs:element name = "Seconds" type="xs:int" minOccurs="0"/>
+                    <xs:element name = "MilliSeconds" type="xs:int" minOccurs="0"/>
+               </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+<xs:element name = "TypeDeclarationSentence">
+     <xs:complexType>
+               <xs:sequence>
+                    <xs:element name = "ObjectName" type="xs:string"/>
+                    <xs:element name = "ObjectType" type="xs:string" minOccurs="0"/>
+                    <xs:element name = "InitialValue" type="xs:string" minOccurs="0"/>
+                    <xs:element name = "ObjectScope" type="xs:string" minOccurs="0"/>
+               </xs:sequence>
+          <xs:attribute name="fatherName" type="xs:string" use="optional"/>
+     </xs:complexType>
+</xs:element>
+
+</xs:schema>
