@@ -23,7 +23,7 @@ clc
 %% Toy problems
 % Hardcode input
 
-testCase = 4;
+testCase = 5;
 
 switch testCase
     
@@ -129,6 +129,41 @@ switch testCase
         outputStruct.processes = {'Feeding',4,VisualData{4}};
         outputStruct.structuralRelations = {};      % Each row is a from-to link to connect objects and processes
         outputStruct.proceduralLinks = {'Consumption',7,2,4,VisualData{7}; 'Result',6,4,3,VisualData{6}};
+        
+    case 5  % SpaceShuttle.opx - Decomposition Link example
+        
+        VisualData = cell(1,3);
+        VisualData{1} = [1185,286,240,80];
+        VisualData{2} = [961,595,144,80];
+        VisualData{3} = [1177,657,240,80];
+        VisualData{4} = [1459,504,368,80];       
+        VisualData{5} = [4,0.425,1,0.5,1211,471,56,48];
+        VisualData{6} = [4,0.425,1,0.5,1211,471,56,48];
+        VisualData{7} = [4,0.425,1,0.5,1211,471,56,48];
+        
+        % VisualData for objects and processes
+        % [x,y,width,height]
+        
+        % VisualData for procedural links
+        % [SourceConnectionSide, SourceConnectionParameter,
+        % DestinationConnectionSide, DestinationConnectionParameter]
+        
+        % VisualData for structural links
+        % [SourceConnectionSide, SourceConnectionParameter,
+        % DestinationConnectionSide, DestinationConnectionParameter,
+        % symbol_x, symbol_y, symbol_width, symbol_height]
+        % Note that symbol_x and symbol_y denote the top left hand corner
+        % of the triangle in structural relations
+                        
+        % Note that if input text has "&#xA;", this equivalent to starting
+        % a new line between the words
+        outputStruct.objects = {'Solid Rocket Boosters',4,VisualData{4},{};'External Tank',3,VisualData{3},{};...
+            'Orbiter',2,VisualData{2},{};'Space Shuttle',1,VisualData{1},{}};
+        outputStruct.processes = {};
+        outputStruct.structuralRelations = {'Aggregation',7,1,2,VisualData{7};'Aggregation',6,1,4,VisualData{6};...
+            'Aggregation',5,1,3,VisualData{5}};      % Each row is a from-to link to connect objects and processes
+        outputStruct.proceduralLinks = {};
+        
         
 end
 
@@ -252,12 +287,46 @@ for i = 1:size(outputStruct.proceduralLinks,1)
         error(['Problem with extraction of procedural link ID: ',num2str(outputStruct.proceduralLinks{i,2})]);
     end
     
-    % TO DO: Add other if conditions
-    
 end
 
+%% Initialize Structural Relations
+structRel = OPMstructuralRelation.empty(0,size(outputStruct.structuralRelations,1));
 
-
+% Create Structural Relations
+for i = 1:size(outputStruct.structuralRelations,1)
+    
+    % If not exhibition link - all structural relations link to the same
+    % type of thing
+    if ~strcmpi(outputStruct.structuralRelations{i,1},'Exhibition')
+        
+        % Determine if source is an object (ind=1) or a process (ind=2)
+        [~,ind] = max([~isempty(find([obj.id]==outputStruct.structuralRelations{i,3},1)),...
+            ~isempty(find([proc.id]==outputStruct.structuralRelations{i,3},1))]);
+        
+        if ind == 1
+            % If SourceNode is an object
+            structRel(i) = OPMstructuralRelation(outputStruct.structuralRelations{i,1},outputStruct.structuralRelations{i,2},...
+            obj(find([obj.id]==outputStruct.structuralRelations{i,3},1)),...
+            obj(find([obj.id]==outputStruct.structuralRelations{i,4},1)),outputStruct.structuralRelations{i,5});
+        elseif ind == 2
+            % If SourceNode is a process
+            structRel(i) = OPMstructuralRelation(outputStruct.structuralRelations{i,1},outputStruct.structuralRelations{i,2},...
+            proc(find([proc.id]==outputStruct.structuralRelations{i,3},1)),...
+            proc(find([proc.id]==outputStruct.structuralRelations{i,4},1)),outputStruct.structuralRelations{i,5});
+        else
+            % Error
+            error('Problem with extraction of Structural Relation');
+        end
+    
+    else
+        % Code for Exhibition relation
+    
+    
+    
+    end
+    
+    
+end
 
 %% Visualization
 % Driven by procedural links and structural relations
@@ -277,6 +346,11 @@ end
 for k = 1:length(procLink)
     hold on
     procLink(k).plotOPD;
+end
+
+for m = 1:length(structRel)
+    hold on
+    structRel(m).plotOPD;
 end
 
 

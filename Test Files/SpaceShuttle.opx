@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OPX version="3">
+  <OPMSystem creationDate="2015-10-20T21:47:52" lastUpdate="2015-10-21T02:47:38" author="SydneyDo" modeltype="System" name="SpaceShuttle" uuid="b530abe4-b6cc-47b8-b01f-44796b64adb7" maxEntityEntry="7" maxOpdEntry="1" global-id="eab7a238-7b2c-45a0-acd9-f544eef22717">
+    <Scenarios />
+    <SystemProperties>
+      <SystemConfiguration>
+        <Property key="StateColor" value="-10790144" />
+        <Property key="MinimalThingHeight" value="35" />
+        <Property key="StateHeight" value="35" />
+        <Property key="ThingHeight" value="70" />
+        <Property key="SmallFont" value="11 0" />
+        <Property key="ThingWidth" value="120" />
+        <Property key="ObjectColor" value="-16749056" />
+        <Property key="LineFont" value="11 0" />
+        <Property key="TextColor" value="-16777216" />
+        <Property key="BackgroundColor" value="-1644826" />
+        <Property key="OPDWidth" value="1300" />
+        <Property key="LabelFont" value="11 0" />
+        <Property key="StateFont" value="12 0" />
+        <Property key="NormalSize" value="5" />
+        <Property key="DraggerSize" value="36" />
+        <Property key="MeasureFont" value="16 0" />
+        <Property key="OPDHeight" value="860" />
+        <Property key="URLFont" value="16 3" />
+        <Property key="FundamentalRelationHeight" value="31" />
+        <Property key="CurrentSize" value="8" />
+        <Property key="FundamentalRelationWidth" value="36" />
+        <Property key="UrlColor" value="-65536" />
+        <Property key="ProcessColor" value="-16777046" />
+        <Property key="ThingFont" value="16 0" />
+        <Property key="TimesFont" value="16 0" />
+        <Property key="MinimalThingWidth" value="60" />
+        <Property key="StateWidth" value="60" />
+        <Property key="LinkFont" value="12 0" />
+      </SystemConfiguration>
+      <GeneralInfo>
+        <Property key="Goals_and_Objectives_of_the_Project" value="" />
+        <Property key="Hardware_and_Software_Requirements" value="" />
+        <Property key="Client" value="" />
+        <Property key="Future_Goals" value="" />
+        <Property key="System_Overview" value="" />
+        <Property key="Possible_Users_for_the_System" value="" />
+        <Property key="Open_Issues" value="" />
+        <Property key="Operation_and_Maintenance" value="" />
+        <Property key="Problems" value="" />
+        <Property key="Inputs_Processing" value="" />
+        <Property key="The_Current_State" value="" />
+      </GeneralInfo>
+    </SystemProperties>
+    <LogicalStructure>
+      <ObjectSection>
+        <LogicalObject>
+          <EntityAttr id="4" uuid="cab73a11-e8c7-4fef-855f-cfd977966d12" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.general.name" value="Solid Rocket Boosters" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="0adda35c-a06a-4722-a747-c64f1912ea7a" name="Solid Rocket Boosters ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+          <ThingAttr>
+            <EntityIncludedInstances />
+          </ThingAttr>
+        </LogicalObject>
+        <LogicalObject>
+          <EntityAttr id="3" uuid="48095aff-5856-4e2a-a771-47229b9e9a26" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.general.name" value="External Tank" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="e74c75de-9364-46b1-9947-96919cf445d5" name="External Tank ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+          <ThingAttr>
+            <EntityIncludedInstances />
+          </ThingAttr>
+        </LogicalObject>
+        <LogicalObject>
+          <EntityAttr id="2" uuid="fa0d1b11-46b6-417f-a578-31b11b714cd5" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.general.name" value="Orbiter" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="687fceec-b617-4457-ade8-4e8ec9b704db" name="Orbiter ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+          <ThingAttr>
+            <EntityIncludedInstances />
+          </ThingAttr>
+        </LogicalObject>
+        <LogicalObject>
+          <EntityAttr id="1" uuid="c014dca3-781a-47fb-8448-94f150440cbb" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.general.name" value="Space Shuttle" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="fa5f4c00-e70e-4a64-991f-ffd558cd5567" name="Space Shuttle ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+          <ThingAttr>
+            <EntityIncludedInstances />
+          </ThingAttr>
+        </LogicalObject>
+      </ObjectSection>
+      <ProcessSection />
+      <RelationSection>
+        <LogicalRelation relationType="204" sourceId="1" destinationId="2" source-uuid="c014dca3-781a-47fb-8448-94f150440cbb" destination-uuid="fa0d1b11-46b6-417f-a578-31b11b714cd5">
+          <EntityAttr id="7" uuid="b4a827ad-1c6b-44e4-998f-2c211cc1b7c7" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.general.name" value="Aggregation 7" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="abcfaa1d-a1bf-48f8-bd5d-870cb96671e6" name="Aggregation 7 ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+        </LogicalRelation>
+        <LogicalRelation relationType="204" sourceId="1" destinationId="4" source-uuid="c014dca3-781a-47fb-8448-94f150440cbb" destination-uuid="cab73a11-e8c7-4fef-855f-cfd977966d12">
+          <EntityAttr id="6" uuid="6d4e54ed-82c5-48db-9368-f4d1b8858c0c" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.general.name" value="Aggregation 6" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="f1eb5994-fe03-45f3-95ce-107b111c2943" name="Aggregation 6 ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+        </LogicalRelation>
+        <LogicalRelation relationType="204" sourceId="1" destinationId="3" source-uuid="c014dca3-781a-47fb-8448-94f150440cbb" destination-uuid="48095aff-5856-4e2a-a771-47229b9e9a26">
+          <EntityAttr id="5" uuid="940bd38d-b54d-4899-ad23-174abfed2186" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.general.name" value="Aggregation 5" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="827ecb95-04c4-4cf9-b9a8-badaa86684e4" name="Aggregation 5 ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+        </LogicalRelation>
+      </RelationSection>
+      <LinkSection />
+    </LogicalStructure>
+    <VisualPart>
+      <OPD id="1" name="SD" maxEntityEntry="7" view="false" indexinlevel="0">
+        <ThingSection>
+          <VisualThing>
+            <ThingData>
+              <VisualObject>
+                <InstanceAttr entityId="1" entityInOpdId="1" uuid="fa5f4c00-e70e-4a64-991f-ffd558cd5567" />
+                <ConnectionEdgeAttr x="1185" y="286" width="240" height="80" />
+                <ThingInstanceAttr textPosition="C" />
+                <ExportKey />
+              </VisualObject>
+            </ThingData>
+            <ChildrenContainer />
+          </VisualThing>
+          <VisualThing>
+            <ThingData>
+              <VisualObject>
+                <InstanceAttr entityId="2" entityInOpdId="2" uuid="687fceec-b617-4457-ade8-4e8ec9b704db" />
+                <ConnectionEdgeAttr x="879" y="583" width="144" height="80" />
+                <ThingInstanceAttr textPosition="C" />
+                <ExportKey />
+              </VisualObject>
+            </ThingData>
+            <ChildrenContainer />
+          </VisualThing>
+          <VisualThing>
+            <ThingData>
+              <VisualObject>
+                <InstanceAttr entityId="3" entityInOpdId="3" uuid="e74c75de-9364-46b1-9947-96919cf445d5" />
+                <ConnectionEdgeAttr x="1145" y="634" width="240" height="80" />
+                <ThingInstanceAttr textPosition="C" />
+                <ExportKey />
+              </VisualObject>
+            </ThingData>
+            <ChildrenContainer />
+          </VisualThing>
+          <VisualThing>
+            <ThingData>
+              <VisualObject>
+                <InstanceAttr entityId="4" entityInOpdId="4" uuid="0adda35c-a06a-4722-a747-c64f1912ea7a" />
+                <ConnectionEdgeAttr x="1465" y="515" width="368" height="80" />
+                <ThingInstanceAttr textPosition="C" />
+                <ExportKey />
+              </VisualObject>
+            </ThingData>
+            <ChildrenContainer />
+          </VisualThing>
+        </ThingSection>
+        <FundamentalRelationSection>
+          <CommonPart sourceId="1" sourceInOpdId="1" sourceConnectionSide="4" sourceConnectionParameter="0.425" x="1211" y="471" width="56" height="48">
+            <VisualFundamentalRelation destinationId="4" destinationInOpdId="4" destinationSide="1" destinationParameter="0.5" labelX="3317" labelY="1122" visible="true">
+              <InstanceAttr entityId="6" entityInOpdId="6" uuid="f1eb5994-fe03-45f3-95ce-107b111c2943" />
+            </VisualFundamentalRelation>
+            <VisualFundamentalRelation destinationId="3" destinationInOpdId="3" destinationSide="1" destinationParameter="0.5" labelX="2549" labelY="1241" visible="true">
+              <InstanceAttr entityId="5" entityInOpdId="5" uuid="827ecb95-04c4-4cf9-b9a8-badaa86684e4" />
+            </VisualFundamentalRelation>
+            <VisualFundamentalRelation destinationId="2" destinationInOpdId="2" destinationSide="1" destinationParameter="0.5" labelX="1963" labelY="1197" visible="true">
+              <InstanceAttr entityId="7" entityInOpdId="7" uuid="abcfaa1d-a1bf-48f8-bd5d-870cb96671e6" />
+            </VisualFundamentalRelation>
+          </CommonPart>
+        </FundamentalRelationSection>
+        <GeneralRelationSection />
+        <VisualLinkSection />
+        <Unfolded />
+        <View />
+        <InZoomed />
+      </OPD>
+    </VisualPart>
+  </OPMSystem>
+</OPX>
+

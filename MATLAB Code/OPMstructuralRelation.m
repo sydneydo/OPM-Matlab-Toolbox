@@ -1,13 +1,14 @@
-classdef OPMproceduralLink < handle
+classdef OPMstructuralRelation < handle
     % By: Sydney Do
-    % Date created: October 18, 2015
-    % Last modified: October 18, 2015
+    % Date created: October 21, 2015
+    % Last modified: October 21, 2015
     
     % SUMMARY
-    % proceduralLink class for MATLAB OPM Toolbox
-    % Types of Procedural Links within OPM include: instrument, agent,
-    % consumption/result, effect links
-    
+    % Structural Relation class for MATLAB OPM Toolbox
+    % Types of Structural Relations within OPM include: specialization,
+    % exhibition, instantiation, aggregation, uni-directional, and
+    % bi-direction relations
+        
     properties
         type
         id
@@ -21,25 +22,30 @@ classdef OPMproceduralLink < handle
         DestinationName
         DestinationConnectionSide
         DestinationConnectionParameter
+        SymbolX
+        SymbolY
+        SymbolWidth
+        SymbolHeight
         environment = 0
         physical = 0
     end
     
     methods
         %% Constructor
-        function obj = OPMproceduralLink(Type,ID,FromNode,ToNode,VisualData)
+        function obj = OPMstructuralRelation(Type,ID,FromNode,ToNode,VisualData)
             
 %             if nargin ~= 3
 %                 error('Three input values required. Input format: proceduralLink(Type,Source Node,Destination Node)')
 %             end
                 
             % Control type of input type for link
-            if ~(strcmpi(Type,'Instrument')||...
-                    strcmpi(Type,'Agent')||...
-                    strcmpi(Type,'Consumption')||...
-                    strcmpi(Type,'Result')||...
-                    strcmpi(Type,'Effect'))
-                error('Link type must be one of the following: {Instrument, Agent, Consumption, Result, Effect}')
+            if ~(strcmpi(Type,'Specialization')||...
+                    strcmpi(Type,'Exhibition')||...
+                    strcmpi(Type,'Instantiation')||...
+                    strcmpi(Type,'Aggregation')||...
+                    strcmpi(Type,'Unidirectional')||...
+                    strcmpi(Type,'Bidirectional'))
+                error('Link type must be one of the following: {Specialization, Exhibition, Instantiation, Aggregation, Unidirectional, Bidirectional}')
             end
                        
             obj.type = Type;
@@ -57,22 +63,150 @@ classdef OPMproceduralLink < handle
             obj.DestinationConnectionSide = VisualData(3);
             obj.DestinationConnectionParameter = VisualData(4);
             
+            % Add symbol visual data if not a unidirectional or
+            % bidirectional relation
+            if ~(strcmpi(Type,'Unidirectional')||...
+                    strcmpi(Type,'Bidirectional'))
+                obj.SymbolX = VisualData(5);
+                obj.SymbolY = VisualData(6);
+                obj.SymbolWidth = VisualData(7);
+                obj.SymbolHeight = VisualData(8);
+            end
+            
+            % Distribute Source and Destination Objects to appropriate
+            % locations
+            
+            if strcmpi(Type,'Aggregation')
+               % If aggregation link, distribute objects/processes to
+               % appropriate parent/child attributes of each corresponding
+               % object/process
+               
+               % Add DestinationNode as child of SourceNode
+               obj.SourceNode.appendChildren(obj.DestinationNode);
+               
+               % Add SourceNode as psrent of DestinationNode
+               obj.DestinationNode.appendParents(obj.SourceNode);
+                
+            elseif strcmpi(Type,'Exhibition')
+                % add DestinationNode to the UniqueAttributes of the
+                % SourceNode
+                
+            elseif strcmpi(Type,'Specialization')
+                % append parent and child classes
+                % transfer unique attributes of source node to inherited
+                % attributes of destination node - ensure zero value?
+                
+            elseif strcmpi(Type,'Instantiation')
+                % append instances property of source node
+                % transfer unique attributes of source node to inherited
+                % attributes of destination node - ensure zero value?
+                
+                
+            end
+            
+            
         end
         
         %% Plotting Code
         % Baseline plot about (0,0)
-        function obj = plotOPD(obj)
-            
+        function obj = plotOPD(obj)           
+           
             % Determine Connection Point of Source Node
             [x1,y1] = obj.findConnectionPoint(obj.SourceNode,obj.SourceConnectionSide,obj.SourceConnectionParameter);           
             
             % Determine Connection Point of Destination Node
             [x2,y2] = obj.findConnectionPoint(obj.DestinationNode,obj.DestinationConnectionSide,obj.DestinationConnectionParameter);
             
-            line([x1,x2],[y1,y2],'Color','k','LineWidth',3)
-            axis equal
-            set(gca,'YDir','reverse');
-            hold on
+            % If not a unidirectional or bidirectional relation
+            if ~(strcmpi(obj.type,'Unidirectional')||...
+                    strcmpi(obj.type,'Bidirectional'))
+                
+                % Location of top vertex triangle symbol
+                xTriTop = obj.SymbolX + obj.SymbolWidth/2;
+                yTriTop = obj.SymbolY;
+                
+                % Location of center base of triangle symbol
+                xTriBottom = obj.SymbolX + obj.SymbolWidth/2;
+                yTriBottom = obj.SymbolY + obj.SymbolHeight;
+                
+                % Coordinates of Triangle
+                xTriPlot = [obj.SymbolX + obj.SymbolWidth/2, obj.SymbolX + obj.SymbolWidth, obj.SymbolX];
+                yTriPlot = [obj.SymbolY, obj.SymbolY + obj.SymbolHeight, obj.SymbolY + obj.SymbolHeight];
+                
+                %% Plot Triangle
+                if strcmpi(obj.type,'Aggregation')
+                
+                    patch(xTriPlot,yTriPlot,'k','EdgeColor','k','LineWidth',3);
+                    axis equal
+                    hold on
+                    set(gca,'YDir','reverse');
+                    
+                else
+                   % Other symbols for other conditions 
+                end
+                
+                %% Bent Line between Source Node and Triangle
+                % if connection point on source element is above top of
+                % triangle
+                if yTriTop >= y1
+                    vertMidway = (yTriTop+y1)/2;
+                    
+                    % Draw bent line
+                    line([x1,x1,xTriTop,xTriTop],[y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',3);
+                    
+                else
+                    % Determine horizontal midway point
+                    horizMidway = (xTriTop+x1)/2;
+                    
+                    % Bent line from source node to top of triangle
+                    % Note that a buffer of 16 units exists beneath the
+                    % object, and a buffer of 24 units exists above the
+                    % triangle
+                    sourceLowerBuffer = 16;
+                    triUpperBuffer = 24;
+                    
+                    line([x1,x1,horizMidway,horizMidway,xTriTop,xTriTop],...
+                        [y1,y1+sourceLowerBuffer,y1+sourceLowerBuffer,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],...
+                        'Color','k','LineWidth',3);
+                    
+                end
+                                
+                %% Bent Line between Triangle and Destination Node
+                % if connection point on destination element is beneath bottom of
+                % triangle
+                if y2 >= yTriBottom
+                    % Determine vertical midway point
+                    vertMidway = (yTriBottom+y2)/2;
+                    
+                    % Bent line from bottom of trangle to destination node
+                    line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,vertMidway,vertMidway,y2],'Color','k','LineWidth',3);
+                else
+                    % Determine horizontal midway point
+                    horizMidway = (xTriBottom+x2)/2;
+                    
+                    % Bent line from bottom of trangle to destination node
+                    % Note that a buffer of 40 units exists beneath the
+                    % triangle, and a buffer of 24 units exists above the
+                    % object
+                    triLowerBuffer = 40;
+                    destinationUpperBuffer = 24;
+                    
+                    line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2,x2],...
+                        [yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2-destinationUpperBuffer,y2-destinationUpperBuffer,y2],...
+                        'Color','k','LineWidth',3);
+                end
+                
+
+                
+            else
+               % Code for unidirectional and bidirectional relations 
+            end
+            
+            
+%             line([x1,x2],[y1,y2],'Color','k','LineWidth',3)
+%             axis equal
+%             set(gca,'YDir','reverse');
+%             hold on
             
             % Plotting ends of curves
             % Plotting if instrument link

@@ -14,6 +14,11 @@ classdef OPMobject < handle
         physical = 0
         ParentObjects       % array of OPMobjects - Decomposition Link
         ChildObjects        % array of OPMobjects - Decomposition Link
+        ParentClasses       % Parents through Specialization Link
+        ChildClasses        % Children through Specialization Link
+        UniqueAttributes    % define with Exhibition Link - combination of both objects and processes
+        InheritedAttributes % transfered into object when this object is subclassed or is an instance of a parent object
+        Instances           % array of Instances (Instantiation Link)
         VisualX
         VisualY
         VisualWidth
@@ -94,6 +99,43 @@ classdef OPMobject < handle
             end
             
         end
+        
+        %% Append Child Objects
+        function obj = appendChildren(obj,childObjects)
+           
+            % Ensure that input is an OPMobject
+            if ~strcmpi(class(childObjects),'OPMobject')
+                error('Input must be of class OPMobject')
+            end
+            
+            obj.ChildObjects = [obj.ChildObjects, childObjects];
+        
+        end
+
+        %% Append Parent Objects
+        function obj = appendParents(obj,parentObjects)
+           
+            % Ensure that input is an OPMobject
+            if ~strcmpi(class(parentObjects),'OPMobject')
+                error('Input must be of class OPMobject')
+            end
+            
+            obj.ParentObjects = [obj.ParentObjects, parentObjects];
+        
+        end
+        
+        %% Append Instances
+        function obj = appendInstances(obj,additionalInstances)
+           
+            % Ensure that input is an OPMobject
+            if ~strcmpi(class(additionalInstances),'OPMobject')
+                error('Input must be of class OPMobject')
+            end
+            
+            obj.Instances = [obj.Instances, additionalInstances];
+        
+        end
+        
         
     end
     
