@@ -1,0 +1,302 @@
+%% OPM MATLAB TOOLBOX - TOY PROBLEM 1
+% By: Sydney Do (sydneydo@mit.edu)
+% Date Created: October 18, 2015
+% Last Updated: October 18, 2015
+
+%% Order of Operations
+% 1. Read opz file
+% 2. Insert relevant components of opz file (objects, processes, structural
+% relations, and procedural links) into relevant classes in MATLAB
+% 3. Render OPM in MATLAB figure
+
+%% Code
+
+% outputStruct = opzReader(opzFile);
+% % outputStruct.objects       % Includes object ids
+% % outputStruct.processes     
+% % outputStruct.structuralRelations
+% % outputStruct.proceduralLinks
+
+clear all
+clc
+
+%% Toy problems
+% Hardcode input
+
+testCase = 4;
+
+switch testCase
+    
+    case 1 % Flying Requires Aircraft
+
+        VisualData = cell(1,9);
+        VisualData{1} = [444,271,135,154];
+        VisualData{2} = [712,320,128,64];
+        VisualData{3} = [4,0.78125,4,0.2628205];
+        VisualData{8} = [712,504,128,64];
+        VisualData{9} = [1,0.8,4,0.4903846];
+        
+        % VisualData for objects and processes
+        % [x,y,width,height]
+        
+        % VisualData for procedural links
+        % [SourceConnectionSide, SourceConnectionParameter,
+        % DestinationConnectionSide, DestinationConnectionParameter]
+        
+        outputStruct.objects = {'a1',8,VisualData{8},{};'Aircraft',2,VisualData{2},{}};
+        outputStruct.processes = {'Flying',1,VisualData{1}};
+        outputStruct.structuralRelations = [];      % Each row is a from-to link to connect objects and processes
+        outputStruct.proceduralLinks = {'Instrument',9,8,1,VisualData{9};'Instrument',3,2,1,VisualData{3}};       % Each row is a from-to link to connect objects and processes
+        
+        % Error checking code to ensure that id numbers declared in procedural
+        % links are valid id numbers of objects and processes
+
+    case 2 % Eating Consumes Food
+        
+        VisualData = cell(1,19);
+        VisualData{1} = [856,440,136,80];
+        VisualData{2} = [1168,520,136,80];
+        VisualData{4} = [1160,392,136,80];
+        VisualData{14} = [7,0.5,4,1];
+        VisualData{15} = [7,0.2820513,4,0.958348];
+        VisualData{16} = [591,376,225,64];
+        VisualData{17} = [1,0.09132279,4,0.6736111];
+        VisualData{18} = [719,595,134,152];
+        VisualData{19} = [7,0.3223684,4,0.30442667];
+        
+        % VisualData for objects and processes
+        % [x,y,width,height]
+        
+        % VisualData for procedural links
+        % [SourceConnectionSide, SourceConnectionParameter,
+        % DestinationConnectionSide, DestinationConnectionParameter]
+        
+        % Note that if input text has "&#xA;", this equivalent to starting
+        % a new line between the words
+        outputStruct.objects = {{'Satiation','Level'},18,VisualData{18},StateData{1};'Food',4,VisualData{4},{};'Mouth',2,VisualData{2},{};'Waste',16,VisualData{16},{}};
+        outputStruct.processes = {'Eating',1,VisualData{1}};
+        outputStruct.structuralRelations = [];      % Each row is a from-to link to connect objects and processes
+        outputStruct.proceduralLinks = {'Effect',19,18,1,VisualData{19};'Result',17,1,16,VisualData{17};'Instrument',15,2,1,VisualData{15};'Consumption',14,4,1,VisualData{14}};       % Each row is a from-to link to connect objects and processes
+
+    case 3 % PersonHasStates.opx
+        
+        VisualData = cell(1,3);
+        VisualData{1} = [960,314,204,92];
+        VisualData{2} = [20,42,72,42];
+        VisualData{3} = [112,42,72,42];
+
+        
+        % VisualData for objects and processes
+        % [x,y,width,height]
+        
+        % VisualData for procedural links
+        % [SourceConnectionSide, SourceConnectionParameter,
+        % DestinationConnectionSide, DestinationConnectionParameter]
+        
+        
+        StateData{1} = {'Full',3,VisualData{3};'Hungry',2,VisualData{2}};       
+        
+        % Note that if input text has "&#xA;", this equivalent to starting
+        % a new line between the words
+        outputStruct.objects = {'Person',1,VisualData{1},StateData{1}};
+        outputStruct.processes = [];
+        outputStruct.structuralRelations = [];      % Each row is a from-to link to connect objects and processes
+        outputStruct.proceduralLinks = [];
+
+    case 4 % PersonEatingWithStates.opx
+        
+        VisualData = cell(1,3);
+        VisualData{1} = [960,314,204,92];
+        VisualData{2} = [20,42,72,42];
+        VisualData{3} = [112,42,72,42];
+        VisualData{4} = [1008,499,111,72];       
+        VisualData{6} = [1,0.58887976,8,0.30952382];
+        VisualData{7} = [4,0.31944445,1,0.40527108];
+        
+        % VisualData for objects and processes
+        % [x,y,width,height]
+        
+        % VisualData for procedural links
+        % [SourceConnectionSide, SourceConnectionParameter,
+        % DestinationConnectionSide, DestinationConnectionParameter]
+        
+        
+        StateData{1} = {'Full',3,VisualData{3};'Hungry',2,VisualData{2}};
+                
+        % Note that if input text has "&#xA;", this equivalent to starting
+        % a new line between the words
+        outputStruct.objects = {'Person',1,VisualData{1},StateData{1}};
+        outputStruct.processes = {'Feeding',4,VisualData{4}};
+        outputStruct.structuralRelations = {};      % Each row is a from-to link to connect objects and processes
+        outputStruct.proceduralLinks = {'Consumption',7,2,4,VisualData{7}; 'Result',6,4,3,VisualData{6}};
+        
+end
+
+%% Initialize Objects Arrays
+obj = OPMobject.empty(0,size(outputStruct.objects,1));
+
+% Create Objects
+% objectIDs = [outputStruct.objects{:,2}];
+
+c = 0;
+states = OPMstate.empty(0,length(VisualData));
+for i = 1:size(outputStruct.objects,1)
+    
+    % If there is state information associated with the object
+    if ~isempty(outputStruct.objects{i,4})
+        StateSet = OPMstate.empty(0,size(outputStruct.objects{i,4},1));
+        
+        % Build array of states
+        for j = 1:size(outputStruct.objects{i,4},1)
+            StateSet(j) = OPMstate(outputStruct.objects{i,4}{j,1},outputStruct.objects{i,4}{j,2},outputStruct.objects{i,4}{j,3},outputStruct.objects{i,3});
+            c = c+1;
+            states(c) = StateSet(j);    
+        end
+        
+        obj(i) = OPMobject(outputStruct.objects{i,1},outputStruct.objects{i,2},outputStruct.objects{i,3},StateSet);
+        
+    else
+        obj(i) = OPMobject(outputStruct.objects{i,1},outputStruct.objects{i,2},outputStruct.objects{i,3},OPMstate.empty(0));
+    end
+    
+end
+
+%% Initialize Processes Arrays
+proc = OPMprocess.empty(0,size(outputStruct.processes,1));
+
+% Create Processes
+for i = 1:size(outputStruct.processes,1)
+    proc(i) = OPMprocess(outputStruct.processes{i,1},outputStruct.processes{i,2},outputStruct.processes{i,3});
+end
+
+%% Initialize Procedural Links
+procLink = OPMproceduralLink.empty(0,size(outputStruct.proceduralLinks,1));
+
+% Create Procedural Links
+for i = 1:size(outputStruct.proceduralLinks,1)
+    % For each procedural link, find source and destination entities
+    if strcmpi(outputStruct.proceduralLinks{i,1},'Instrument') ||...
+            strcmpi(outputStruct.proceduralLinks{i,1},'Agent') ||...
+            strcmpi(outputStruct.proceduralLinks{i,1},'Consumption')
+        % SourceNode must be an object and DestinationNode must be a
+        % process
+   
+        % If states present in objects, determine whether or not SourceNode
+        % is connected to a state
+        [~,ind] = max([~isempty(find([obj.id]==outputStruct.proceduralLinks{i,3},1)),...
+            ~isempty(find([states.id]==outputStruct.proceduralLinks{i,3},1))]);
+        
+        if ind == 1
+            % If SourceNode is an object
+            procLink(i) = OPMproceduralLink(outputStruct.proceduralLinks{i,1},outputStruct.proceduralLinks{i,2},...
+                obj(find([obj.id]==outputStruct.proceduralLinks{i,3},1)),...
+                proc(find([proc.id]==outputStruct.proceduralLinks{i,4},1)),outputStruct.proceduralLinks{i,5});
+        elseif ind == 2
+            % If SourceNode is a state
+            procLink(i) = OPMproceduralLink(outputStruct.proceduralLinks{i,1},outputStruct.proceduralLinks{i,2},...
+                states(find([states.id]==outputStruct.proceduralLinks{i,3},1)),...
+                proc(find([proc.id]==outputStruct.proceduralLinks{i,4},1)),outputStruct.proceduralLinks{i,5}); 
+        else
+            % Error
+            error(['Problem with extraction of ',outputStruct.proceduralLinks{i,1},' link']);
+        end
+    
+    elseif strcmpi(outputStruct.proceduralLinks{i,1},'Result')
+        % SourceNode must be a process and DestinationNode must be an
+        % object
+        
+        % If states present in objects, determine whether or not DestinationNode
+        % is connected to a state
+        [~,ind] = max([~isempty(find([obj.id]==outputStruct.proceduralLinks{i,4},1)),...
+            ~isempty(find([states.id]==outputStruct.proceduralLinks{i,4},1))]);
+        
+        if ind == 1
+            % If DestinationNode is an object
+            procLink(i) = OPMproceduralLink(outputStruct.proceduralLinks{i,1},outputStruct.proceduralLinks{i,2},...
+                proc(find([proc.id]==outputStruct.proceduralLinks{i,3},1)),...
+                obj(find([obj.id]==outputStruct.proceduralLinks{i,4},1)),outputStruct.proceduralLinks{i,5});    
+        elseif ind == 2
+            % If DestinationNode is a state
+            procLink(i) = OPMproceduralLink(outputStruct.proceduralLinks{i,1},outputStruct.proceduralLinks{i,2},...
+                proc(find([proc.id]==outputStruct.proceduralLinks{i,3},1)),...
+                states(find([states.id]==outputStruct.proceduralLinks{i,4},1)),outputStruct.proceduralLinks{i,5});       
+        else
+            % Error
+            error(['Problem with extraction of ',outputStruct.proceduralLinks{i,1},' link']);
+        end
+           
+    elseif strcmpi(outputStruct.proceduralLinks{i,1},'Effect')
+        % No constraints on whether SourceNode is a process or object.
+        % DestinationNode must be opposite to that of SourceNode
+        
+        % Determine if source is a process (ind=1) or an object (ind=2)
+        [~,ind] = max([~isempty(find([proc.id]==outputStruct.proceduralLinks{i,3},1)),...
+            ~isempty(find([obj.id]==outputStruct.proceduralLinks{i,3},1))]);
+        
+        if ind == 1
+            % If SourceNode is a process
+            procLink(i) = OPMproceduralLink(outputStruct.proceduralLinks{i,1},outputStruct.proceduralLinks{i,2},...
+            proc(find([proc.id]==outputStruct.proceduralLinks{i,3},1)),...
+            obj(find([obj.id]==outputStruct.proceduralLinks{i,4},1)),outputStruct.proceduralLinks{i,5});
+        elseif ind == 2
+            % If SourceNode is an object
+            procLink(i) = OPMproceduralLink(outputStruct.proceduralLinks{i,1},outputStruct.proceduralLinks{i,2},...
+            obj(find([obj.id]==outputStruct.proceduralLinks{i,3},1)),...
+            proc(find([proc.id]==outputStruct.proceduralLinks{i,4},1)),outputStruct.proceduralLinks{i,5});
+        else
+            % Error
+            error('Problem with extraction of Effect link');
+        end
+        
+    else
+        error(['Problem with extraction of procedural link ID: ',num2str(outputStruct.proceduralLinks{i,2})]);
+    end
+    
+    % TO DO: Add other if conditions
+    
+end
+
+
+
+
+%% Visualization
+% Driven by procedural links and structural relations
+
+% Plotting
+figure,
+for i = 1:length(obj)
+    hold on
+    obj(i).plotOPD;
+end
+
+for j = 1:length(proc)
+    hold on
+    proc(j).plotOPD;
+end
+
+for k = 1:length(procLink)
+    hold on
+    procLink(k).plotOPD;
+end
+
+
+%% Random Scribbles
+
+% % Default Opcat OPD Space
+% defaultOPDwidth = 1300;
+% defaultOPDheight = 860;
+% 
+% % Default Opcat FontSize
+% defaultThingFontSize = 16;
+% defaultStateFontSize = 12;
+% defaultLabelFontSize = 11;      % For structural links
+% 
+% defaultFont = 'Helvetica';  % note that this is Matlab's default text font
+% 
+% % Default Opcat Colors
+% thingBackgroundColor = [230, 230, 230]/255;
+% objectGreen = [0, 110, 0]/255;
+% processBlue = [0, 0, 170]/255;
+% stateBrown = [91, 91, 0]/255;
+
+

@@ -1,0 +1,10 @@
+[PropertyInfo]
+animationElements,Vector,false,false, , ,false,<default>
+animationThread,AnimationThread,false,false, , ,false,<default>
+currentStep,long,false,false, , ,false,<default>
+mySys,IXSystem,false,false, , ,false,<default>
+[IconNames]
+
+
+
+

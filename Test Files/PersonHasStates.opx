@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OPX version="3">
+  <OPMSystem creationDate="2015-10-20T17:18:37" lastUpdate="2015-10-20T17:20:20" author="SydneyDo" modeltype="System" name="PersonHasStates" uuid="98813df5-a21e-4abd-bd3d-6adb67719b24" maxEntityEntry="3" maxOpdEntry="1" global-id="da8df0a6-0d6c-49cc-bd2a-0d39597727b6">
+    <Scenarios />
+    <SystemProperties>
+      <SystemConfiguration>
+        <Property key="StateColor" value="-10790144" />
+        <Property key="MinimalThingHeight" value="35" />
+        <Property key="StateHeight" value="35" />
+        <Property key="ThingHeight" value="70" />
+        <Property key="SmallFont" value="11 0" />
+        <Property key="ThingWidth" value="120" />
+        <Property key="ObjectColor" value="-16749056" />
+        <Property key="LineFont" value="11 0" />
+        <Property key="TextColor" value="-16777216" />
+        <Property key="BackgroundColor" value="-1644826" />
+        <Property key="OPDWidth" value="1300" />
+        <Property key="LabelFont" value="11 0" />
+        <Property key="StateFont" value="12 0" />
+        <Property key="NormalSize" value="5" />
+        <Property key="DraggerSize" value="36" />
+        <Property key="MeasureFont" value="16 0" />
+        <Property key="OPDHeight" value="860" />
+        <Property key="URLFont" value="16 3" />
+        <Property key="FundamentalRelationHeight" value="31" />
+        <Property key="CurrentSize" value="6" />
+        <Property key="FundamentalRelationWidth" value="36" />
+        <Property key="UrlColor" value="-65536" />
+        <Property key="ProcessColor" value="-16777046" />
+        <Property key="ThingFont" value="16 0" />
+        <Property key="TimesFont" value="16 0" />
+        <Property key="MinimalThingWidth" value="60" />
+        <Property key="StateWidth" value="60" />
+        <Property key="LinkFont" value="12 0" />
+      </SystemConfiguration>
+      <GeneralInfo>
+        <Property key="Goals_and_Objectives_of_the_Project" value="" />
+        <Property key="Hardware_and_Software_Requirements" value="" />
+        <Property key="Client" value="" />
+        <Property key="Future_Goals" value="" />
+        <Property key="System_Overview" value="" />
+        <Property key="Possible_Users_for_the_System" value="" />
+        <Property key="Open_Issues" value="" />
+        <Property key="Operation_and_Maintenance" value="" />
+        <Property key="Problems" value="" />
+        <Property key="The_Current_State" value="" />
+        <Property key="Inputs_Processing" value="" />
+      </GeneralInfo>
+    </SystemProperties>
+    <LogicalStructure>
+      <ObjectSection>
+        <LogicalObject>
+          <EntityAttr id="1" uuid="cdfcc355-4cd1-48a3-9e44-21b25a6a4cb8" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.general.name" value="Person" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="67e19207-89c0-40a3-b594-921838a323d4" name="Person ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+          <ThingAttr>
+            <EntityIncludedInstances />
+          </ThingAttr>
+          <LogicalState>
+            <EntityAttr id="3" uuid="6274674f-1c96-48a3-a808-5621376d6004" exposed="false" privateexposed="false">
+              <EntryProperties />
+              <OPMProperties>
+                <Property key="entity.general.name" value="Full" />
+                <Property key="entity.opm.enviromental" value="false" />
+                <Property key="entity.opm.physical" value="false" />
+              </OPMProperties>
+              <EntityInstances count="1">
+                <instance uuid="f97bbcb2-e126-49df-acc4-406d3f577e3a" name="Full ( OPD : SD)" />
+              </EntityInstances>
+            </EntityAttr>
+          </LogicalState>
+          <LogicalState>
+            <EntityAttr id="2" uuid="78393f4c-a50f-4e6c-bf28-0705b16a811d" exposed="false" privateexposed="false">
+              <EntryProperties />
+              <OPMProperties>
+                <Property key="entity.general.name" value="Hungry" />
+                <Property key="entity.opm.enviromental" value="false" />
+                <Property key="entity.opm.physical" value="false" />
+              </OPMProperties>
+              <EntityInstances count="1">
+                <instance uuid="16e7626f-8857-4684-8344-61545a356de3" name="Hungry ( OPD : SD)" />
+              </EntityInstances>
+            </EntityAttr>
+          </LogicalState>
+        </LogicalObject>
+      </ObjectSection>
+      <ProcessSection />
+      <RelationSection />
+      <LinkSection />
+    </LogicalStructure>
+    <VisualPart>
+      <OPD id="1" name="SD" maxEntityEntry="3" view="false" indexinlevel="0">
+        <ThingSection>
+          <VisualThing>
+            <ThingData>
+              <VisualObject>
+                <InstanceAttr entityId="1" entityInOpdId="1" uuid="67e19207-89c0-40a3-b594-921838a323d4" />
+                <ConnectionEdgeAttr x="960" y="314" width="204" height="92" />
+                <ThingInstanceAttr textPosition="C" />
+                <ExportKey />
+                <VisualState visible="true" istemplate="false">
+                  <InstanceAttr entityId="2" entityInOpdId="2" uuid="16e7626f-8857-4684-8344-61545a356de3" />
+                  <ConnectionEdgeAttr x="20" y="42" width="72" height="42" />
+                  <ExportKey />
+                </VisualState>
+                <VisualState visible="true" istemplate="false">
+                  <InstanceAttr entityId="3" entityInOpdId="3" uuid="f97bbcb2-e126-49df-acc4-406d3f577e3a" />
+                  <ConnectionEdgeAttr x="112" y="42" width="72" height="42" />
+                  <ExportKey />
+                </VisualState>
+              </VisualObject>
+            </ThingData>
+            <ChildrenContainer />
+          </VisualThing>
+        </ThingSection>
+        <FundamentalRelationSection />
+        <GeneralRelationSection />
+        <VisualLinkSection />
+        <Unfolded />
+        <View />
+        <InZoomed />
+      </OPD>
+    </VisualPart>
+  </OPMSystem>
+</OPX>
+

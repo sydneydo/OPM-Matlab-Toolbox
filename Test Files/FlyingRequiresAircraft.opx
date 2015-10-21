@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OPX version="3">
+  <OPMSystem creationDate="2015-10-18T10:43:48" lastUpdate="2015-10-20T01:53:53" author="SydneyDo" modeltype="System" name="FlyingRequiresAircraft" uuid="264b36bb-5351-458c-ba40-91b14f39ba62" maxEntityEntry="9" maxOpdEntry="1" global-id="4ba2b851-8f08-4df1-8838-803402a6d69d">
+    <Scenarios />
+    <SystemProperties>
+      <SystemConfiguration>
+        <Property key="StateColor" value="-10790144" />
+        <Property key="MinimalThingHeight" value="35" />
+        <Property key="StateHeight" value="35" />
+        <Property key="ThingHeight" value="70" />
+        <Property key="SmallFont" value="11 0" />
+        <Property key="ThingWidth" value="120" />
+        <Property key="ObjectColor" value="-16749056" />
+        <Property key="LineFont" value="11 0" />
+        <Property key="TextColor" value="-16777216" />
+        <Property key="BackgroundColor" value="-1644826" />
+        <Property key="OPDWidth" value="1300" />
+        <Property key="LabelFont" value="11 0" />
+        <Property key="StateFont" value="12 0" />
+        <Property key="NormalSize" value="5" />
+        <Property key="DraggerSize" value="36" />
+        <Property key="MeasureFont" value="16 0" />
+        <Property key="OPDHeight" value="860" />
+        <Property key="URLFont" value="16 3" />
+        <Property key="FundamentalRelationHeight" value="31" />
+        <Property key="CurrentSize" value="10" />
+        <Property key="FundamentalRelationWidth" value="36" />
+        <Property key="UrlColor" value="-65536" />
+        <Property key="ProcessColor" value="-16777046" />
+        <Property key="ThingFont" value="16 0" />
+        <Property key="TimesFont" value="16 0" />
+        <Property key="MinimalThingWidth" value="60" />
+        <Property key="StateWidth" value="60" />
+        <Property key="LinkFont" value="12 0" />
+      </SystemConfiguration>
+      <GeneralInfo>
+        <Property key="Goals_and_Objectives_of_the_Project" value="" />
+        <Property key="Hardware_and_Software_Requirements" value="" />
+        <Property key="Client" value="" />
+        <Property key="Future_Goals" value="" />
+        <Property key="System_Overview" value="" />
+        <Property key="Possible_Users_for_the_System" value="" />
+        <Property key="Open_Issues" value="" />
+        <Property key="Operation_and_Maintenance" value="" />
+        <Property key="Problems" value="" />
+        <Property key="Inputs_Processing" value="" />
+        <Property key="The_Current_State" value="" />
+      </GeneralInfo>
+    </SystemProperties>
+    <LogicalStructure>
+      <ObjectSection>
+        <LogicalObject>
+          <EntityAttr id="8" uuid="3640cc00-b3ea-49ba-a358-1066debcdc54" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.general.name" value="a1" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="0ec61a34-18d5-4340-89ce-043c47e4a916" name="a1 ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+          <ThingAttr>
+            <EntityIncludedInstances />
+          </ThingAttr>
+        </LogicalObject>
+        <LogicalObject>
+          <EntityAttr id="2" uuid="6a84e142-3ca5-4bf3-8192-783f05df3cc4" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.general.name" value="Aircraft" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="cef56ac4-151d-47d2-8603-123b751afcb1" name="Aircraft ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+          <ThingAttr>
+            <EntityIncludedInstances />
+          </ThingAttr>
+        </LogicalObject>
+      </ObjectSection>
+      <ProcessSection>
+        <LogicalProcess>
+          <EntityAttr id="1" uuid="17923421-f8e8-499e-9df5-2080a494a1b0" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.opm.MaxTimeActivation" value="infinity" />
+              <Property key="entity.general.name" value="Flying" />
+              <Property key="entity.opm.MinTimeActivation" value="0;0;0;0;0;0;0" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="9333aa55-3e5c-4188-a003-5bf68b79abec" name="Flying ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+          <ThingAttr>
+            <EntityIncludedInstances />
+          </ThingAttr>
+        </LogicalProcess>
+      </ProcessSection>
+      <RelationSection />
+      <LinkSection>
+        <LogicalLink linkType="303" sourceId="8" destinationId="1" source-uuid="3640cc00-b3ea-49ba-a358-1066debcdc54" destination-uuid="17923421-f8e8-499e-9df5-2080a494a1b0">
+          <EntityAttr id="9" uuid="add0a711-e33e-4036-9ba3-149dd818070c" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.general.name" value="Instrument 9" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="ccb6d3fe-a3bc-409b-ac2b-bf9378b970cb" name="Instrument 9 ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+        </LogicalLink>
+        <LogicalLink linkType="303" sourceId="2" destinationId="1" source-uuid="6a84e142-3ca5-4bf3-8192-783f05df3cc4" destination-uuid="17923421-f8e8-499e-9df5-2080a494a1b0">
+          <EntityAttr id="3" uuid="5160de5f-d747-43ec-9ce0-e2d2076d7b8c" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.general.name" value="Instrument 3" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="df4b9bdb-6b4a-443c-9b6a-79cf1976068c" name="Instrument 3 ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+        </LogicalLink>
+      </LinkSection>
+    </LogicalStructure>
+    <VisualPart>
+      <OPD id="1" name="SD" maxEntityEntry="9" view="false" indexinlevel="0">
+        <ThingSection>
+          <VisualThing>
+            <ThingData>
+              <VisualProcess>
+                <InstanceAttr entityId="1" entityInOpdId="1" uuid="9333aa55-3e5c-4188-a003-5bf68b79abec" />
+                <ConnectionEdgeAttr x="550" y="330" width="160" height="190" />
+                <ThingInstanceAttr textPosition="C" />
+                <ExportKey />
+              </VisualProcess>
+            </ThingData>
+            <ChildrenContainer />
+          </VisualThing>
+          <VisualThing>
+            <ThingData>
+              <VisualObject>
+                <InstanceAttr entityId="2" entityInOpdId="2" uuid="cef56ac4-151d-47d2-8603-123b751afcb1" />
+                <ConnectionEdgeAttr x="890" y="400" width="160" height="80" />
+                <ThingInstanceAttr textPosition="C" />
+                <ExportKey />
+              </VisualObject>
+            </ThingData>
+            <ChildrenContainer />
+          </VisualThing>
+          <VisualThing>
+            <ThingData>
+              <VisualObject>
+                <InstanceAttr entityId="8" entityInOpdId="8" uuid="0ec61a34-18d5-4340-89ce-043c47e4a916" />
+                <ConnectionEdgeAttr x="890" y="630" width="160" height="80" />
+                <ThingInstanceAttr textPosition="C" />
+                <ExportKey />
+              </VisualObject>
+            </ThingData>
+            <ChildrenContainer />
+          </VisualThing>
+        </ThingSection>
+        <FundamentalRelationSection />
+        <GeneralRelationSection />
+        <VisualLinkSection>
+          <VisualLink>
+            <InstanceAttr entityId="3" entityInOpdId="3" uuid="df4b9bdb-6b4a-443c-9b6a-79cf1976068c" />
+            <LineAttr autoArranged="false" sourceId="2" sourceInOpdId="2" sourceConnectionSide="4" sourceConnectionParameter="0.78125" destinationId="1" destinationInOpdId="1" destinationConnectionSide="4" destinationConnectionParameter="0.2628205" />
+          </VisualLink>
+          <VisualLink>
+            <InstanceAttr entityId="9" entityInOpdId="9" uuid="ccb6d3fe-a3bc-409b-ac2b-bf9378b970cb" />
+            <LineAttr autoArranged="false" sourceId="8" sourceInOpdId="8" sourceConnectionSide="1" sourceConnectionParameter="0.8" destinationId="1" destinationInOpdId="1" destinationConnectionSide="4" destinationConnectionParameter="0.4903846" />
+          </VisualLink>
+        </VisualLinkSection>
+        <Unfolded />
+        <View />
+        <InZoomed />
+      </OPD>
+    </VisualPart>
+  </OPMSystem>
+</OPX>
+
