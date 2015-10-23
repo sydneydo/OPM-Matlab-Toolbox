@@ -161,14 +161,14 @@ classdef OPMstructuralRelation < handle
                 %% Plot Triangle
                 if strcmpi(obj.type,'Aggregation')
                 
-                    patch(xTriPlot,yTriPlot,'k','EdgeColor','k','LineWidth',3);
+                    patch(xTriPlot,yTriPlot,'k','EdgeColor','k','LineWidth',2);
                     axis equal
                     hold on
                     set(gca,'YDir','reverse');
                     
                 elseif strcmpi(obj.type,'Specialization')
                 
-                    patch(xTriPlot,yTriPlot,[230, 230, 230]/255,'EdgeColor','k','LineWidth',3);
+                    patch(xTriPlot,yTriPlot,[230, 230, 230]/255,'EdgeColor','k','LineWidth',2);
                     axis equal
                     hold on
                     set(gca,'YDir','reverse');
@@ -176,7 +176,7 @@ classdef OPMstructuralRelation < handle
                 elseif strcmpi(obj.type,'Exhibition')
                     
                     % Plot outside triangle
-                    patch(xTriPlot,yTriPlot,[230, 230, 230]/255,'EdgeColor','k','LineWidth',3);
+                    patch(xTriPlot,yTriPlot,[230, 230, 230]/255,'EdgeColor','k','LineWidth',2);
                     axis equal
                     hold on
                     
@@ -208,7 +208,7 @@ classdef OPMstructuralRelation < handle
                 elseif strcmpi(obj.type,'Instantiation')
                     
                     % Plot outside triangle
-                    patch(xTriPlot,yTriPlot,[230, 230, 230]/255,'EdgeColor','k','LineWidth',3);
+                    patch(xTriPlot,yTriPlot,[230, 230, 230]/255,'EdgeColor','k','LineWidth',2);
                     axis equal
                     hold on
                     
@@ -250,7 +250,7 @@ classdef OPMstructuralRelation < handle
                             vertMidway = (yTriTop+y1)/2;
                             
                             % Draw bent line
-                            line([x1,x1,xTriTop,xTriTop],[y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,x1,xTriTop,xTriTop],[y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',2);
                             
                         else
                             % Determine horizontal midway point
@@ -265,7 +265,7 @@ classdef OPMstructuralRelation < handle
                             
                             line([x1,x1,horizMidway,horizMidway,xTriTop,xTriTop],...
                                 [y1,y1+sourceLowerBuffer,y1+sourceLowerBuffer,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],...
-                                'Color','k','LineWidth',3);
+                                'Color','k','LineWidth',2);
                         end
                         
                         % For a SourceNode connection point on the north side
@@ -277,9 +277,9 @@ classdef OPMstructuralRelation < handle
                         % if connection point on source element is above top of
                         % triangle
                         if yTriTop >= y1
-                            line([x1,x1,xTriTop,xTriTop],[y1,y1-sourceUpperBuffer,y1-sourceUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,x1,xTriTop,xTriTop],[y1,y1-sourceUpperBuffer,y1-sourceUpperBuffer,yTriTop],'Color','k','LineWidth',2);
                         else
-                            line([x1,x1,xTriTop,xTriTop],[y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,x1,xTriTop,xTriTop],[y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',2);
                         end
                         
                         % For a SourceNode connection point on the east side
@@ -291,15 +291,15 @@ classdef OPMstructuralRelation < handle
                         % if connection point on source element is above top of
                         % triangle
                         if yTriTop >= y1 && xTriTop > x1
-                            line([x1,xTriTop,xTriTop],[y1,y1,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,xTriTop,xTriTop],[y1,y1,yTriTop],'Color','k','LineWidth',2);
                         elseif yTriTop >= y1 && xTriTop <= x1
                             vertMidway = (y1+yTriTop)/2;
-                            line([x1,x1+sourceEastBuffer,x1+sourceEastBuffer,xTriTop,xTriTop],[y1,y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,x1+sourceEastBuffer,x1+sourceEastBuffer,xTriTop,xTriTop],[y1,y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',2);
                         elseif yTriTop < y1 && xTriTop > x1
                             horizMidway = (x1+xTriTop)/2;
-                            line([x1,horizMidway,horizMidway,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,horizMidway,horizMidway,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',2);
                         elseif yTriTop < y1 && xTriTop <= x1
-                            line([x1,x1+sourceEastBuffer,x1+sourceEastBuffer,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,x1+sourceEastBuffer,x1+sourceEastBuffer,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',2);
                         else
                             error('Problem drawing connecting line')
                         end
@@ -316,10 +316,10 @@ classdef OPMstructuralRelation < handle
                             line([x1,xTriTop,xTriTop],[y1,y1,yTriTop],'Color','k','LineWidth',3);
                         elseif yTriTop >= y1 && xTriTop >= x1
                             vertMidway = (y1+yTriTop)/2;
-                            line([x1,x1-sourceWestBuffer,x1-sourceWestBuffer,xTriTop,xTriTop],[y1,y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,x1-sourceWestBuffer,x1-sourceWestBuffer,xTriTop,xTriTop],[y1,y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',2);
                         elseif yTriTop < y1 && xTriTop < x1
                             horizMidway = (x1+xTriTop)/2;
-                            line([x1,horizMidway,horizMidway,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,horizMidway,horizMidway,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',2);
                         elseif yTriTop < y1 && xTriTop >= x1
                             line([x1,x1-sourceWestBuffer,x1-sourceWestBuffer,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
                         else
@@ -341,7 +341,7 @@ classdef OPMstructuralRelation < handle
                             vertMidway = (yTriTop+y1)/2;
                             
                             % Draw bent line
-                            line([x1,x1,xTriTop,xTriTop],[y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,x1,xTriTop,xTriTop],[y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',2);
                             
                         else
                             % Determine horizontal midway point
@@ -368,9 +368,9 @@ classdef OPMstructuralRelation < handle
                         % if connection point on source element is above top of
                         % triangle
                         if yTriTop >= y1
-                            line([x1,x1,xTriTop,xTriTop],[y1,y1-sourceUpperBuffer,y1-sourceUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,x1,xTriTop,xTriTop],[y1,y1-sourceUpperBuffer,y1-sourceUpperBuffer,yTriTop],'Color','k','LineWidth',2);
                         else
-                            line([x1,x1,xTriTop,xTriTop],[y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,x1,xTriTop,xTriTop],[y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',2);
                         end
                         
                         % For a SourceNode connection point on the east side
@@ -382,15 +382,15 @@ classdef OPMstructuralRelation < handle
                         % if connection point on source element is above top of
                         % triangle
                         if yTriTop >= y1 && xTriTop > x1
-                            line([x1,xTriTop,xTriTop],[y1,y1,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,xTriTop,xTriTop],[y1,y1,yTriTop],'Color','k','LineWidth',2);
                         elseif yTriTop >= y1 && xTriTop <= x1
                             vertMidway = (y1+yTriTop)/2;
-                            line([x1,x1+sourceEastBuffer,x1+sourceEastBuffer,xTriTop,xTriTop],[y1,y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,x1+sourceEastBuffer,x1+sourceEastBuffer,xTriTop,xTriTop],[y1,y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',2);
                         elseif yTriTop < y1 && xTriTop > x1
                             horizMidway = (x1+xTriTop)/2;
-                            line([x1,horizMidway,horizMidway,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,horizMidway,horizMidway,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',2);
                         elseif yTriTop < y1 && xTriTop <= x1
-                            line([x1,x1+sourceEastBuffer,x1+sourceEastBuffer,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,x1+sourceEastBuffer,x1+sourceEastBuffer,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',2);
                         else
                             error('Problem drawing connecting line')
                         end
@@ -404,15 +404,15 @@ classdef OPMstructuralRelation < handle
                         % if connection point on source element is above top of
                         % triangle
                         if yTriTop >= y1 && xTriTop < x1
-                            line([x1,xTriTop,xTriTop],[y1,y1,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,xTriTop,xTriTop],[y1,y1,yTriTop],'Color','k','LineWidth',2);
                         elseif yTriTop >= y1 && xTriTop >= x1
                             vertMidway = (y1+yTriTop)/2;
-                            line([x1,x1-sourceWestBuffer,x1-sourceWestBuffer,xTriTop,xTriTop],[y1,y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,x1-sourceWestBuffer,x1-sourceWestBuffer,xTriTop,xTriTop],[y1,y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',2);
                         elseif yTriTop < y1 && xTriTop < x1
                             horizMidway = (x1+xTriTop)/2;
-                            line([x1,horizMidway,horizMidway,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,horizMidway,horizMidway,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',2);
                         elseif yTriTop < y1 && xTriTop >= x1
-                            line([x1,x1-sourceWestBuffer,x1-sourceWestBuffer,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                            line([x1,x1-sourceWestBuffer,x1-sourceWestBuffer,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',2);
                         else
                             error('Problem drawing connecting line')
                         end
@@ -436,7 +436,7 @@ classdef OPMstructuralRelation < handle
                             vertMidway = (yTriBottom+y2)/2;
                             
                             % Bent line from bottom of trangle to destination node
-                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,vertMidway,vertMidway,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,vertMidway,vertMidway,y2],'Color','k','LineWidth',2);
                         else
                             % Determine horizontal midway point
                             horizMidway = (xTriBottom+x2)/2;
@@ -450,7 +450,7 @@ classdef OPMstructuralRelation < handle
                             
                             line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2,x2],...
                                 [yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2-destinationUpperBuffer,y2-destinationUpperBuffer,y2],...
-                                'Color','k','LineWidth',3);
+                                'Color','k','LineWidth',2);
                         end
                         
                         % For a DestinationNode connection point on the south side
@@ -458,9 +458,9 @@ classdef OPMstructuralRelation < handle
                         triLowerBuffer = 40;
                         destinationLowerBuffer = 24;
                         if y2 >= yTriBottom
-                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,y2+destinationLowerBuffer,y2+destinationLowerBuffer,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,y2+destinationLowerBuffer,y2+destinationLowerBuffer,y2],'Color','k','LineWidth',2);
                         else
-                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2],'Color','k','LineWidth',2);
                         end
                         
                         % For a DestinationNode connection point on the east side
@@ -472,15 +472,15 @@ classdef OPMstructuralRelation < handle
                         % if connection point on source element is above top of
                         % triangle
                         if y2 >= yTriBottom && x2 < xTriBottom
-                            line([xTriBottom,xTriBottom,x2],[yTriBottom,y2,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2],[yTriBottom,y2,y2],'Color','k','LineWidth',2);
                         elseif y2 >= yTriBottom && x2 >= xTriBottom
                             vertMidway = (y2+yTriBottom)/2;
-                            line([xTriBottom,xTriBottom,x2+destinationEastBuffer,x2+destinationEastBuffer,x2],[yTriBottom,vertMidway,vertMidway,y2,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2+destinationEastBuffer,x2+destinationEastBuffer,x2],[yTriBottom,vertMidway,vertMidway,y2,y2],'Color','k','LineWidth',2);
                         elseif y2 < yTriBottom &&  x2 < xTriBottom
                             horizMidway = (x2+xTriBottom)/2;
-                            line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',2);
                         elseif y2 < yTriBottom && x2 >= xTriBottom
-                            line([xTriBottom,xTriBottom,x2+destinationEastBuffer,x2+destinationEastBuffer,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2+destinationEastBuffer,x2+destinationEastBuffer,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',2);
                         else
                             error('Problem drawing connecting line')
                         end
@@ -494,15 +494,15 @@ classdef OPMstructuralRelation < handle
                         % if connection point on source element is above top of
                         % triangle
                         if y2 >= yTriBottom && x2 > xTriBottom
-                            line([xTriBottom,xTriBottom,x2],[yTriBottom,y2,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2],[yTriBottom,y2,y2],'Color','k','LineWidth',2);
                         elseif y2 >= yTriBottom && x2 <= xTriBottom
                             vertMidway = (y2+yTriBottom)/2;
-                            line([xTriBottom,xTriBottom,x2-destinationWestBuffer,x2-destinationWestBuffer,x2],[yTriBottom,vertMidway,vertMidway,y2,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2-destinationWestBuffer,x2-destinationWestBuffer,x2],[yTriBottom,vertMidway,vertMidway,y2,y2],'Color','k','LineWidth',2);
                         elseif y2 < yTriBottom &&  x2 > xTriBottom
                             horizMidway = (x2+xTriBottom)/2;
-                            line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',2);
                         elseif y2 < yTriBottom && x2 <= xTriBottom
-                            line([xTriBottom,xTriBottom,x2-destinationWestBuffer,x2-destinationWestBuffer,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2-destinationWestBuffer,x2-destinationWestBuffer,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',2);
                         else
                             error('Problem drawing connecting line')
                         end
@@ -520,7 +520,7 @@ classdef OPMstructuralRelation < handle
                             vertMidway = (yTriBottom+y2)/2;
                             
                             % Bent line from bottom of trangle to destination node
-                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,vertMidway,vertMidway,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,vertMidway,vertMidway,y2],'Color','k','LineWidth',2);
                         else
                             % Determine horizontal midway point
                             horizMidway = (xTriBottom+x2)/2;
@@ -542,9 +542,9 @@ classdef OPMstructuralRelation < handle
                         triLowerBuffer = 40;
                         destinationLowerBuffer = 24;
                         if y2 >= yTriBottom
-                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,y2+destinationLowerBuffer,y2+destinationLowerBuffer,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,y2+destinationLowerBuffer,y2+destinationLowerBuffer,y2],'Color','k','LineWidth',2);
                         else
-                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2],'Color','k','LineWidth',2);
                         end
                         
                         % For a DestinationNode connection point on the east side
@@ -556,15 +556,15 @@ classdef OPMstructuralRelation < handle
                         % if connection point on source element is above top of
                         % triangle
                         if y2 >= yTriBottom && x2 < xTriBottom
-                            line([xTriBottom,xTriBottom,x2],[yTriBottom,y2,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2],[yTriBottom,y2,y2],'Color','k','LineWidth',2);
                         elseif y2 >= yTriBottom && x2 >= xTriBottom
                             vertMidway = (y2+yTriBottom)/2;
-                            line([xTriBottom,xTriBottom,x2+destinationEastBuffer,x2+destinationEastBuffer,x2],[yTriBottom,vertMidway,vertMidway,y2,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2+destinationEastBuffer,x2+destinationEastBuffer,x2],[yTriBottom,vertMidway,vertMidway,y2,y2],'Color','k','LineWidth',2);
                         elseif y2 < yTriBottom &&  x2 < xTriBottom
                             horizMidway = (x2+xTriBottom)/2;
-                            line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',2);
                         elseif y2 < yTriBottom && x2 >= xTriBottom
-                            line([xTriBottom,xTriBottom,x2+destinationEastBuffer,x2+destinationEastBuffer,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2+destinationEastBuffer,x2+destinationEastBuffer,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',2);
                         else
                             error('Problem drawing connecting line')
                         end
@@ -578,15 +578,15 @@ classdef OPMstructuralRelation < handle
                         % if connection point on source element is above top of
                         % triangle
                         if y2 >= yTriBottom && x2 > xTriBottom
-                            line([xTriBottom,xTriBottom,x2],[yTriBottom,y2,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2],[yTriBottom,y2,y2],'Color','k','LineWidth',2);
                         elseif y2 >= yTriBottom && x2 <= xTriBottom
                             vertMidway = (y2+yTriBottom)/2;
-                            line([xTriBottom,xTriBottom,x2-destinationWestBuffer,x2-destinationWestBuffer,x2],[yTriBottom,vertMidway,vertMidway,y2,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2-destinationWestBuffer,x2-destinationWestBuffer,x2],[yTriBottom,vertMidway,vertMidway,y2,y2],'Color','k','LineWidth',2);
                         elseif y2 < yTriBottom &&  x2 > xTriBottom
                             horizMidway = (x2+xTriBottom)/2;
-                            line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',2);
                         elseif y2 < yTriBottom && x2 <= xTriBottom
-                            line([xTriBottom,xTriBottom,x2-destinationWestBuffer,x2-destinationWestBuffer,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',3);
+                            line([xTriBottom,xTriBottom,x2-destinationWestBuffer,x2-destinationWestBuffer,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',2);
                         else
                             error('Problem drawing connecting line')
                         end

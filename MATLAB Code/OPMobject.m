@@ -96,8 +96,38 @@ classdef OPMobject < handle
                 text(obj.VisualX+obj.VisualWidth/2,obj.VisualY+abs(obj.states(1).VisualY)/2,obj.name,...
                 'FontSize',min([0.25*obj.VisualHeight,12]),'HorizontalAlignment','center');
             else
-                text(obj.VisualX+obj.VisualWidth/2,obj.VisualY+obj.VisualHeight/2,...
-                obj.name,'FontSize',min([0.25*obj.VisualHeight,12]),'HorizontalAlignment','center');
+                printedText = text(obj.VisualX+obj.VisualWidth/2,obj.VisualY+obj.VisualHeight/2,...
+                    obj.name,'FontSize',min([0.25*obj.VisualHeight,12]),'HorizontalAlignment','center');
+                
+                % Adjust text size if too long in the horizontal dimension
+                textDims = get(printedText,'Extent');       % [left bottom width height]
+                
+                if textDims(3) >= obj.VisualWidth
+                    % find spaces within name to see if we can break it up
+                    spaceIndex = strfind(obj.name,' ');
+                    
+                    if ~isempty(spaceIndex)
+                        
+                        newTextName = cell(1,length(spaceIndex)+1);
+                        
+                        for i = 1:length(newTextName)
+                            if i == 1
+                                newTextName{i} = obj.name(1:(spaceIndex(i)-1));
+                            elseif i == length(newTextName)
+                                newTextName{i} = obj.name((spaceIndex(end)+1):end);
+                                break
+                            else
+                                newTextName{i} = obj.name(spaceIndex(i-1):(spaceIndex(i)-1));
+                            end
+                        end
+                        
+                        delete(printedText)
+                        text(obj.VisualX+obj.VisualWidth/2,obj.VisualY+obj.VisualHeight/2,...
+                            newTextName,'FontSize',min([0.25*obj.VisualHeight,12]),'HorizontalAlignment','center');
+                        
+                    end
+                end
+                
             end
             
         end

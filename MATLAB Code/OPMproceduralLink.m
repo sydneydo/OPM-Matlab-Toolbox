@@ -69,7 +69,7 @@ classdef OPMproceduralLink < handle
             % Determine Connection Point of Destination Node
             [x2,y2] = obj.findConnectionPoint(obj.DestinationNode,obj.DestinationConnectionSide,obj.DestinationConnectionParameter);
             
-            line([x1,x2],[y1,y2],'Color','k','LineWidth',3)
+            line([x1,x2],[y1,y2],'Color','k','LineWidth',2)
             axis equal
             set(gca,'YDir','reverse');
             hold on
@@ -120,7 +120,7 @@ classdef OPMproceduralLink < handle
                 
                 rotatedCoords = alpha*[x;y];       
                 
-                patch(rotatedCoords(1,:)+x2,rotatedCoords(2,:)+y2,[230, 230, 230]/255,'EdgeColor','k','LineWidth',3);
+                patch(rotatedCoords(1,:)+x2,rotatedCoords(2,:)+y2,[230, 230, 230]/255,'EdgeColor','k','LineWidth',2);
                 axis equal
                 set(gca,'YDir','reverse');
                 
@@ -156,9 +156,9 @@ classdef OPMproceduralLink < handle
                 
                 rotatedCoordsSource = alphaSource*[x;y]; 
                 
-                patch(rotatedCoordsDestination(1,:)+x2,rotatedCoordsDestination(2,:)+y2,[230, 230, 230]/255,'EdgeColor','k','LineWidth',3);
+                patch(rotatedCoordsDestination(1,:)+x2,rotatedCoordsDestination(2,:)+y2,[230, 230, 230]/255,'EdgeColor','k','LineWidth',2);
                 hold on
-                patch(rotatedCoordsSource(1,:)+x1,rotatedCoordsSource(2,:)+y1,[230, 230, 230]/255,'EdgeColor','k','LineWidth',3);
+                patch(rotatedCoordsSource(1,:)+x1,rotatedCoordsSource(2,:)+y1,[230, 230, 230]/255,'EdgeColor','k','LineWidth',2);
                 axis equal
                 set(gca,'YDir','reverse');
                 
