@@ -492,21 +492,21 @@ classdef OPMproject
             
             % Search within processes
             indexList = ~cellfun('isempty',strfind(obj.ProcessSummary(:,1),searchTerm));
-            if sum(indexList) > 0
+            if ~isempty(indexList)
                 returnedElement = obj.Processes(indexList);
                 return
             end
             
             % Search within states
             % Find indexes for objects with states
-            stateIndexList = find(~cellfun('isempty',obj.ObjectSummary(:,4)));
+            stateIndexList = find(~cellfun('isempty',opm.ObjectSummary(:,4)));
             
             % Search within each stateset of each object for the correct
             % state
             for i = 1:length(stateIndexList)
-                if sum(cell2mat(strfind({obj.Objects(stateIndexList(i)).states.name},searchTerm))) > 0
-                    stateInObjectIndex = ~cellfun('isempty',strfind({obj.Objects(stateIndexList(i)).states.name},searchTerm));
-                    returnedElement = obj.Objects(stateIndexList(i)).states(stateInObjectIndex);
+                if ~isempty(strfind({obj.Objects(i).states.name},searchTerm))
+                    stateInObjectIndex = ~cellfun('isempty',strfind({obj.Objects(i).states.name},searchTerm));
+                    returnedElement = obj.Objects(i).states(stateInObjectIndex);
                     return
                 end
             end
