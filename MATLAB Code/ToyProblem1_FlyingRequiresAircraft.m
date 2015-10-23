@@ -17,13 +17,13 @@
 % % outputStruct.structuralRelations
 % % outputStruct.proceduralLinks
 
-clear all
+% clear all
 clc
 
 %% Toy problems
 % Hardcode input
 
-testCase = 5;
+testCase = 8;
 
 switch testCase
     
@@ -164,11 +164,81 @@ switch testCase
             'Aggregation',5,1,3,VisualData{5}};      % Each row is a from-to link to connect objects and processes
         outputStruct.proceduralLinks = {};
         
+    case 6      % HumanAttributes.opx - testing exhibition structural relation for both processes and objects
         
+        VisualData = cell(1,8);
+        VisualData{1} = [819,278,108,62];
+        VisualData{2} = [886,389,153,97];
+        VisualData{3} = [908,510,108,62];
+        VisualData{4} = [907,591,108,62];       
+        VisualData{5} = [];
+        VisualData{6} = [4,0.5,7,0.54761904,807,363,42,36];
+        VisualData{7} = [4,0.5,7,0.54761904,807,363,42,36];
+        VisualData{8} = [4,0.5,1,0.067961164,807,363,42,36];
+        
+        % VisualData for objects and processes
+        % [x,y,width,height]
+        
+        % VisualData for procedural links
+        % [SourceConnectionSide, SourceConnectionParameter,
+        % DestinationConnectionSide, DestinationConnectionParameter]
+        
+        % VisualData for structural links
+        % [SourceConnectionSide, SourceConnectionParameter,
+        % DestinationConnectionSide, DestinationConnectionParameter,
+        % symbol_x, symbol_y, symbol_width, symbol_height]
+        % Note that symbol_x and symbol_y denote the top left hand corner
+        % of the triangle in structural relations
+                        
+        % Note that if input text has "&#xA;", this equivalent to starting
+        % a new line between the words
+        outputStruct.objects = {'Weight',4,VisualData{4},{};'Age',3,VisualData{3},{};...
+            'Human',1,VisualData{1},{}};
+        outputStruct.processes = {'Metabolizing',2,VisualData{2}};
+        outputStruct.structuralRelations = {'Exhibition',8,1,2,VisualData{8};'Exhibition',7,1,3,VisualData{7};...
+            'Exhibition',6,1,4,VisualData{6}};      % Each row is a from-to link to connect objects and processes
+        outputStruct.proceduralLinks = {};
+        
+    case 7      % TypesOfCooking.opx - testing specialization structural relation for processes
+        
+        VisualData = cell(1,8);
+        VisualData{4} = [1160,136,164,107];
+        VisualData{8} = [877,230,162,95];
+        VisualData{9} = [1105,323,228,137];
+        VisualData{10} = [1393,309,126,126];       
+        VisualData{5} = [];
+        VisualData{13} = [4,0.5,1,0.5,1275,288,64,55];
+        VisualData{12} = [4,0.5,1,0.5,1275,288,64,55];
+        VisualData{11} = [4,0.5,1,0.5,1275,288,64,55];
+        
+        % VisualData for objects and processes
+        % [x,y,width,height]
+        
+        % VisualData for procedural links
+        % [SourceConnectionSide, SourceConnectionParameter,
+        % DestinationConnectionSide, DestinationConnectionParameter]
+        
+        % VisualData for structural links
+        % [SourceConnectionSide, SourceConnectionParameter,
+        % DestinationConnectionSide, DestinationConnectionParameter,
+        % symbol_x, symbol_y, symbol_width, symbol_height]
+        % Note that symbol_x and symbol_y denote the top left hand corner
+        % of the triangle in structural relations
+                        
+        % Note that if input text has "&#xA;", this equivalent to starting
+        % a new line between the words
+        outputStruct.objects = {};
+        outputStruct.processes = {'frying',10,VisualData{10};'steaming',9,VisualData{9};...
+            'baking',8,VisualData{8};'cooking',4,VisualData{4}};
+        outputStruct.structuralRelations = {'Specialization',13,4,8,VisualData{13};'Specialization',12,4,10,VisualData{12};...
+            'Specialization',11,4,9,VisualData{11}};      % Each row is a from-to link to connect objects and processes
+        outputStruct.proceduralLinks = {};
+        
+    case 8
 end
 
 %% Initialize Objects Arrays
-obj = OPMobject.empty(0,size(outputStruct.objects,1));
+object = OPMobject.empty(0,size(outputStruct.objects,1));
 
 % Create Objects
 % objectIDs = [outputStruct.objects{:,2}];
@@ -188,10 +258,10 @@ for i = 1:size(outputStruct.objects,1)
             states(c) = StateSet(j);    
         end
         
-        obj(i) = OPMobject(outputStruct.objects{i,1},outputStruct.objects{i,2},outputStruct.objects{i,3},StateSet);
+        object(i) = OPMobject(outputStruct.objects{i,1},outputStruct.objects{i,2},outputStruct.objects{i,3},StateSet);
         
     else
-        obj(i) = OPMobject(outputStruct.objects{i,1},outputStruct.objects{i,2},outputStruct.objects{i,3},OPMstate.empty(0));
+        object(i) = OPMobject(outputStruct.objects{i,1},outputStruct.objects{i,2},outputStruct.objects{i,3},OPMstate.empty(0));
     end
     
 end
@@ -218,13 +288,13 @@ for i = 1:size(outputStruct.proceduralLinks,1)
    
         % If states present in objects, determine whether or not SourceNode
         % is connected to a state
-        [~,ind] = max([~isempty(find([obj.id]==outputStruct.proceduralLinks{i,3},1)),...
+        [~,ind] = max([~isempty(find([object.id]==outputStruct.proceduralLinks{i,3},1)),...
             ~isempty(find([states.id]==outputStruct.proceduralLinks{i,3},1))]);
         
         if ind == 1
             % If SourceNode is an object
             procLink(i) = OPMproceduralLink(outputStruct.proceduralLinks{i,1},outputStruct.proceduralLinks{i,2},...
-                obj(find([obj.id]==outputStruct.proceduralLinks{i,3},1)),...
+                object(find([object.id]==outputStruct.proceduralLinks{i,3},1)),...
                 proc(find([proc.id]==outputStruct.proceduralLinks{i,4},1)),outputStruct.proceduralLinks{i,5});
         elseif ind == 2
             % If SourceNode is a state
@@ -242,14 +312,14 @@ for i = 1:size(outputStruct.proceduralLinks,1)
         
         % If states present in objects, determine whether or not DestinationNode
         % is connected to a state
-        [~,ind] = max([~isempty(find([obj.id]==outputStruct.proceduralLinks{i,4},1)),...
+        [~,ind] = max([~isempty(find([object.id]==outputStruct.proceduralLinks{i,4},1)),...
             ~isempty(find([states.id]==outputStruct.proceduralLinks{i,4},1))]);
         
         if ind == 1
             % If DestinationNode is an object
             procLink(i) = OPMproceduralLink(outputStruct.proceduralLinks{i,1},outputStruct.proceduralLinks{i,2},...
                 proc(find([proc.id]==outputStruct.proceduralLinks{i,3},1)),...
-                obj(find([obj.id]==outputStruct.proceduralLinks{i,4},1)),outputStruct.proceduralLinks{i,5});    
+                object(find([object.id]==outputStruct.proceduralLinks{i,4},1)),outputStruct.proceduralLinks{i,5});    
         elseif ind == 2
             % If DestinationNode is a state
             procLink(i) = OPMproceduralLink(outputStruct.proceduralLinks{i,1},outputStruct.proceduralLinks{i,2},...
@@ -266,17 +336,17 @@ for i = 1:size(outputStruct.proceduralLinks,1)
         
         % Determine if source is a process (ind=1) or an object (ind=2)
         [~,ind] = max([~isempty(find([proc.id]==outputStruct.proceduralLinks{i,3},1)),...
-            ~isempty(find([obj.id]==outputStruct.proceduralLinks{i,3},1))]);
+            ~isempty(find([object.id]==outputStruct.proceduralLinks{i,3},1))]);
         
         if ind == 1
             % If SourceNode is a process
             procLink(i) = OPMproceduralLink(outputStruct.proceduralLinks{i,1},outputStruct.proceduralLinks{i,2},...
             proc(find([proc.id]==outputStruct.proceduralLinks{i,3},1)),...
-            obj(find([obj.id]==outputStruct.proceduralLinks{i,4},1)),outputStruct.proceduralLinks{i,5});
+            object(find([object.id]==outputStruct.proceduralLinks{i,4},1)),outputStruct.proceduralLinks{i,5});
         elseif ind == 2
             % If SourceNode is an object
             procLink(i) = OPMproceduralLink(outputStruct.proceduralLinks{i,1},outputStruct.proceduralLinks{i,2},...
-            obj(find([obj.id]==outputStruct.proceduralLinks{i,3},1)),...
+            object(find([object.id]==outputStruct.proceduralLinks{i,3},1)),...
             proc(find([proc.id]==outputStruct.proceduralLinks{i,4},1)),outputStruct.proceduralLinks{i,5});
         else
             % Error
@@ -300,19 +370,19 @@ for i = 1:size(outputStruct.structuralRelations,1)
     if ~strcmpi(outputStruct.structuralRelations{i,1},'Exhibition')
         
         % Determine if source is an object (ind=1) or a process (ind=2)
-        [~,ind] = max([~isempty(find([obj.id]==outputStruct.structuralRelations{i,3},1)),...
+        [~,ind] = max([~isempty(find([object.id]==outputStruct.structuralRelations{i,3},1)),...
             ~isempty(find([proc.id]==outputStruct.structuralRelations{i,3},1))]);
         
         if ind == 1
             % If SourceNode is an object
             structRel(i) = OPMstructuralRelation(outputStruct.structuralRelations{i,1},outputStruct.structuralRelations{i,2},...
-            obj(find([obj.id]==outputStruct.structuralRelations{i,3},1)),...
-            obj(find([obj.id]==outputStruct.structuralRelations{i,4},1)),outputStruct.structuralRelations{i,5});
+                object(find([object.id]==outputStruct.structuralRelations{i,3},1)),...
+                object(find([object.id]==outputStruct.structuralRelations{i,4},1)),outputStruct.structuralRelations{i,5});
         elseif ind == 2
             % If SourceNode is a process
             structRel(i) = OPMstructuralRelation(outputStruct.structuralRelations{i,1},outputStruct.structuralRelations{i,2},...
-            proc(find([proc.id]==outputStruct.structuralRelations{i,3},1)),...
-            proc(find([proc.id]==outputStruct.structuralRelations{i,4},1)),outputStruct.structuralRelations{i,5});
+                proc(find([proc.id]==outputStruct.structuralRelations{i,3},1)),...
+                proc(find([proc.id]==outputStruct.structuralRelations{i,4},1)),outputStruct.structuralRelations{i,5});
         else
             % Error
             error('Problem with extraction of Structural Relation');
@@ -320,11 +390,41 @@ for i = 1:size(outputStruct.structuralRelations,1)
     
     else
         % Code for Exhibition relation
-    
-    
+        % Determine if source is an object (ind=1) or a process (ind=2)
+        [~,SourceInd] = max([~isempty(find([object.id]==outputStruct.structuralRelations{i,3},1)),...
+            ~isempty(find([proc.id]==outputStruct.structuralRelations{i,3},1))]);
+        
+        % Determine if detination is an object (ind=1) or a process (ind=2)
+        [~,DestinationInd] = max([~isempty(find([object.id]==outputStruct.structuralRelations{i,4},1)),...
+            ~isempty(find([proc.id]==outputStruct.structuralRelations{i,4},1))]);
+        
+        % If source and destination are both objects
+        if SourceInd == 1 && DestinationInd == 1
+            structRel(i) = OPMstructuralRelation(outputStruct.structuralRelations{i,1},outputStruct.structuralRelations{i,2},...
+                object(find([object.id]==outputStruct.structuralRelations{i,3},1)),...
+                object(find([object.id]==outputStruct.structuralRelations{i,4},1)),outputStruct.structuralRelations{i,5});
+        % If source is an object and destination is a process    
+        elseif SourceInd == 1 && DestinationInd == 2
+            structRel(i) = OPMstructuralRelation(outputStruct.structuralRelations{i,1},outputStruct.structuralRelations{i,2},...
+                object(find([object.id]==outputStruct.structuralRelations{i,3},1)),...
+                proc(find([proc.id]==outputStruct.structuralRelations{i,4},1)),outputStruct.structuralRelations{i,5});
+        % If source is a process and destination is an object
+        elseif SourceInd == 2 && DestinationInd == 1
+            structRel(i) = OPMstructuralRelation(outputStruct.structuralRelations{i,1},outputStruct.structuralRelations{i,2},...
+                proc(find([proc.id]==outputStruct.structuralRelations{i,3},1)),...
+                object(find([object.id]==outputStruct.structuralRelations{i,4},1)),outputStruct.structuralRelations{i,5});
+        % If source and destination are both processes
+        elseif SourceInd == 2 && DestinationInd == 2
+            
+            structRel(i) = OPMstructuralRelation(outputStruct.structuralRelations{i,1},outputStruct.structuralRelations{i,2},...
+                proc(find([proc.id]==outputStruct.structuralRelations{i,3},1)),...
+                proc(find([proc.id]==outputStruct.structuralRelations{i,4},1)),outputStruct.structuralRelations{i,5});
+        else
+            % Error
+            error('Problem with extraction of Exhibition Relation');
+        end
     
     end
-    
     
 end
 
@@ -333,9 +433,9 @@ end
 
 % Plotting
 figure,
-for i = 1:length(obj)
+for i = 1:length(object)
     hold on
-    obj(i).plotOPD;
+    object(i).plotOPD;
 end
 
 for j = 1:length(proc)

@@ -12,13 +12,15 @@ classdef OPMobject < handle
         id
         environment = 0
         physical = 0
-        ParentObjects       % array of OPMobjects - Decomposition Link
-        ChildObjects        % array of OPMobjects - Decomposition Link
-        ParentClasses       % Parents through Specialization Link
-        ChildClasses        % Children through Specialization Link
-        UniqueAttributes    % define with Exhibition Link - combination of both objects and processes
-        InheritedAttributes % transfered into object when this object is subclassed or is an instance of a parent object
-        Instances           % array of Instances (Instantiation Link)
+        ParentObjects = OPMobject.empty(0)               % array of OPMobjects - Decomposition Link
+        ChildObjects = OPMobject.empty(0)                % array of OPMobjects - Decomposition Link
+        ParentClasses = OPMobject.empty(0)               % Parents through Specialization Link
+        ChildClasses = OPMobject.empty(0)                % Children through Specialization Link
+        UniqueAttributes = OPMobject.empty(0)       % define with Exhibition Link - combination of both objects and processes
+        InheritedAttributes = OPMobject.empty(0)    % transfered into object when this object is subclassed or is an instance of a parent object
+        UniqueOperations = OPMprocess.empty(0)            % Contains only processes that are exhibited by this object         
+        InheritedOperations = OPMprocess.empty(0)         % Contains only processes that are exhibited by this object
+        Instances = OPMobject.empty(0)                   % array of Instances (Instantiation Link)
         VisualX
         VisualY
         VisualWidth
@@ -92,10 +94,10 @@ classdef OPMobject < handle
                 % Base text position on relative vertical position of first
                 % state only
                 text(obj.VisualX+obj.VisualWidth/2,obj.VisualY+abs(obj.states(1).VisualY)/2,obj.name,...
-                'FontUnits','normalized','FontSize',0.05,'HorizontalAlignment','center');
+                'FontSize',min([0.25*obj.VisualHeight,12]),'HorizontalAlignment','center');
             else
                 text(obj.VisualX+obj.VisualWidth/2,obj.VisualY+obj.VisualHeight/2,...
-                obj.name,'FontUnits','normalized','FontSize',0.05,'HorizontalAlignment','center');
+                obj.name,'FontSize',min([0.25*obj.VisualHeight,12]),'HorizontalAlignment','center');
             end
             
         end
@@ -122,6 +124,68 @@ classdef OPMobject < handle
             
             obj.ParentObjects = [obj.ParentObjects, parentObjects];
         
+        end
+        
+        %% Append Child Classes
+        function obj = appendChildrenClasses(obj,childClasses)
+           
+            % Ensure that input is an OPMobject
+            if ~strcmpi(class(childClasses),'OPMobject')
+                error('Input must be of class OPMobject')
+            end
+            
+            obj.ChildClasses = [obj.ChildClasses, childClasses];
+        
+        end
+
+        %% Append Parent Classes
+        function obj = appendParentClasses(obj,parentClasses)
+           
+            % Ensure that input is an OPMobject
+            if ~strcmpi(class(parentClasses),'OPMobject')
+                error('Input must be of class OPMobject')
+            end
+            
+            obj.ParentClasses = [obj.ParentClasses, parentClasses];
+        
+        end
+        
+        %% Append Unique Properties
+        function obj = appendUniqueProperties(obj,additionalUniqueProperties)
+           
+            % Ensure that input is an OPMobject or OPMproces
+            if ~(strcmpi(class(additionalUniqueProperties),'OPMprocess')||...
+                    strcmpi(class(additionalUniqueProperties),'OPMobject'))
+                error('Input must be of class OPMprocess or OPMobject')
+            end
+            
+            if strcmpi(class(additionalUniqueProperties),'OPMobject')
+                obj.UniqueAttributes = [obj.UniqueAttributes, additionalUniqueProperties];
+            elseif strcmpi(class(additionalUniqueProperties),'OPMprocess')
+                obj.UniqueOperations = [obj.UniqueOperations, additionalUniqueProperties];
+            else
+                error('Error in transferring attribute/operation')
+            end
+
+        end
+        
+        %% Append Inherited Properties
+        function obj = appendInheritedProperties(obj,additionalInheritedProperties)
+           
+            % Ensure that input is an OPMobject or OPMproces
+            if ~(strcmpi(class(additionalInheritedProperties),'OPMprocess')||...
+                    strcmpi(class(additionalInheritedProperties),'OPMobject'))
+                error('Input must be of class OPMprocess or OPMobject')
+            end
+            
+            if strcmpi(class(additionalInheritedProperties),'OPMobject')
+                obj.InheritedAttributes = [obj.InheritedAttributes, additionalInheritedProperties];
+            elseif strcmpi(class(additionalInheritedProperties),'OPMprocess')
+                obj.InheritedOperations = [obj.InheritedOperations, additionalInheritedProperties];
+            else
+                error('Error in transferring attribute/operation')
+            end
+
         end
         
         %% Append Instances

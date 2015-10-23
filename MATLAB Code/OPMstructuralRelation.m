@@ -90,17 +90,42 @@ classdef OPMstructuralRelation < handle
             elseif strcmpi(Type,'Exhibition')
                 % add DestinationNode to the UniqueAttributes of the
                 % SourceNode
+                obj.SourceNode.appendUniqueProperties(obj.DestinationNode);
+                
                 
             elseif strcmpi(Type,'Specialization')
                 % append parent and child classes
                 % transfer unique attributes of source node to inherited
                 % attributes of destination node - ensure zero value?
                 
+                % Add DestinationNode as child class of SourceNode
+                obj.SourceNode.appendChildrenClasses(obj.DestinationNode);
+                
+                % Add SourceNode as psrent class of DestinationNode
+                obj.DestinationNode.appendParentClasses(obj.SourceNode);
+                
+                % Transfer parent unique and inherited attributes to child node
+                obj.DestinationNode.appendInheritedProperties(obj.SourceNode.UniqueAttributes);
+                obj.DestinationNode.appendInheritedProperties(obj.SourceNode.InheritedAttributes);
+                % Transfer parent unique and inherited operations to child node
+                obj.DestinationNode.appendInheritedProperties(obj.SourceNode.UniqueOperations);
+                obj.DestinationNode.appendInheritedProperties(obj.SourceNode.InheritedOperations);
+                
+                
             elseif strcmpi(Type,'Instantiation')
                 % append instances property of source node
                 % transfer unique attributes of source node to inherited
                 % attributes of destination node - ensure zero value?
+
+                % Identify instances in parent node
+                obj.SourceNode.appendInstances(obj.DestinationNode);
                 
+                % Transfer parent unique and inherited attributes to child node
+                obj.DestinationNode.appendInheritedProperties(obj.SourceNode.UniqueAttributes);
+                obj.DestinationNode.appendInheritedProperties(obj.SourceNode.InheritedAttributes);
+                % Transfer parent unique and inherited operations to child node
+                obj.DestinationNode.appendInheritedProperties(obj.SourceNode.UniqueOperations);
+                obj.DestinationNode.appendInheritedProperties(obj.SourceNode.InheritedOperations);
                 
             end
             
@@ -141,163 +166,441 @@ classdef OPMstructuralRelation < handle
                     hold on
                     set(gca,'YDir','reverse');
                     
+                elseif strcmpi(obj.type,'Specialization')
+                
+                    patch(xTriPlot,yTriPlot,[230, 230, 230]/255,'EdgeColor','k','LineWidth',3);
+                    axis equal
+                    hold on
+                    set(gca,'YDir','reverse');
+                    
+                elseif strcmpi(obj.type,'Exhibition')
+                    
+                    % Plot outside triangle
+                    patch(xTriPlot,yTriPlot,[230, 230, 230]/255,'EdgeColor','k','LineWidth',3);
+                    axis equal
+                    hold on
+                    
+                    % Plot inside triangle
+                    % determine centroid of triangle
+                    xCentroid = mean(xTriPlot);
+                    yCentroid = mean(yTriPlot);
+                    
+                    % Scale inner triangle vertices to occur halfway
+                    % between centroid and outer triangle vertices
+                    innerTriScale = 0.5;
+                    innerAngleRatio = (yTriPlot(2)-yCentroid)/(obj.SymbolWidth/2);
+                    lengthOfCentroidToBottomVertex = sqrt((xTriPlot(2)-xCentroid)^2+(yTriPlot(2)-yCentroid)^2);
+                    
+                    % Differential height of inner triangle vertex from
+                    % centroid
+                    % Derived using Pythagoras' theorem and angle ratio
+                    dh = innerTriScale*lengthOfCentroidToBottomVertex/sqrt(1/innerAngleRatio^2+1);
+                    
+                    % Differential length of inner triangle vertex from
+                    % centroid
+                    dw = innerTriScale*lengthOfCentroidToBottomVertex/sqrt(1+innerAngleRatio^2);
+                    
+                    % Draw inner triangle
+                    patch([xCentroid,xCentroid+dw,xCentroid-dw],...
+                        [yCentroid-(yCentroid-yTriPlot(1))*innerTriScale,yCentroid+dh,yCentroid+dh],'k')
+                    set(gca,'YDir','reverse');
+                    
+                elseif strcmpi(obj.type,'Instantiation')
+                    
+                    % Plot outside triangle
+                    patch(xTriPlot,yTriPlot,[230, 230, 230]/255,'EdgeColor','k','LineWidth',3);
+                    axis equal
+                    hold on
+                    
+                    % Plot inside circle
+                    % determine centroid of circle
+                    xCentroid = mean(xTriPlot);
+                    yCentroid = mean(yTriPlot);
+                    
+                    % Scale inner triangle vertices to occur halfway
+                    % between centroid and outer triangle vertices
+                    innerTriScale = 1/3.5;
+                    circleRad = innerTriScale*(yCentroid-yTriPlot(1));
+                    theta = linspace(0,2*pi*1.01,100);
+                    
+                    % Draw inner circle
+                    patch(xCentroid+circleRad*cos(theta),yCentroid+circleRad*sin(theta),'k')
+                    set(gca,'YDir','reverse');
+                    
                 else
                    % Other symbols for other conditions 
                 end
                 
                 %% Bent Line between Source Node and Triangle
-                % if connection point on source element is above top of
-                % triangle
-                if yTriTop >= y1
-                    vertMidway = (yTriTop+y1)/2;
-                    
-                    % Draw bent line
-                    line([x1,x1,xTriTop,xTriTop],[y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',3);
-                    
-                else
-                    % Determine horizontal midway point
-                    horizMidway = (xTriTop+x1)/2;
-                    
-                    % Bent line from source node to top of triangle
-                    % Note that a buffer of 16 units exists beneath the
-                    % object, and a buffer of 24 units exists above the
-                    % triangle
-                    sourceLowerBuffer = 16;
-                    triUpperBuffer = 24;
-                    
-                    line([x1,x1,horizMidway,horizMidway,xTriTop,xTriTop],...
-                        [y1,y1+sourceLowerBuffer,y1+sourceLowerBuffer,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],...
-                        'Color','k','LineWidth',3);
-                    
-                end
-                                
-                %% Bent Line between Triangle and Destination Node
-                % if connection point on destination element is beneath bottom of
-                % triangle
-                if y2 >= yTriBottom
-                    % Determine vertical midway point
-                    vertMidway = (yTriBottom+y2)/2;
-                    
-                    % Bent line from bottom of trangle to destination node
-                    line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,vertMidway,vertMidway,y2],'Color','k','LineWidth',3);
-                else
-                    % Determine horizontal midway point
-                    horizMidway = (xTriBottom+x2)/2;
-                    
-                    % Bent line from bottom of trangle to destination node
-                    % Note that a buffer of 40 units exists beneath the
-                    % triangle, and a buffer of 24 units exists above the
-                    % object
-                    triLowerBuffer = 40;
-                    destinationUpperBuffer = 24;
-                    
-                    line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2,x2],...
-                        [yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2-destinationUpperBuffer,y2-destinationUpperBuffer,y2],...
-                        'Color','k','LineWidth',3);
-                end
                 
-
+                % Shape of line is dependent on connection side of object
+                % as well as position of triangle relative to object
+                
+                % If connection side is south, and triangle is beneath
+                % source object
+                  
+                if strcmpi(class(obj.SourceNode),'OPMobject')
+                
+                    % For a SourceNode connection point on the south side
+                    if obj.SourceConnectionSide == 4
+                        
+                        % if connection point on source element is above top of
+                        % triangle
+                        if yTriTop >= y1
+                            vertMidway = (yTriTop+y1)/2;
+                            
+                            % Draw bent line
+                            line([x1,x1,xTriTop,xTriTop],[y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',3);
+                            
+                        else
+                            % Determine horizontal midway point
+                            horizMidway = (xTriTop+x1)/2;
+                            
+                            % Bent line from source node to top of triangle
+                            % Note that a buffer of 16 units exists beneath the
+                            % object, and a buffer of 24 units exists above the
+                            % triangle
+                            sourceLowerBuffer = 16;
+                            triUpperBuffer = 24;
+                            
+                            line([x1,x1,horizMidway,horizMidway,xTriTop,xTriTop],...
+                                [y1,y1+sourceLowerBuffer,y1+sourceLowerBuffer,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],...
+                                'Color','k','LineWidth',3);
+                        end
+                        
+                        % For a SourceNode connection point on the north side
+                    elseif obj.SourceConnectionSide == 1
+                        
+                        sourceUpperBuffer = 16;
+                        triUpperBuffer = 24;
+                        
+                        % if connection point on source element is above top of
+                        % triangle
+                        if yTriTop >= y1
+                            line([x1,x1,xTriTop,xTriTop],[y1,y1-sourceUpperBuffer,y1-sourceUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                        else
+                            line([x1,x1,xTriTop,xTriTop],[y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                        end
+                        
+                        % For a SourceNode connection point on the east side
+                    elseif obj.SourceConnectionSide == 8
+                        
+                        sourceEastBuffer = 16;
+                        triUpperBuffer = 24;
+                        
+                        % if connection point on source element is above top of
+                        % triangle
+                        if yTriTop >= y1 && xTriTop > x1
+                            line([x1,xTriTop,xTriTop],[y1,y1,yTriTop],'Color','k','LineWidth',3);
+                        elseif yTriTop >= y1 && xTriTop <= x1
+                            vertMidway = (y1+yTriTop)/2;
+                            line([x1,x1+sourceEastBuffer,x1+sourceEastBuffer,xTriTop,xTriTop],[y1,y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',3);
+                        elseif yTriTop < y1 && xTriTop > x1
+                            horizMidway = (x1+xTriTop)/2;
+                            line([x1,horizMidway,horizMidway,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                        elseif yTriTop < y1 && xTriTop <= x1
+                            line([x1,x1+sourceEastBuffer,x1+sourceEastBuffer,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                        else
+                            error('Problem drawing connecting line')
+                        end
+                        
+                        % For a SourceNode connection point on the west side
+                    elseif obj.SourceConnectionSide == 7
+                        
+                        sourceWestBuffer = 16;
+                        triUpperBuffer = 24;
+                        
+                        % if connection point on source element is above top of
+                        % triangle
+                        if yTriTop >= y1 && xTriTop < x1
+                            line([x1,xTriTop,xTriTop],[y1,y1,yTriTop],'Color','k','LineWidth',3);
+                        elseif yTriTop >= y1 && xTriTop >= x1
+                            vertMidway = (y1+yTriTop)/2;
+                            line([x1,x1-sourceWestBuffer,x1-sourceWestBuffer,xTriTop,xTriTop],[y1,y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',3);
+                        elseif yTriTop < y1 && xTriTop < x1
+                            horizMidway = (x1+xTriTop)/2;
+                            line([x1,horizMidway,horizMidway,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                        elseif yTriTop < y1 && xTriTop >= x1
+                            line([x1,x1-sourceWestBuffer,x1-sourceWestBuffer,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                        else
+                            error('Problem drawing connecting line')
+                        end
+                        
+                    else
+                        error('Problem drawing connecting line')
+                    end
+                    
+                elseif strcmpi(class(obj.SourceNode),'OPMprocess')
+                    
+                    % For a SourceNode connection point on the south side
+                    if obj.SourceConnectionSide == 4 && obj.SourceConnectionParameter > 0.25 && obj.SourceConnectionParameter < 0.75
+                        
+                        % if connection point on source element is above top of
+                        % triangle
+                        if yTriTop >= y1
+                            vertMidway = (yTriTop+y1)/2;
+                            
+                            % Draw bent line
+                            line([x1,x1,xTriTop,xTriTop],[y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',3);
+                            
+                        else
+                            % Determine horizontal midway point
+                            horizMidway = (xTriTop+x1)/2;
+                            
+                            % Bent line from source node to top of triangle
+                            % Note that a buffer of 16 units exists beneath the
+                            % object, and a buffer of 24 units exists above the
+                            % triangle
+                            sourceLowerBuffer = 16;
+                            triUpperBuffer = 24;
+                            
+                            line([x1,x1,horizMidway,horizMidway,xTriTop,xTriTop],...
+                                [y1,y1+sourceLowerBuffer,y1+sourceLowerBuffer,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],...
+                                'Color','k','LineWidth',3);
+                        end
+                        
+                        % For a SourceNode connection point on the north side
+                    elseif obj.SourceConnectionSide == 1 && obj.SourceConnectionParameter > 0.25 && obj.SourceConnectionParameter < 0.75
+                        
+                        sourceUpperBuffer = 16;
+                        triUpperBuffer = 24;
+                        
+                        % if connection point on source element is above top of
+                        % triangle
+                        if yTriTop >= y1
+                            line([x1,x1,xTriTop,xTriTop],[y1,y1-sourceUpperBuffer,y1-sourceUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                        else
+                            line([x1,x1,xTriTop,xTriTop],[y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                        end
+                        
+                        % For a SourceNode connection point on the east side
+                    elseif obj.SourceConnectionParameter >= 0.75
+                        
+                        sourceEastBuffer = 16;
+                        triUpperBuffer = 24;
+                        
+                        % if connection point on source element is above top of
+                        % triangle
+                        if yTriTop >= y1 && xTriTop > x1
+                            line([x1,xTriTop,xTriTop],[y1,y1,yTriTop],'Color','k','LineWidth',3);
+                        elseif yTriTop >= y1 && xTriTop <= x1
+                            vertMidway = (y1+yTriTop)/2;
+                            line([x1,x1+sourceEastBuffer,x1+sourceEastBuffer,xTriTop,xTriTop],[y1,y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',3);
+                        elseif yTriTop < y1 && xTriTop > x1
+                            horizMidway = (x1+xTriTop)/2;
+                            line([x1,horizMidway,horizMidway,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                        elseif yTriTop < y1 && xTriTop <= x1
+                            line([x1,x1+sourceEastBuffer,x1+sourceEastBuffer,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                        else
+                            error('Problem drawing connecting line')
+                        end
+                        
+                    % For a SourceNode connection point on the west side
+                    elseif obj.SourceConnectionParameter <= 0.25
+                        
+                        sourceWestBuffer = 16;
+                        triUpperBuffer = 24;
+                        
+                        % if connection point on source element is above top of
+                        % triangle
+                        if yTriTop >= y1 && xTriTop < x1
+                            line([x1,xTriTop,xTriTop],[y1,y1,yTriTop],'Color','k','LineWidth',3);
+                        elseif yTriTop >= y1 && xTriTop >= x1
+                            vertMidway = (y1+yTriTop)/2;
+                            line([x1,x1-sourceWestBuffer,x1-sourceWestBuffer,xTriTop,xTriTop],[y1,y1,vertMidway,vertMidway,yTriTop],'Color','k','LineWidth',3);
+                        elseif yTriTop < y1 && xTriTop < x1
+                            horizMidway = (x1+xTriTop)/2;
+                            line([x1,horizMidway,horizMidway,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                        elseif yTriTop < y1 && xTriTop >= x1
+                            line([x1,x1-sourceWestBuffer,x1-sourceWestBuffer,xTriTop,xTriTop],[y1,y1,yTriTop-triUpperBuffer,yTriTop-triUpperBuffer,yTriTop],'Color','k','LineWidth',3);
+                        else
+                            error('Problem drawing connecting line')
+                        end
+                        
+                    else
+                        error('Problem drawing connecting line')
+                    end
+                    
+                else
+                    error('Problem drawing connecting line')
+                end
+                %% Bent Line between Triangle and Destination Node
+                
+                if strcmpi(class(obj.DestinationNode),'OPMobject')
+                    
+                    % For a DestinationNode connection point on the north side
+                    if obj.DestinationConnectionSide == 1
+                        
+                        if y2 >= yTriBottom
+                            % Determine vertical midway point
+                            vertMidway = (yTriBottom+y2)/2;
+                            
+                            % Bent line from bottom of trangle to destination node
+                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,vertMidway,vertMidway,y2],'Color','k','LineWidth',3);
+                        else
+                            % Determine horizontal midway point
+                            horizMidway = (xTriBottom+x2)/2;
+                            
+                            % Bent line from bottom of trangle to destination node
+                            % Note that a buffer of 40 units exists beneath the
+                            % triangle, and a buffer of 24 units exists above the
+                            % object
+                            triLowerBuffer = 40;
+                            destinationUpperBuffer = 24;
+                            
+                            line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2,x2],...
+                                [yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2-destinationUpperBuffer,y2-destinationUpperBuffer,y2],...
+                                'Color','k','LineWidth',3);
+                        end
+                        
+                        % For a DestinationNode connection point on the south side
+                    elseif obj.DestinationConnectionSide == 4
+                        triLowerBuffer = 40;
+                        destinationLowerBuffer = 24;
+                        if y2 >= yTriBottom
+                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,y2+destinationLowerBuffer,y2+destinationLowerBuffer,y2],'Color','k','LineWidth',3);
+                        else
+                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2],'Color','k','LineWidth',3);
+                        end
+                        
+                        % For a DestinationNode connection point on the east side
+                    elseif obj.DestinationConnectionSide == 8
+                        
+                        destinationEastBuffer = 24;
+                        triLowerBuffer = 40;
+                        
+                        % if connection point on source element is above top of
+                        % triangle
+                        if y2 >= yTriBottom && x2 < xTriBottom
+                            line([xTriBottom,xTriBottom,x2],[yTriBottom,y2,y2],'Color','k','LineWidth',3);
+                        elseif y2 >= yTriBottom && x2 >= xTriBottom
+                            vertMidway = (y2+yTriBottom)/2;
+                            line([xTriBottom,xTriBottom,x2+destinationEastBuffer,x2+destinationEastBuffer,x2],[yTriBottom,vertMidway,vertMidway,y2,y2],'Color','k','LineWidth',3);
+                        elseif y2 < yTriBottom &&  x2 < xTriBottom
+                            horizMidway = (x2+xTriBottom)/2;
+                            line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',3);
+                        elseif y2 < yTriBottom && x2 >= xTriBottom
+                            line([xTriBottom,xTriBottom,x2+destinationEastBuffer,x2+destinationEastBuffer,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',3);
+                        else
+                            error('Problem drawing connecting line')
+                        end
+                        
+                        % For a DestinationNode connection point on the west side
+                    elseif obj.DestinationConnectionSide == 7
+                        
+                        destinationWestBuffer = 24;
+                        triLowerBuffer = 40;
+                        
+                        % if connection point on source element is above top of
+                        % triangle
+                        if y2 >= yTriBottom && x2 > xTriBottom
+                            line([xTriBottom,xTriBottom,x2],[yTriBottom,y2,y2],'Color','k','LineWidth',3);
+                        elseif y2 >= yTriBottom && x2 <= xTriBottom
+                            vertMidway = (y2+yTriBottom)/2;
+                            line([xTriBottom,xTriBottom,x2-destinationWestBuffer,x2-destinationWestBuffer,x2],[yTriBottom,vertMidway,vertMidway,y2,y2],'Color','k','LineWidth',3);
+                        elseif y2 < yTriBottom &&  x2 > xTriBottom
+                            horizMidway = (x2+xTriBottom)/2;
+                            line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',3);
+                        elseif y2 < yTriBottom && x2 <= xTriBottom
+                            line([xTriBottom,xTriBottom,x2-destinationWestBuffer,x2-destinationWestBuffer,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',3);
+                        else
+                            error('Problem drawing connecting line')
+                        end
+                    else
+                        error('Problem drawing connecting line')
+                    end
+                    
+                elseif strcmpi(class(obj.DestinationNode),'OPMprocess')
+                    
+                     % For a DestinationNode connection point on the north side
+                    if obj.DestinationConnectionSide == 1 && obj.DestinationConnectionParameter > 0.25 && obj.DestinationConnectionParameter < 0.75
+                        
+                        if y2 >= yTriBottom
+                            % Determine vertical midway point
+                            vertMidway = (yTriBottom+y2)/2;
+                            
+                            % Bent line from bottom of trangle to destination node
+                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,vertMidway,vertMidway,y2],'Color','k','LineWidth',3);
+                        else
+                            % Determine horizontal midway point
+                            horizMidway = (xTriBottom+x2)/2;
+                            
+                            % Bent line from bottom of trangle to destination node
+                            % Note that a buffer of 40 units exists beneath the
+                            % triangle, and a buffer of 24 units exists above the
+                            % object
+                            triLowerBuffer = 40;
+                            destinationUpperBuffer = 24;
+                            
+                            line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2,x2],...
+                                [yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2-destinationUpperBuffer,y2-destinationUpperBuffer,y2],...
+                                'Color','k','LineWidth',3);
+                        end
+                        
+                        % For a DestinationNode connection point on the south side
+                    elseif obj.DestinationConnectionSide == 4 && obj.DestinationConnectionParameter > 0.25 && obj.DestinationConnectionParameter < 0.75
+                        triLowerBuffer = 40;
+                        destinationLowerBuffer = 24;
+                        if y2 >= yTriBottom
+                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,y2+destinationLowerBuffer,y2+destinationLowerBuffer,y2],'Color','k','LineWidth',3);
+                        else
+                            line([xTriBottom,xTriBottom,x2,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2],'Color','k','LineWidth',3);
+                        end
+                        
+                        % For a DestinationNode connection point on the east side
+                    elseif obj.DestinationConnectionParameter >= 0.75
+                        
+                        destinationEastBuffer = 24;
+                        triLowerBuffer = 40;
+                        
+                        % if connection point on source element is above top of
+                        % triangle
+                        if y2 >= yTriBottom && x2 < xTriBottom
+                            line([xTriBottom,xTriBottom,x2],[yTriBottom,y2,y2],'Color','k','LineWidth',3);
+                        elseif y2 >= yTriBottom && x2 >= xTriBottom
+                            vertMidway = (y2+yTriBottom)/2;
+                            line([xTriBottom,xTriBottom,x2+destinationEastBuffer,x2+destinationEastBuffer,x2],[yTriBottom,vertMidway,vertMidway,y2,y2],'Color','k','LineWidth',3);
+                        elseif y2 < yTriBottom &&  x2 < xTriBottom
+                            horizMidway = (x2+xTriBottom)/2;
+                            line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',3);
+                        elseif y2 < yTriBottom && x2 >= xTriBottom
+                            line([xTriBottom,xTriBottom,x2+destinationEastBuffer,x2+destinationEastBuffer,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',3);
+                        else
+                            error('Problem drawing connecting line')
+                        end
+                        
+                    % For a DestinationNode connection point on the west side
+                    elseif obj.DestinationConnectionParameter <= 0.25
+                        
+                        destinationWestBuffer = 24;
+                        triLowerBuffer = 40;
+                        
+                        % if connection point on source element is above top of
+                        % triangle
+                        if y2 >= yTriBottom && x2 > xTriBottom
+                            line([xTriBottom,xTriBottom,x2],[yTriBottom,y2,y2],'Color','k','LineWidth',3);
+                        elseif y2 >= yTriBottom && x2 <= xTriBottom
+                            vertMidway = (y2+yTriBottom)/2;
+                            line([xTriBottom,xTriBottom,x2-destinationWestBuffer,x2-destinationWestBuffer,x2],[yTriBottom,vertMidway,vertMidway,y2,y2],'Color','k','LineWidth',3);
+                        elseif y2 < yTriBottom &&  x2 > xTriBottom
+                            horizMidway = (x2+xTriBottom)/2;
+                            line([xTriBottom,xTriBottom,horizMidway,horizMidway,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',3);
+                        elseif y2 < yTriBottom && x2 <= xTriBottom
+                            line([xTriBottom,xTriBottom,x2-destinationWestBuffer,x2-destinationWestBuffer,x2],[yTriBottom,yTriBottom+triLowerBuffer,yTriBottom+triLowerBuffer,y2,y2],'Color','k','LineWidth',3);
+                        else
+                            error('Problem drawing connecting line')
+                        end
+                    else
+                        error('Problem drawing connecting line')
+                    end
+                    
+                else
+                    error('Problem drawing connecting line')
+                end
                 
             else
-               % Code for unidirectional and bidirectional relations 
-            end
-            
-            
-%             line([x1,x2],[y1,y2],'Color','k','LineWidth',3)
-%             axis equal
-%             set(gca,'YDir','reverse');
-%             hold on
-            
-            % Plotting ends of curves
-            % Plotting if instrument link
-            if strcmpi(obj.type,'Instrument')
-                % Plot from left to right, process first then object
-                rad = 10;       % radius of circle for instrument link
-                delta = 0.05;
-                r = 0:delta:(2*pi+delta);
-                patch(x2+rad*cos(r),y2+rad*sin(r),[230, 230, 230]/255,'EdgeColor','k','LineWidth',2);
-                axis equal
-                set(gca,'YDir','reverse');
-                
-            elseif strcmpi(obj.type,'Agent')
-                % Plot from left to right, process first then object
-                rad = 10;       % radius of circle for instrument link
-                delta = 0.05;
-                r = 0:delta:(2*pi+delta);
-                patch(x2+rad*cos(r),y2+rad*sin(r),'k','EdgeColor','k','LineWidth',2);
-                axis equal
-                set(gca,'YDir','reverse');
-                
-            elseif strcmpi(obj.type,'Consumption') || strcmpi(obj.type,'Result')     % Process Consumes Object
-                
-                lengthOfSymLine = 20;       % length of line of symmetry
-                centerAngle = 45*pi/180;
-                arrowDihedralAngle = (pi/2 - centerAngle/2)/2;
-                commonEdge = lengthOfSymLine*sin(centerAngle/2)/sin(arrowDihedralAngle);        %Sine rule to determine length of diagonal line
-                gapVertDist = commonEdge*cos(centerAngle/2+arrowDihedralAngle);
-                gapHorizDist = commonEdge*sin(centerAngle/2+arrowDihedralAngle);
-                
-                x = [0, gapHorizDist,                0,               -gapHorizDist,                0];
-                y = [0, lengthOfSymLine+gapVertDist, lengthOfSymLine, lengthOfSymLine+gapVertDist, 0];  
-                
-                % Determine which quadrant angle is in to determine correct
-                % rotation angle of element
-                if (x2-x1) <= 0 % 1st and 4th quadrants                
-                    rotAngle = (atan((y2-y1)/(x2-x1)))-pi/2;      % Add pi/2 to rotate image to align with arrow head. Negative angle since y is upside down in the coordinate system
-                else % 2nd and 3rd quadrants - this condition assumes dx < 0                   
-                    rotAngle = pi+(atan((y2-y1)/(x2-x1)))-pi/2;                    
-                end
-        
-                % Rotation Matrix
-                alpha=[cos(rotAngle) -sin(rotAngle);
-                    sin(rotAngle) cos(rotAngle)];
-                
-                rotatedCoords = alpha*[x;y];       
-                
-                patch(rotatedCoords(1,:)+x2,rotatedCoords(2,:)+y2,[230, 230, 230]/255,'EdgeColor','k','LineWidth',3);
-                axis equal
-                set(gca,'YDir','reverse');
-                
-            elseif strcmpi(obj.type,'Effect')   % Double headed arror 
-                
-                lengthOfSymLine = 20;       % length of line of symmetry
-                centerAngle = 45*pi/180;
-                arrowDihedralAngle = (pi/2 - centerAngle/2)/2;
-                commonEdge = lengthOfSymLine*sin(centerAngle/2)/sin(arrowDihedralAngle);        %Sine rule to determine length of diagonal line
-                gapVertDist = commonEdge*cos(centerAngle/2+arrowDihedralAngle);
-                gapHorizDist = commonEdge*sin(centerAngle/2+arrowDihedralAngle);
-                
-                x = [0, gapHorizDist,                0,               -gapHorizDist,                0];
-                y = [0, lengthOfSymLine+gapVertDist, lengthOfSymLine, lengthOfSymLine+gapVertDist, 0];  
-                
-                % Determine which quadrant angle is in to determine correct
-                % rotation angle of element
-                if (x2-x1) <= 0 % 1st and 4th quadrants              
-                    rotAngle = (atan((y2-y1)/(x2-x1)))-pi/2;      % Add pi/2 to rotate image to align with arrow head. Negative angle since y is upside down in the coordinate system               
-                else % 2nd and 3rd quadrants - this condition assumes dx < 0   
-                    rotAngle = pi+(atan((y2-y1)/(x2-x1)))-pi/2;     
-                end
-                
-                % Destination Rotation Matrix
-                alphaDestination=[cos(rotAngle) -sin(rotAngle);
-                    sin(rotAngle) cos(rotAngle)];
-                
-                rotatedCoordsDestination = alphaDestination*[x;y];       
-                
-                % Source Rotation Matrix
-                alphaSource=[cos(rotAngle+pi) -sin(rotAngle+pi);
-                    sin(rotAngle+pi) cos(rotAngle+pi)];
-                
-                rotatedCoordsSource = alphaSource*[x;y]; 
-                
-                patch(rotatedCoordsDestination(1,:)+x2,rotatedCoordsDestination(2,:)+y2,[230, 230, 230]/255,'EdgeColor','k','LineWidth',3);
-                hold on
-                patch(rotatedCoordsSource(1,:)+x1,rotatedCoordsSource(2,:)+y1,[230, 230, 230]/255,'EdgeColor','k','LineWidth',3);
-                axis equal
-                set(gca,'YDir','reverse');
-                
-            end
-            
+               % Code for plotting unidirectional and bidirectional relations 
+            end          
             
         end
         

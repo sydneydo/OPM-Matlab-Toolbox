@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OPX version="3">
+  <OPMSystem creationDate="2015-10-21T18:00:58" lastUpdate="2015-10-22T01:07:02" author="NoCreator" modeltype="System" name="NoName" uuid="d31a7a57-8eeb-4899-9446-51f6a115cd07" maxEntityEntry="15" maxOpdEntry="1" global-id="32568137-1acd-48a7-95a2-d7bd108c4410">
+    <Scenarios />
+    <SystemProperties>
+      <SystemConfiguration>
+        <Property key="StateColor" value="-10790144" />
+        <Property key="MinimalThingHeight" value="35" />
+        <Property key="StateHeight" value="35" />
+        <Property key="ThingHeight" value="70" />
+        <Property key="SmallFont" value="11 0" />
+        <Property key="ThingWidth" value="120" />
+        <Property key="ObjectColor" value="-16749056" />
+        <Property key="LineFont" value="11 0" />
+        <Property key="TextColor" value="-16777216" />
+        <Property key="BackgroundColor" value="-1644826" />
+        <Property key="OPDWidth" value="1300" />
+        <Property key="LabelFont" value="11 0" />
+        <Property key="StateFont" value="12 0" />
+        <Property key="NormalSize" value="5" />
+        <Property key="DraggerSize" value="36" />
+        <Property key="MeasureFont" value="16 0" />
+        <Property key="OPDHeight" value="860" />
+        <Property key="URLFont" value="16 3" />
+        <Property key="FundamentalRelationHeight" value="31" />
+        <Property key="CurrentSize" value="9" />
+        <Property key="FundamentalRelationWidth" value="36" />
+        <Property key="UrlColor" value="-65536" />
+        <Property key="ProcessColor" value="-16777046" />
+        <Property key="ThingFont" value="16 0" />
+        <Property key="TimesFont" value="16 0" />
+        <Property key="MinimalThingWidth" value="60" />
+        <Property key="StateWidth" value="60" />
+        <Property key="LinkFont" value="12 0" />
+      </SystemConfiguration>
+      <GeneralInfo>
+        <Property key="Goals_and_Objectives_of_the_Project" value="" />
+        <Property key="Hardware_and_Software_Requirements" value="" />
+        <Property key="Client" value="" />
+        <Property key="Future_Goals" value="" />
+        <Property key="System_Overview" value="" />
+        <Property key="Possible_Users_for_the_System" value="" />
+        <Property key="Open_Issues" value="" />
+        <Property key="Operation_and_Maintenance" value="" />
+        <Property key="Problems" value="" />
+        <Property key="The_Current_State" value="" />
+        <Property key="Inputs_Processing" value="" />
+      </GeneralInfo>
+    </SystemProperties>
+    <LogicalStructure>
+      <ObjectSection />
+      <ProcessSection>
+        <LogicalProcess>
+          <EntityAttr id="10" uuid="05181066-1ee4-4d94-84a8-5ca0a520e85b" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.opm.MaxTimeActivation" value="infinity" />
+              <Property key="entity.general.name" value="frying" />
+              <Property key="entity.opm.MinTimeActivation" value="0;0;0;0;0;0;0" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="9837cb92-abfb-49f7-b996-555d2d7af46f" name="frying ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+          <ThingAttr>
+            <EntityIncludedInstances />
+          </ThingAttr>
+        </LogicalProcess>
+        <LogicalProcess>
+          <EntityAttr id="9" uuid="5a96214b-b15c-4077-9a5b-b09dc86b588c" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.opm.MaxTimeActivation" value="infinity" />
+              <Property key="entity.general.name" value="steaming" />
+              <Property key="entity.opm.MinTimeActivation" value="0;0;0;0;0;0;0" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="969f8858-3972-417f-835a-0a6ad4e68e61" name="steaming ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+          <ThingAttr>
+            <EntityIncludedInstances />
+          </ThingAttr>
+        </LogicalProcess>
+        <LogicalProcess>
+          <EntityAttr id="8" uuid="46b779c0-a8f5-4659-8f6b-2b2308b26d38" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.opm.MaxTimeActivation" value="infinity" />
+              <Property key="entity.general.name" value="baking" />
+              <Property key="entity.opm.MinTimeActivation" value="0;0;0;0;0;0;0" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="8f1db448-f204-45ef-9299-6efb7390e584" name="baking ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+          <ThingAttr>
+            <EntityIncludedInstances />
+          </ThingAttr>
+        </LogicalProcess>
+        <LogicalProcess>
+          <EntityAttr id="4" uuid="915e2635-69a0-4266-93da-0cd50a51c23e" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.opm.MaxTimeActivation" value="infinity" />
+              <Property key="entity.general.name" value="cooking" />
+              <Property key="entity.opm.MinTimeActivation" value="0;0;0;0;0;0;0" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="7afeae22-49ad-4f09-9bb8-3b94d1ecf792" name="cooking ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+          <ThingAttr>
+            <EntityIncludedInstances />
+          </ThingAttr>
+        </LogicalProcess>
+      </ProcessSection>
+      <RelationSection>
+        <LogicalRelation relationType="201" sourceId="4" destinationId="8" source-uuid="915e2635-69a0-4266-93da-0cd50a51c23e" destination-uuid="46b779c0-a8f5-4659-8f6b-2b2308b26d38">
+          <EntityAttr id="13" uuid="c2e4cd19-1669-4a6e-aa58-f7f4c63e3843" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.general.name" value="Generalization 13" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="7b412825-29c3-4b64-91e9-004ef05e15ef" name="Generalization 13 ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+        </LogicalRelation>
+        <LogicalRelation relationType="201" sourceId="4" destinationId="10" source-uuid="915e2635-69a0-4266-93da-0cd50a51c23e" destination-uuid="05181066-1ee4-4d94-84a8-5ca0a520e85b">
+          <EntityAttr id="12" uuid="4601f6d7-ae93-440d-b2d5-16f2dba7a60c" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.general.name" value="Generalization 12" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="c8a517e3-fe81-4a32-bfc4-62af49bb98d5" name="Generalization 12 ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+        </LogicalRelation>
+        <LogicalRelation relationType="201" sourceId="4" destinationId="9" source-uuid="915e2635-69a0-4266-93da-0cd50a51c23e" destination-uuid="5a96214b-b15c-4077-9a5b-b09dc86b588c">
+          <EntityAttr id="11" uuid="48fb46e4-9c4e-40f9-8711-0edfd7e8eb67" exposed="false" privateexposed="false">
+            <EntryProperties />
+            <OPMProperties>
+              <Property key="entity.general.name" value="Generalization 11" />
+              <Property key="entity.opm.enviromental" value="false" />
+              <Property key="entity.opm.physical" value="false" />
+            </OPMProperties>
+            <EntityInstances count="1">
+              <instance uuid="36db0a46-475d-4943-ba45-dd49efaedca9" name="Generalization 11 ( OPD : SD)" />
+            </EntityInstances>
+          </EntityAttr>
+        </LogicalRelation>
+      </RelationSection>
+      <LinkSection />
+    </LogicalStructure>
+    <VisualPart>
+      <OPD id="1" name="SD" maxEntityEntry="15" view="false" indexinlevel="0">
+        <ThingSection>
+          <VisualThing>
+            <ThingData>
+              <VisualProcess>
+                <InstanceAttr entityId="4" entityInOpdId="4" uuid="7afeae22-49ad-4f09-9bb8-3b94d1ecf792" />
+                <ConnectionEdgeAttr x="1160" y="136" width="164" height="107" />
+                <ThingInstanceAttr textPosition="C" />
+                <ExportKey />
+              </VisualProcess>
+            </ThingData>
+            <ChildrenContainer />
+          </VisualThing>
+          <VisualThing>
+            <ThingData>
+              <VisualProcess>
+                <InstanceAttr entityId="8" entityInOpdId="8" uuid="8f1db448-f204-45ef-9299-6efb7390e584" />
+                <ConnectionEdgeAttr x="877" y="230" width="162" height="95" />
+                <ThingInstanceAttr textPosition="C" />
+                <ExportKey />
+              </VisualProcess>
+            </ThingData>
+            <ChildrenContainer />
+          </VisualThing>
+          <VisualThing>
+            <ThingData>
+              <VisualProcess>
+                <InstanceAttr entityId="9" entityInOpdId="9" uuid="969f8858-3972-417f-835a-0a6ad4e68e61" />
+                <ConnectionEdgeAttr x="1105" y="323" width="228" height="137" />
+                <ThingInstanceAttr textPosition="C" />
+                <ExportKey />
+              </VisualProcess>
+            </ThingData>
+            <ChildrenContainer />
+          </VisualThing>
+          <VisualThing>
+            <ThingData>
+              <VisualProcess>
+                <InstanceAttr entityId="10" entityInOpdId="10" uuid="9837cb92-abfb-49f7-b996-555d2d7af46f" />
+                <ConnectionEdgeAttr x="1393" y="309" width="126" height="126" />
+                <ThingInstanceAttr textPosition="C" />
+                <ExportKey />
+              </VisualProcess>
+            </ThingData>
+            <ChildrenContainer />
+          </VisualThing>
+        </ThingSection>
+        <FundamentalRelationSection>
+          <CommonPart sourceId="4" sourceInOpdId="4" sourceConnectionSide="4" sourceConnectionParameter="0.5" x="1275" y="288" width="64" height="55">
+            <VisualFundamentalRelation destinationId="8" destinationInOpdId="8" destinationSide="1" destinationParameter="0.5" labelX="946" labelY="200" visible="true">
+              <InstanceAttr entityId="13" entityInOpdId="13" uuid="7b412825-29c3-4b64-91e9-004ef05e15ef" />
+            </VisualFundamentalRelation>
+            <VisualFundamentalRelation destinationId="10" destinationInOpdId="10" destinationSide="1" destinationParameter="0.5" labelX="1444" labelY="279" visible="true">
+              <InstanceAttr entityId="12" entityInOpdId="12" uuid="c8a517e3-fe81-4a32-bfc4-62af49bb98d5" />
+            </VisualFundamentalRelation>
+            <VisualFundamentalRelation destinationId="9" destinationInOpdId="9" destinationSide="1" destinationParameter="0.5" labelX="1207" labelY="293" visible="true">
+              <InstanceAttr entityId="11" entityInOpdId="11" uuid="36db0a46-475d-4943-ba45-dd49efaedca9" />
+            </VisualFundamentalRelation>
+          </CommonPart>
+        </FundamentalRelationSection>
+        <GeneralRelationSection />
+        <VisualLinkSection />
+        <Unfolded />
+        <View />
+        <InZoomed />
+      </OPD>
+    </VisualPart>
+  </OPMSystem>
+</OPX>
+
